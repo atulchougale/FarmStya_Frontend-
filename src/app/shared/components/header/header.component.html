@@ -1,0 +1,173 @@
+<header class="main-header sticky-top">
+
+    <nav class="navbar navbar-expand-lg">
+
+        <div class="container-fluid">
+
+            <!-- ================= Logo ================= -->
+
+            <a class="navbar-brand d-flex align-items-center" routerLink="/home">
+
+                @if(site?.logoUrl)
+                {
+                <img [src]="logoUrl" [alt]="site?.farmHouseName" class="header-logo-image">
+                }
+                @else
+                {
+                <div class="logo-box">
+
+                    {{ site?.farmHouseName?.charAt(0) || 'F' }}
+
+                </div>
+                }
+
+                <div class="ms-3">
+
+                    <h6 class="logo-title">
+
+                        {{ site?.farmHouseName }}
+
+                    </h6>
+
+                    <small class="logo-subtitle">
+
+                        {{ site?.taluka | uppercase }}
+                        ·
+                        {{ site?.district | uppercase }}
+
+                    </small>
+
+                </div>
+
+            </a>
+
+            <!-- ================= Mobile Button ================= -->
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <!-- ================= Menu ================= -->
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <ul class="navbar-nav mx-auto">
+
+                    <li class="nav-item">
+                        <a routerLink="/home" routerLinkActive="active" class="nav-link">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a routerLink="/about" routerLinkActive="active" class="nav-link">
+                            About
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a routerLink="/gallery" routerLinkActive="active" class="nav-link">
+                            Gallery
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a routerLink="/farmhouses" routerLinkActive="active" class="nav-link">
+                            Farm Houses
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a routerLink="/contact" routerLinkActive="active" class="nav-link">
+                            Contact
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Guest -->
+
+                @if(!isLoggedIn)
+                {
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <a routerLink="/login" class="login-link">
+                        Login
+                    </a>
+
+                    <a routerLink="/register" class="btn register-btn">
+                        Register
+                    </a>
+
+                </div>
+
+                }
+
+                <!-- Logged In -->
+
+                @if(isLoggedIn)
+                {
+
+                <div class="dropdown position-relative" (click)="stopPropagation($event)">
+
+                    <button class="btn profile-btn" type="button" (click)="toggleDropdown()">
+
+                        <i class="bi bi-person-circle me-2"></i>
+
+                        {{ currentUser?.fullName }}
+
+                        <i class="bi bi-chevron-down ms-2"></i>
+
+                    </button>
+
+                    @if(isDropdownOpen)
+                    {
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow show">
+
+                        <li>
+                            <a routerLink="/dashboard" class="dropdown-item" (click)="closeDropdown()">
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li>
+                            <a routerLink="/profile" class="dropdown-item" (click)="closeDropdown()">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a routerLink="/my-bookings" class="dropdown-item" (click)="closeDropdown()">
+                                My Bookings
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <button class="dropdown-item" (click)="logout()">
+                                Logout
+                            </button>
+                        </li>
+
+                    </ul>
+
+                    }
+
+                </div>
+
+                }
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>

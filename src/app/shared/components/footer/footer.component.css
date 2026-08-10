@@ -1,0 +1,247 @@
+/* ==========================================
+   Footer
+========================================== */
+
+.footer {
+  background: linear-gradient(to bottom, #fdfcf9, #f8f1e3);
+  border-top: 1px solid #e8d8be;
+  padding: 15px 0 0;
+}
+
+/* ==========================================
+   Brand
+========================================== */
+
+.logo-box {
+  width: 60px;
+  height: 60px;
+  background: #d45b28;
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+
+  flex-shrink: 0;
+}
+
+.footer-logo-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.footer-logo {
+  margin: 0;
+  font-size: 26px;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  color: #1f1f1f;
+}
+
+.footer-desc {
+  margin-top: 10px;
+  margin-bottom: 0;
+
+  color: #555;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   Section Title
+========================================== */
+
+.footer-title {
+  margin-bottom: 6px;
+
+  font-size: 22px;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  color: #1f1f1f;
+}
+
+.title-line {
+  width: 55px;
+  height: 4px;
+
+  margin-bottom: 18px;
+
+  background: #d45b28;
+  border-radius: 50px;
+}
+
+/* ==========================================
+   Links
+========================================== */
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 5px;
+}
+
+.footer-links li:last-child {
+  margin-bottom: 0;
+}
+
+.footer-links a {
+  color: #444;
+  text-decoration: none;
+  font-size: 15px;
+  transition: all 0.25s ease;
+}
+
+.footer-links a:hover {
+  color: #d45b28;
+  padding-left: 6px;
+}
+
+/* ==========================================
+   Contact
+========================================== */
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  margin-bottom: 6px;
+
+  color: #444;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.contact-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-item i {
+  color: #d45b28;
+  font-size: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   Social
+========================================== */
+
+.social-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.social-icons a {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+
+  transition: all 0.3s ease;
+}
+
+.facebook {
+  background: #1877f2;
+}
+
+.instagram {
+  background: #e4405f;
+}
+
+.whatsapp {
+  background: #25d366;
+}
+
+.youtube {
+  background: #d45b28;
+}
+
+.social-icons a:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================
+   Copyright
+========================================== */
+
+.copyright {
+  margin-top: 15px;
+  padding: 15px 10px;
+
+  text-align: center;
+
+  border-top: 1px solid #ddd;
+
+  color: #666;
+  font-size: 14px;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 991px) {
+  .footer {
+    padding-top: 12px;
+  }
+
+  .footer-logo {
+    font-size: 24px;
+  }
+
+  .footer-title {
+    margin-top: 10px;
+    font-size: 21px;
+  }
+
+  .footer-desc,
+  .footer-links a,
+  .contact-item {
+    font-size: 14px;
+  }
+
+  .logo-box,
+  .footer-logo-image {
+    width: 52px;
+    height: 52px;
+  }
+
+  .social-icons {
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .social-icons a {
+    width: 40px;
+    height: 40px;
+    font-size: 17px;
+  }
+
+  .copyright {
+    margin-top: 20px;
+    font-size: 13px;
+  }
+}

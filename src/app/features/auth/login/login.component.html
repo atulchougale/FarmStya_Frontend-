@@ -1,0 +1,170 @@
+<main class="register-wrapper">
+
+    <section class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+
+                <div class="card border shadow-lg rounded-4">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <h1 class="display-6 fw-bold mb-2">
+                            Welcome Back
+                        </h1>
+
+                        <p class="text-muted mb-4">
+                            Sign in to continue to your FarmStay account.
+                        </p>
+
+                        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+
+                            <!-- Email -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Email Address
+                                </label>
+
+                                <input type="email" class="form-control custom-input" placeholder="Enter your email"
+                                    formControlName="email" autocomplete="off"
+                                    [class.is-invalid]="f['email'].touched && f['email'].invalid"
+                                    [class.is-valid]="f['email'].touched && f['email'].valid">
+
+                                @if(
+                                f['email'].touched &&
+                                f['email'].errors?.['required']
+                                )
+                                {
+                                <small class="text-danger">
+                                    Email is required
+                                </small>
+                                }
+
+                                @if(
+                                f['email'].touched &&
+                                f['email'].errors?.['email']
+                                )
+                                {
+                                <small class="text-danger">
+                                    Enter a valid email address
+                                </small>
+                                }
+
+                            </div>
+
+                            <!-- Password -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Password
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input [type]="showPassword ? 'text' : 'password'" class="form-control custom-input"
+                                        placeholder="Enter password" formControlName="password"
+                                        autocomplete="new-password"
+                                        [class.is-invalid]="f['password'].touched && f['password'].invalid"
+                                        [class.is-valid]="f['password'].touched && f['password'].valid">
+
+                                    <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+
+                                        <i class="bi" [class.bi-eye]="!showPassword"
+                                            [class.bi-eye-slash]="showPassword">
+                                        </i>
+
+                                    </button>
+
+                                </div>
+
+                                @if(
+                                f['password'].touched &&
+                                f['password'].errors?.['required']
+                                )
+                                {
+                                <small class="text-danger">
+                                    Password is required
+                                </small>
+                                }
+
+                            </div>
+
+                            <!-- Remember Me -->
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                                <div class="form-check">
+
+                                    <input class="form-check-input" type="checkbox" id="rememberMe"
+                                        formControlName="rememberMe">
+
+                                    <label class="form-check-label" for="rememberMe">
+
+                                        Remember Me
+
+                                    </label>
+
+                                </div>
+
+                                <a routerLink="/forgot-password" class="text-decoration-none">
+
+                                    Forgot Password?
+
+                                </a>
+
+                            </div>
+
+                            <!-- Login Button -->
+
+                            <button type="submit" class="btn btn-register btn-lg w-100"
+                                [disabled]="loginForm.invalid || isSubmitting">
+
+                                @if(isSubmitting)
+                                {
+                                <span class="spinner-border spinner-border-sm me-2">
+                                </span>
+
+                                Signing In...
+                                }
+                                @else
+                                {
+                                Login
+                                }
+
+                            </button>
+
+                            <!-- Register -->
+
+                            <div class="text-center mt-4">
+
+                                <p class="mb-0">
+
+                                    Don't have an account?
+
+                                    <a routerLink="/register" class="fw-semibold text-decoration-none">
+
+                                        Register
+
+                                    </a>
+
+                                </p>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>

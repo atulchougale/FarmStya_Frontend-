@@ -1,0 +1,223 @@
+<footer class="footer">
+
+    <div class="container-fluid ">
+
+        <div class="row gy-3 ps-3">
+
+            <!-- ================= Brand ================= -->
+
+            <div class="col-lg-4 col-md-6">
+
+                <div class="d-flex align-items-center mb-3">
+
+                    @if(site?.logoUrl)
+                    {
+                    <img [src]="logoUrl" [alt]="site?.farmHouseName" class="footer-logo-image">
+                    }
+                    @else
+                    {
+                    <div class="logo-box">
+
+                        {{ site?.farmHouseName?.charAt(0) || 'F' }}
+
+                    </div>
+                    }
+
+                    <div class="ms-3">
+
+                        <h2 class="footer-logo">
+
+                            {{ site?.farmHouseName }}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                <p class="footer-desc">
+
+                    {{ site?.description }}
+
+                </p>
+
+            </div>
+
+            <!-- ================= Quick Links ================= -->
+
+            <div class="col-lg-2 col-md-6">
+
+                <h4 class="footer-title">
+
+                    Quick Links
+
+                </h4>
+
+                <div class="title-line"></div>
+
+                <ul class="footer-links">
+
+                    <li>
+                        <a routerLink="/home">Home</a>
+                    </li>
+
+                    <li>
+                        <a routerLink="/about">About</a>
+                    </li>
+
+                    <li>
+                        <a routerLink="/gallery">Gallery</a>
+                    </li>
+
+                    <li>
+                        <a routerLink="/farmhouses">Farm Houses</a>
+                    </li>
+
+                    <li>
+                        <a routerLink="/contact">Contact</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- ================= Information ================= -->
+
+            <div class="col-lg-3 col-md-6">
+
+                <h4 class="footer-title">
+
+                    Information
+
+                </h4>
+
+                <div class="title-line"></div>
+
+                <ul class="footer-links">
+
+                    <li>
+                        <a href="#">FAQ</a>
+                    </li>
+
+                    <li>
+                        <a href="#">Terms &amp; Conditions</a>
+                    </li>
+
+                    <li>
+                        <a href="#">Privacy Policy</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- ================= Contact ================= -->
+
+            <div class="col-lg-3 col-md-6">
+
+                <h4 class="footer-title">
+
+                    Contact
+
+                </h4>
+
+                <div class="title-line"></div>
+
+                <div class="contact-item">
+
+                    <i class="bi bi-geo-alt-fill"></i>
+
+                    <span>
+
+                        {{ fullAddress }}
+
+                    </span>
+
+                </div>
+
+                <div class="contact-item">
+
+                    <i class="bi bi-telephone-fill"></i>
+
+                    <span>
+
+                        {{ site?.mobileNumber }}
+
+                    </span>
+
+                </div>
+
+                @if(site?.alternateMobileNumber)
+                {
+                <div class="contact-item">
+
+                    <i class="bi bi-phone-fill"></i>
+
+                    <span>
+
+                        {{ site?.alternateMobileNumber }}
+
+                    </span>
+
+                </div>
+                }
+
+                <div class="contact-item">
+
+                    <i class="bi bi-envelope-fill"></i>
+
+                    <span>
+
+                        {{ site?.email }}
+
+                    </span>
+
+                </div>
+
+                <!-- ================= Social ================= -->
+
+                <div class="social-icons">
+
+                    <a href="#" class="facebook" title="Facebook">
+
+                        <i class="bi bi-facebook"></i>
+
+                    </a>
+
+                    <a href="#" class="instagram" title="Instagram">
+
+                        <i class="bi bi-instagram"></i>
+
+                    </a>
+
+                    <a [href]="'https://wa.me/' + site?.mobileNumber" target="_blank" class="whatsapp" title="WhatsApp">
+
+                        <i class="bi bi-whatsapp"></i>
+
+                    </a>
+
+                    <a [href]="site?.googleMapUrl" target="_blank" class="youtube" title="View Location">
+
+                        <i class="bi bi-geo-alt-fill"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= Copyright ================= -->
+
+    <div class="copyright">
+
+        © {{ currentYear }}
+        {{ site?.farmHouseName }}.
+        All Rights Reserved.
+
+    </div>
+
+</footer>
