@@ -1,83 +1,209 @@
 .register-wrapper {
-    min-height: 100vh;
-    background: #fdf9f2;
-    padding: 30px 15px;
+  min-height: 100vh;
+  background: #fdf9f2;
+  padding: 30px 15px;
 }
 
 .register-card {
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
 
 .register-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #2d1b14;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2d1b14;
 }
 
 .register-subtitle {
-    color: #6c757d;
-    margin-bottom: 30px;
+  color: #6c757d;
+  margin-bottom: 30px;
 }
 
 .form-control {
-    height: 50px;
-    border-radius: 12px;
+  height: 50px;
+  border-radius: 12px;
 }
 
 .form-control:focus {
-    box-shadow: none;
-    border-color: #c4512d;
+  box-shadow: none;
+  border-color: #c4512d;
 }
 
 .btn-register {
-    background: #c4512d;
-    color: white;
-    height: 50px;
-    border-radius: 12px;
-    font-weight: 600;
+  background: #c4512d;
+  color: white;
+  height: 50px;
+  border-radius: 12px;
+  font-weight: 600;
 }
 
 .btn-register:hover {
-    background: #a94222;
-    color: white;
+  background: #a94222;
+  color: white;
 }
 
 .auth-link {
-    color: #c4512d;
-    font-weight: 600;
-    text-decoration: none;
+  color: #c4512d;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .auth-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .input-group .btn {
-    border-radius: 0 12px 12px 0;
+  border-radius: 0 12px 12px 0;
 }
 
 @media (max-width: 768px) {
+  .register-title {
+    font-size: 1.8rem;
+  }
 
-    .register-title {
-        font-size: 1.8rem;
-    }
-
-    .register-card {
-        border-radius: 15px;
-    }
+  .register-card {
+    border-radius: 15px;
+  }
 }
 
-
 .custom-input {
-    height: 40px;
-    border-radius: 12px;
-    border: 1px solid #dee2e6;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .custom-input:focus {
-    border-color: #c4512d;
-    box-shadow: 0 0 0 0.15rem rgba(196, 81, 45, 0.15);
+  border-color: #c4512d;
+  box-shadow: 0 0 0 0.15rem rgba(196, 81, 45, 0.15);
+}
+
+/* ============================================
+   Verification Page
+   ============================================ */
+
+.verification-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.verification-header-icon {
+  font-size: 3.5rem;
+  color: #c4512d;
+}
+
+.verification-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d1b14;
+}
+
+.verification-subtitle {
+  color: #6c757d;
+}
+
+/* ============================================
+   Verification Status Box
+   ============================================ */
+
+.verification-status {
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+  padding: 16px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.verification-status:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.verification-status-icon {
+  font-size: 1.5rem;
+}
+
+/* ============================================
+   OTP Input
+   ============================================ */
+
+.otp-input {
+  height: 50px;
+  border-radius: 12px 0 0 12px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+}
+
+.otp-input:focus {
+  border-color: #c4512d;
+  box-shadow: 0 0 0 0.15rem rgba(196, 81, 45, 0.15);
+}
+
+/* ============================================
+   Resend OTP
+   ============================================ */
+
+.resend-otp {
+  color: #c4512d;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.resend-otp:hover {
+  color: #a94222;
+  text-decoration: underline;
+}
+
+.resend-otp:disabled {
+  color: #6c757d;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* ============================================
+   Verification Badge
+   ============================================ */
+
+.verification-badge {
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+
+/* ============================================
+   Verification Message
+   ============================================ */
+
+.verification-message {
+  border-radius: 12px;
+}
+
+/* ============================================
+   Mobile Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+  .verification-card {
+    border-radius: 15px;
+  }
+
+  .verification-title {
+    font-size: 1.7rem;
+  }
+
+  .verification-header-icon {
+    font-size: 3rem;
+  }
+
+  .otp-input {
+    letter-spacing: 3px;
+  }
 }

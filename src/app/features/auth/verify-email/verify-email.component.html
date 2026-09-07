@@ -1,4 +1,5 @@
 <main class="register-wrapper">
+
     <section class="container py-5">
 
         <div class="row justify-content-center">
@@ -7,94 +8,359 @@
 
                 <div class="card shadow-lg border-0 rounded-4">
 
-                    <div class="card-body p-5 text-center">
+                    <div class="card-body p-5">
 
+                        <!-- ============================= -->
                         <!-- Loading State -->
+                        <!-- ============================= -->
 
-                        @if(isLoading)
-                        {
-                        <div>
+                        @if (isLoading) {
+
+                        <div class="text-center">
 
                             <div class="spinner-border text-success mb-4" role="status">
+
                                 <span class="visually-hidden">
                                     Loading...
                                 </span>
+
                             </div>
 
                             <h2 class="fw-bold mb-3">
-                                Verifying Email
+                                Checking Verification
                             </h2>
 
-                            <p class="text-muted">
-                                Please wait while we verify your account.
+                            <p class="text-muted mb-0">
+                                Please wait while we check your verification status.
                             </p>
 
                         </div>
+
                         }
 
-                        <!-- Success State -->
+                        <!-- ============================= -->
+                        <!-- Verification Content -->
+                        <!-- ============================= -->
 
-                        @if(!isLoading && isVerified)
-                        {
+                        @if (!isLoading) {
+
                         <div>
 
-                            <i class="bi bi-check-circle-fill text-success display-1">
-                            </i>
+                            <!-- Header -->
 
-                            <h2 class="fw-bold text-success mt-3">
-                                Verification Successful
-                            </h2>
+                            <div class="text-center mb-4">
 
-                            <p class="text-muted mt-3">
+                                <i class="bi bi-shield-check text-success display-4">
+                                </i>
+
+                                <h2 class="fw-bold mt-3 mb-2">
+                                    Account Verification
+                                </h2>
+
+                                <p class="text-muted">
+                                    Complete both verifications to activate your FarmStay account.
+                                </p>
+
+                            </div>
+
+
+                            <!-- ============================= -->
+                            <!-- Email Verification Status -->
+                            <!-- ============================= -->
+
+                            <div class="border rounded-3 p-3 mb-3">
+
+                                <div class="d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex align-items-center">
+
+                                        @if (isEmailVerified) {
+
+                                        <i class="bi bi-check-circle-fill text-success fs-4 me-3">
+                                        </i>
+
+                                        } @else {
+
+                                        <i class="bi bi-envelope-exclamation text-warning fs-4 me-3">
+                                        </i>
+
+                                        }
+
+                                        <div>
+
+                                            <h6 class="fw-bold mb-1">
+                                                Email Verification
+                                            </h6>
+
+                                            @if (isEmailVerified) {
+
+                                            <span class="text-success small">
+                                                Email verified successfully
+                                            </span>
+
+                                            } @else {
+
+                                            <span class="text-muted small">
+                                                Verification pending
+                                            </span>
+
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+
+                                    @if (isEmailVerified) {
+
+                                    <span class="badge bg-success">
+                                        Verified
+                                    </span>
+
+                                    } @else {
+
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+
+                                    }
+
+                                </div>
+
+
+                                @if (!isEmailVerified) {
+
+                                <div class="mt-3">
+
+                                    <p class="small text-muted mb-0">
+
+                                        <i class="bi bi-info-circle me-1"> </i>
+                                        Please check your email and click the verification link to verify your email address.
+
+                                    </p>
+
+                                </div>
+
+                                }
+
+                            </div>
+
+
+                            <!-- ============================= -->
+                            <!-- Mobile Verification Status -->
+                            <!-- ============================= -->
+
+                            <div class="border rounded-3 p-3 mb-4">
+
+                                <div class="d-flex align-items-center justify-content-between">
+
+                                    <div class="d-flex align-items-center">
+
+                                        @if (isMobileVerified) {
+
+                                        <i class="bi bi-check-circle-fill text-success fs-4 me-3">
+                                        </i>
+
+                                        } @else {
+
+                                        <i class="bi bi-phone text-warning fs-4 me-3">
+                                        </i>
+
+                                        }
+
+                                        <div>
+
+                                            <h6 class="fw-bold mb-1">
+                                                Mobile Verification
+                                            </h6>
+
+                                            @if (isMobileVerified) {
+
+                                            <span class="text-success small">
+                                                Mobile number verified successfully
+                                            </span>
+
+                                            } @else {
+
+                                            <span class="text-muted small">
+                                                OTP verification pending
+                                            </span>
+
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+
+                                    @if (isMobileVerified) {
+
+                                    <span class="badge bg-success">
+                                        Verified
+                                    </span>
+
+                                    } @else {
+
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+
+                                    }
+
+                                </div>
+
+
+                                <!-- ============================= -->
+                                <!-- OTP Section -->
+                                <!-- ============================= -->
+
+                                @if (!isMobileVerified) {
+
+                                <div class="mt-4">
+
+                                    <label for="otpCode" class="form-label fw-semibold">
+
+                                        Enter OTP
+
+                                    </label>
+
+
+                                    <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+
+                                        <div class="input-group">
+
+                                            <input type="text" id="otpCode"
+                                                class="form-control form-control-lg text-center"
+                                                placeholder="Enter 6 digit OTP" maxlength="6" inputmode="numeric"
+                                                formControlName="otpCode" />
+
+                                            <button type="submit" class="btn btn-register px-4"
+                                                [disabled]="isVerifyingOtp">
+
+                                                @if (isVerifyingOtp) {
+
+                                                <span class="spinner-border spinner-border-sm me-2">
+                                                </span>
+
+                                                Verifying...
+
+                                                } @else {
+
+                                                Verify OTP
+
+                                                }
+
+                                            </button>
+
+                                        </div>
+
+
+                                        <!-- OTP Validation -->
+
+                                        @if (f['otpCode'].touched &&
+                                        f['otpCode'].invalid) {
+
+                                        <div class="text-danger small mt-2">
+
+                                            @if (f['otpCode'].errors?.['required']) {
+
+                                            <span>
+                                                Please enter OTP.
+                                            </span>
+
+                                            }
+
+                                            @if (f['otpCode'].errors?.['pattern']) {
+
+                                            <span>
+                                                OTP must be exactly 6 digits.
+                                            </span>
+
+                                            }
+
+                                        </div>
+
+                                        }
+
+
+                                        <!-- Resend OTP -->
+
+                                        <div class="text-center mt-3">
+
+                                            <span class="text-muted small">
+                                                Didn't receive the OTP?
+                                            </span>
+
+                                            <button type="button" class="btn btn-link btn-sm text-decoration-none"
+                                                (click)="resendOtp()" [disabled]="isResendingOtp">
+
+                                                @if (isResendingOtp) {
+
+                                                <span class="spinner-border spinner-border-sm me-1">
+                                                </span>
+
+                                                Sending...
+
+                                                } @else {
+
+                                                Resend OTP
+
+                                                }
+
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                                }
+
+                            </div>
+
+
+                            <!-- ============================= -->
+                            <!-- Message -->
+                            <!-- ============================= -->
+
+                            @if (message) {
+
+                            <div class="alert alert-info text-center small mb-4">
+
                                 {{ message }}
-                            </p>
 
-                            <p class="small text-secondary mb-4">
-                                Your account is now active. You can login and start
-                                exploring FarmStay.
-                            </p>
+                            </div>
 
-                            <a routerLink="/login" class="btn btn-register btn-lg px-4">
+                            }
 
-                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                            <!-- ============================= -->
+                            <!-- Both Verification Complete -->
+                            <!-- ============================= -->
 
-                                Go To Login
+                            @if (isEmailVerified && isMobileVerified) {
 
-                            </a>
+                            <div class="text-center">
 
-                        </div>
-                        }
+                                <i class="bi bi-check-circle-fill text-success display-1">
+                                </i>
 
-                        <!-- Failed State -->
+                                <h3 class="fw-bold text-success mt-3">
+                                    Verification Complete
+                                </h3>
 
-                        @if(!isLoading && !isVerified)
-                        {
-                        <div>
+                                <p class="text-muted mt-3">
+                                    Your email and mobile number have been verified successfully.
+                                </p>
 
-                            <i class="bi bi-x-circle-fill text-danger display-1">
-                            </i>
+                                <p class="small text-secondary mb-4">
+                                    Your account is now ready. You can login and start exploring FarmStay.
+                                </p>
 
-                            <h2 class="fw-bold text-danger mt-3">
-                                Verification Failed
-                            </h2>
+                                <a routerLink="/login" class="btn btn-register btn-lg px-4">
 
-                            <p class="text-muted mt-3">
-                                {{ message }}
-                            </p>
-
-                            <p class="small text-secondary mb-4">
-                                The verification link may be invalid or expired.
-                            </p>
-
-                            <div class="d-flex gap-2 justify-content-center flex-wrap">
-
-                                <a routerLink="/register" class="btn btn-outline-primary">
-
-                                    Register Again
-
-                                </a>
-
-                                <a routerLink="/login" class="btn btn-primary">
+                                    <i class="bi bi-box-arrow-in-right me-2">
+                                    </i>
 
                                     Go To Login
 
@@ -102,7 +368,10 @@
 
                             </div>
 
+                            }
+
                         </div>
+
                         }
 
                     </div>
@@ -114,4 +383,5 @@
         </div>
 
     </section>
+
 </main>

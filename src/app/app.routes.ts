@@ -13,6 +13,7 @@ export const routes: Routes = [
   // ==========================
   // Default Route
   // ==========================
+
   {
     path: '',
     redirectTo: 'home',
@@ -22,10 +23,10 @@ export const routes: Routes = [
   // ==========================
   // Authentication Layout
   // ==========================
+
   {
     path: '',
     component: AuthLayoutComponent,
-
     children: [
       {
         path: 'login',
@@ -53,6 +54,11 @@ export const routes: Routes = [
         component: ForgotPasswordComponent,
       },
 
+      // ==========================
+      // Reset Password
+      // Email + OTP
+      // ==========================
+
       {
         path: 'reset-password',
         loadComponent: () =>
@@ -66,12 +72,13 @@ export const routes: Routes = [
   // ==========================
   // Client Layout
   // ==========================
+
   {
     path: '',
     component: ClientLayoutComponent,
-
     children: [
       // Home (Public)
+
       {
         path: 'home',
         loadComponent: () =>
@@ -79,6 +86,7 @@ export const routes: Routes = [
       },
 
       // Dashboard (Protected)
+
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -114,16 +122,29 @@ export const routes: Routes = [
       //     ),
       // },
 
-      // Future Protected Pages
+      // ==========================
+      // Profile (Protected)
+      // ==========================
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile/profile.component').then(
+            (c) => c.ProfileComponent,
+          ),
+        canActivate: [authGuard],
+      },
 
-      // {
-      //   path: 'profile',
-      //   loadComponent: () =>
-      //     import('./features/profile/profile.component').then(
-      //       (c) => c.ProfileComponent
-      //     ),
-      //   canActivate: [authGuard],
-      // },
+      // ==========================
+      // Change Password (Protected)
+      // ==========================
+      {
+        path: 'change-password',
+        loadComponent: () =>
+          import('./features/profile/change-password/change-password.component').then(
+            (c) => c.ChangePasswordComponent,
+          ),
+        canActivate: [authGuard],
+      },
 
       // {
       //   path: 'my-bookings',
@@ -148,6 +169,7 @@ export const routes: Routes = [
   // ==========================
   // 404
   // ==========================
+
   {
     path: '**',
     component: NotFoundComponent,

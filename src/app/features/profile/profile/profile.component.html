@@ -1,0 +1,258 @@
+<main class="profile-wrapper">
+
+    <section class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+
+                <div class="card profile-card">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <!-- ========================================= -->
+                        <!-- Profile Header -->
+                        <!-- ========================================= -->
+
+                        <div class="profile-header">
+
+                            <div class="profile-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+
+                            <h1 class="profile-title mt-3 mb-1">
+                                My Profile
+                            </h1>
+
+                            <p class="profile-subtitle mb-0">
+                                View your account information
+                            </p>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- Loading -->
+                        <!-- ========================================= -->
+
+                        @if (isLoading) {
+
+                        <div class="text-center py-5">
+
+                            <div class="spinner-border profile-spinner" role="status">
+                            </div>
+
+                            <p class="text-muted mt-3 mb-0">
+                                Loading profile...
+                            </p>
+
+                        </div>
+
+                        }
+
+
+                        <!-- ========================================= -->
+                        <!-- Profile Details -->
+                        <!-- ========================================= -->
+
+                        @if (!isLoading && profile) {
+
+                        <div class="profile-details">
+
+                            <!-- Full Name -->
+                            <div class="profile-item">
+
+                                <div class="profile-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+
+                                <div class="profile-content">
+
+                                    <small class="profile-label">
+                                        Full Name
+                                    </small>
+
+                                    <div class="profile-value">
+                                        {{ profile.fullName }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="profile-item">
+
+                                <div class="profile-icon">
+                                    <i class="bi bi-envelope"></i>
+                                </div>
+
+                                <div class="profile-content">
+
+                                    <small class="profile-label">
+                                        Email Address
+                                    </small>
+
+                                    <div class="profile-value">
+                                        {{ profile.email }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Mobile Number -->
+                            <div class="profile-item">
+
+                                <div class="profile-icon">
+                                    <i class="bi bi-phone"></i>
+                                </div>
+
+                                <div class="profile-content">
+
+                                    <small class="profile-label">
+                                        Mobile Number
+                                    </small>
+
+                                    <div class="profile-value">
+                                        {{ profile.mobileNumber }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- FarmHouse -->
+                            <div class="profile-item">
+
+                                <div class="profile-icon">
+                                    <i class="bi bi-house"></i>
+                                </div>
+
+                                <div class="profile-content">
+
+                                    <small class="profile-label">
+                                        FarmHouse
+                                    </small>
+
+                                    <div class="profile-value">
+                                        {{ profile.farmHouseName }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Role -->
+                            <div class="profile-item">
+
+                                <div class="profile-icon">
+                                    <i class="bi bi-person-badge"></i>
+                                </div>
+
+                                <div class="profile-content">
+
+                                    <small class="profile-label">
+                                        Role
+                                    </small>
+
+                                    <div class="profile-value">
+
+                                        <span class="profile-badge">
+                                            {{ profile.roleName }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Owner / Staff Status -->
+                            @if (profile.roleName !== 'Customer') {
+
+                            <div class="profile-item">
+
+                                <div class="profile-icon">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+
+                                <div class="profile-content">
+
+                                    <small class="profile-label">
+                                        Account Type
+                                    </small>
+
+                                    <div class="profile-value">
+
+                                        <span class="profile-badge">
+
+                                            @if (profile.isOwner) {
+                                            Owner
+                                            } @else {
+                                            Staff
+                                            }
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            }
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- Change Password -->
+                        <!-- ========================================= -->
+
+                        <div class="profile-actions mt-4 pt-4">
+
+                            <button type="button" class="btn btn-register btn-lg w-100" (click)="goToChangePassword()">
+                                <i class="bi bi-key me-2"></i>
+                                Change Password
+                            </button>
+
+                        </div>
+
+                        }
+
+
+                        <!-- ========================================= -->
+                        <!-- No Profile Data -->
+                        <!-- ========================================= -->
+
+                        @if (!isLoading && !profile) {
+
+                        <div class="text-center py-5">
+
+                            <i class="bi bi-person-x profile-error-icon"></i>
+
+                            <p class="text-muted mt-3 mb-0">
+                                Unable to load profile information.
+                            </p>
+
+                        </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>

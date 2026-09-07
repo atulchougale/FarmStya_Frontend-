@@ -1,0 +1,298 @@
+.profile-wrapper {
+  min-height: 100vh;
+  background: #fdf9f2;
+  padding: 30px 15px;
+}
+
+/* =========================================
+   Main Profile Card
+   ========================================= */
+
+.profile-card {
+  border: none;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 12px 45px rgba(45, 27, 20, 0.08);
+  overflow: hidden;
+}
+
+/* =========================================
+   Profile Header
+   ========================================= */
+
+.profile-header {
+  text-align: center;
+  padding: 10px 0 25px;
+}
+
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff3ed;
+  color: #c4512d;
+
+  font-size: 38px;
+
+  border: 4px solid #ffffff;
+
+  box-shadow: 0 6px 20px rgba(196, 81, 45, 0.15);
+}
+
+.profile-title {
+  color: #2d1b14;
+
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.profile-subtitle {
+  color: #6c757d;
+
+  font-size: 0.95rem;
+}
+
+/* =========================================
+   Profile Details
+   ========================================= */
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================================
+   Profile Item
+   ========================================= */
+
+.profile-item {
+  display: flex;
+  align-items: center;
+
+  padding: 15px 17px;
+
+  background: #fffaf7;
+
+  border: 1px solid #f2e8e2;
+
+  border-radius: 15px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.profile-item:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(196, 81, 45, 0.25);
+
+  box-shadow: 0 5px 18px rgba(45, 27, 20, 0.06);
+}
+
+/* =========================================
+   Profile Icon
+   ========================================= */
+
+.profile-icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #fff0e9;
+  color: #c4512d;
+
+  font-size: 19px;
+
+  margin-right: 15px;
+}
+
+/* =========================================
+   Profile Content
+   ========================================= */
+
+.profile-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-label {
+  display: block;
+
+  color: #8a817c;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+
+  margin-bottom: 3px;
+}
+
+.profile-value {
+  color: #2d1b14;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  word-break: break-word;
+}
+
+/* =========================================
+   Role / Account Type Badge
+   ========================================= */
+
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  background: #fff0e9;
+  color: #a94222;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* =========================================
+   Profile Actions
+   ========================================= */
+
+.profile-actions {
+  border-top: 1px solid #f0e8e3;
+}
+
+.btn-register {
+  background: #c4512d;
+  color: #ffffff;
+
+  height: 50px;
+
+  border: none;
+  border-radius: 13px;
+
+  font-weight: 600;
+
+  box-shadow: 0 5px 15px rgba(196, 81, 45, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-register:hover {
+  background: #a94222;
+  color: #ffffff;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 7px 20px rgba(196, 81, 45, 0.25);
+}
+
+.btn-register:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   Loading
+   ========================================= */
+
+.profile-spinner {
+  color: #c4512d;
+}
+
+/* =========================================
+   Error
+   ========================================= */
+
+.profile-error-icon {
+  font-size: 42px;
+  color: #c4512d;
+}
+
+/* =========================================
+   Mobile
+   ========================================= */
+
+@media (max-width: 768px) {
+  .profile-wrapper {
+    padding: 20px 10px;
+  }
+
+  .profile-card {
+    border-radius: 20px;
+  }
+
+  .profile-title {
+    font-size: 1.7rem;
+  }
+
+  .profile-avatar {
+    width: 78px;
+    height: 78px;
+
+    font-size: 32px;
+  }
+
+  .profile-item {
+    padding: 13px 14px;
+  }
+
+  .profile-icon {
+    width: 40px;
+    height: 40px;
+
+    margin-right: 12px;
+
+    font-size: 17px;
+  }
+
+  .profile-value {
+    font-size: 0.95rem;
+  }
+
+  .profile-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* =========================================
+   Small Mobile
+   ========================================= */
+
+@media (max-width: 400px) {
+  .profile-wrapper {
+    padding: 15px 8px;
+  }
+
+  .profile-card .card-body {
+    padding: 20px !important;
+  }
+
+  .profile-title {
+    font-size: 1.5rem;
+  }
+
+  .profile-item {
+    padding: 12px;
+  }
+}

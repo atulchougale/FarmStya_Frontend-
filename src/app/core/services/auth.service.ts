@@ -4,11 +4,15 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
-import { RegisterRequest } from '../models/register-request.model';
-import { ForgotPasswordRequest } from '../models/forgot-password-request.model';
-import { ResetPasswordRequest } from '../models/reset-password-request.model';
-import { LoginRequest } from '../models/login-request.model';
-import { LoginResponse } from '../models/login-response.model';
+import { RegisterRequest } from '../../features/auth/models/register-request.model';
+import { ForgotPasswordRequest } from '../../features/auth/models/forgot-password-request.model';
+import { ResetPasswordEmailRequest } from '../../features/auth/models/reset-password-email-request.model';
+import { ResetPasswordOtpRequest } from '../../features/auth/models/reset-password-otp-request.model';
+import { LoginRequest } from '../../features/auth/models/login-request.model';
+import { LoginResponse } from '../../features/auth/models/login-response.model';
+import { ResendOtpRequest } from '../../features/auth/models/resend-otp-request.model';
+import { Profile } from '../../features/profile/models/profile.model';
+import { ChangePasswordRequest } from '../../features/profile/models/change-password-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +20,17 @@ import { LoginResponse } from '../models/login-response.model';
 export class AuthService {
   constructor(private http: HttpClient) {}
 
+  // ============================================
+  // Register
+  // ============================================
+
   register(request: RegisterRequest): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/auth/register`, request);
   }
+
+  // ============================================
+  // Login
+  // ============================================
 
   login(request: LoginRequest): Observable<{
     success: boolean;
@@ -32,11 +44,53 @@ export class AuthService {
     }>(`${environment.apiUrl}/auth/login`, request);
   }
 
-  verifyEmail(token: string): Observable<any> {
-    return this.http.get<any>(
-      `${environment.apiUrl}/auth/verify-email?token=${token}`,
+  // ============================================
+  // Verify Email
+  // ============================================
+
+  verifyEmail(
+    farmHouseId: number,
+    userId: number,
+    token: string,
+  ): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/auth/verify-email`, {
+      params: {
+        farmHouseId: farmHouseId,
+        userId: userId,
+        token: token,
+      },
+    });
+  }
+
+  // ============================================
+  // Verify OTP
+  // ============================================
+
+  verifyOtp(request: {
+    farmHouseId: number;
+    userId: number;
+    otpCode: string;
+  }): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/verify-otp`,
+      request,
     );
   }
+
+  // ============================================
+  // Resend OTP
+  // ============================================
+
+  resendOtp(request: ResendOtpRequest): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/resend-otp`,
+      request,
+    );
+  }
+
+  // ============================================
+  // Forgot Password
+  // ============================================
 
   forgotPassword(request: ForgotPasswordRequest): Observable<any> {
     return this.http.post<any>(
@@ -45,9 +99,55 @@ export class AuthService {
     );
   }
 
-  resetPassword(request: ResetPasswordRequest): Observable<any> {
+  // ============================================
+  // Reset Password - Email
+  // ============================================
+
+  resetPasswordEmail(request: ResetPasswordEmailRequest): Observable<any> {
     return this.http.post<any>(
-      `${environment.apiUrl}/auth/reset-password`,
+      `${environment.apiUrl}/auth/reset-password-email`,
+      request,
+    );
+  }
+
+  // ============================================
+  // Reset Password - WhatsApp OTP
+  // ============================================
+
+  resetPasswordOtp(request: ResetPasswordOtpRequest): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/reset-password-otp`,
+      request,
+    );
+  }
+
+  // ============================================
+  // Get Profile
+  // ============================================
+
+  // ============================================
+  // Get Profile
+  // ============================================
+
+  getProfile(): Observable<{
+    success: boolean;
+    message: string;
+    data: Profile;
+  }> {
+    return this.http.get<{
+      success: boolean;
+      message: string;
+      data: Profile;
+    }>(`${environment.apiUrl}/auth/profile`);
+  }
+
+  // ============================================
+  // Change Password
+  // ============================================
+
+  changePassword(request: ChangePasswordRequest): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/change-password`,
       request,
     );
   }

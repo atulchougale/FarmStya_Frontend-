@@ -79,25 +79,23 @@
 
                             <div class="mb-3">
 
-                                <label for="phoneNumber" class="form-label fw-semibold">
-
+                                <label for="mobileNumber" class="form-label fw-semibold">
                                     WhatsApp Number
-
                                 </label>
 
-                                <input id="phoneNumber" type="text" class="form-control custom-input"
-                                    placeholder="9999999999" formControlName="phoneNumber" autocomplete="off"
-                                    [class.is-invalid]="f['phoneNumber'].touched && f['phoneNumber'].invalid"
-                                    [class.is-valid]="f['phoneNumber'].touched && f['phoneNumber'].valid">
+                                <input id="mobileNumber" type="text" class="form-control custom-input"
+                                    placeholder="9999999999" formControlName="mobileNumber" autocomplete="off"
+                                    [class.is-invalid]="f['mobileNumber'].touched && f['mobileNumber'].invalid"
+                                    [class.is-valid]="f['mobileNumber'].touched && f['mobileNumber'].valid">
 
-                                @if( f['phoneNumber'].touched && f['phoneNumber'].errors?.['required'])
+                                @if(f['mobileNumber'].touched && f['mobileNumber'].errors?.['required'])
                                 {
                                 <small class="text-danger">
                                     WhatsApp number is required
                                 </small>
                                 }
 
-                                @if(f['phoneNumber'].touched && f['phoneNumber'].errors?.['pattern'])
+                                @if(f['mobileNumber'].touched && f['mobileNumber'].errors?.['pattern'])
                                 {
                                 <small class="text-danger">
                                     Enter valid 10 digit WhatsApp number
@@ -239,7 +237,7 @@
                                 </p>
 
                                 <a routerLink="/forgot-password" class="text-decoration-none col-md-6">
-                                   
+
                                     Forgot Password?
 
                                 </a>

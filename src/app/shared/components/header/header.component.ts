@@ -5,7 +5,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TokenService } from '../../../core/services/token.service';
 import { PublicSiteService } from '../../../core/services/public-site.service';
 
-import { LoginResponse } from '../../../core/models/login-response.model';
+import { LoginResponse } from '../../../features/auth/models/login-response.model';
 import { PublicSite } from '../../../core/models/public-site.model';
 
 import { environment } from '../../../../environments/environment';
