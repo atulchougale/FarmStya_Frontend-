@@ -1,0 +1,492 @@
+<main class="admin-dashboard">
+
+    <div class="container-fluid px-3 px-md-4">
+
+        <!-- ========================================= -->
+        <!-- Dashboard Header -->
+        <!-- ========================================= -->
+
+        <div class="d-flex flex-column flex-md-row justify-content-between
+                    align-items-md-center gap-3 mb-4">
+
+            <div>
+                <h1 class="h3 fw-bold mb-1 dashboard-title">
+                    Dashboard
+                </h1>
+
+                <p class="text-muted mb-0">
+                    Overview of your farm stay business.
+                </p>
+            </div>
+
+            <div class="dashboard-date">
+                <i class="bi bi-calendar3 me-2"></i>
+                September 9, 2026
+            </div>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- Statistics Cards -->
+        <!-- ========================================= -->
+
+        <div class="row g-3 g-xl-4 mb-4">
+
+            <!-- This Week -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="card stat-card h-100 border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between
+                                    align-items-start">
+
+                            <div>
+                                <p class="stat-label mb-2">
+                                    THIS WEEK
+                                </p>
+
+                                <h2 class="stat-value mb-1">
+                                    0
+                                </h2>
+
+                                <small class="text-muted">
+                                    Bookings
+                                </small>
+                            </div>
+
+                            <div class="stat-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- This Month -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="card stat-card h-100 border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between
+                                    align-items-start">
+
+                            <div>
+                                <p class="stat-label mb-2">
+                                    THIS MONTH
+                                </p>
+
+                                <h2 class="stat-value mb-1">
+                                    0
+                                </h2>
+
+                                <small class="text-muted">
+                                    Bookings
+                                </small>
+                            </div>
+
+                            <div class="stat-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Revenue -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="card stat-card h-100 border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between
+                                    align-items-start">
+
+                            <div>
+                                <p class="stat-label mb-2">
+                                    TOTAL REVENUE
+                                </p>
+
+                                <h2 class="stat-value mb-1">
+                                    ₹15.0k
+                                </h2>
+
+                                <small class="text-muted">
+                                    ₹0.0k this month
+                                </small>
+                            </div>
+
+                            <div class="stat-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Occupancy -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="card stat-card h-100 border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between
+                                    align-items-start">
+
+                            <div>
+                                <p class="stat-label mb-2">
+                                    OCCUPANCY
+                                </p>
+
+                                <h2 class="stat-value mb-1">
+                                    0%
+                                </h2>
+
+                                <small class="text-muted">
+                                    This month
+                                </small>
+                            </div>
+
+                            <div class="stat-icon">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- Main Dashboard Content -->
+        <!-- ========================================= -->
+
+        <div class="row g-3 g-xl-4">
+
+
+            <!-- ========================================= -->
+            <!-- Upcoming Bookings -->
+            <!-- ========================================= -->
+
+            <div class="col-12 col-xl-8">
+
+                <div class="card dashboard-card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-4">
+
+                        <!-- Card Header -->
+
+                        <div class="d-flex justify-content-between
+                                    align-items-center mb-4">
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">
+                                    Upcoming Bookings
+                                </h2>
+
+                                <p class="text-muted small mb-0">
+                                    Your upcoming reservations
+                                </p>
+                            </div>
+
+                            <a routerLink="/admin/bookings"
+                               class="btn btn-sm btn-outline-secondary">
+
+                                View All
+                                <i class="bi bi-arrow-right ms-1"></i>
+
+                            </a>
+
+                        </div>
+
+
+                        <!-- Empty State -->
+
+                        <div class="empty-state text-center py-5">
+
+                            <div class="empty-icon mx-auto mb-3">
+                                <i class="bi bi-calendar-x"></i>
+                            </div>
+
+                            <h5 class="fw-semibold mb-2">
+                                No upcoming bookings
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                New bookings will appear here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- Calendar -->
+            <!-- ========================================= -->
+
+            <div class="col-12 col-xl-4">
+
+                <div class="card dashboard-card border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <div class="mb-4">
+
+                            <h2 class="h5 fw-semibold mb-1">
+                                Calendar
+                            </h2>
+
+                            <p class="text-muted small mb-0">
+                                September 2026
+                            </p>
+
+                        </div>
+
+
+                        <!-- Calendar Navigation -->
+
+                        <div class="d-flex justify-content-between
+                                    align-items-center mb-3">
+
+                            <button type="button"
+                                    class="btn btn-sm btn-light calendar-nav">
+
+                                <i class="bi bi-chevron-left"></i>
+
+                            </button>
+
+                            <strong>
+                                September 2026
+                            </strong>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-light calendar-nav">
+
+                                <i class="bi bi-chevron-right"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- Week Days -->
+
+                        <div class="calendar-grid calendar-week mb-2">
+
+                            <span>Su</span>
+                            <span>Mo</span>
+                            <span>Tu</span>
+                            <span>We</span>
+                            <span>Th</span>
+                            <span>Fr</span>
+                            <span>Sa</span>
+
+                        </div>
+
+
+                        <!-- Dates -->
+
+                        <div class="calendar-grid calendar-days">
+
+                            <span class="muted">30</span>
+                            <span class="muted">31</span>
+
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+
+                            <span class="today">
+                                9
+                            </span>
+
+                            <span>10</span>
+                            <span>11</span>
+                            <span>12</span>
+
+                            <span>13</span>
+                            <span>14</span>
+                            <span>15</span>
+                            <span>16</span>
+                            <span>17</span>
+                            <span>18</span>
+                            <span>19</span>
+
+                            <span>20</span>
+                            <span>21</span>
+                            <span>22</span>
+                            <span>23</span>
+                            <span>24</span>
+                            <span>25</span>
+                            <span>26</span>
+
+                            <span>27</span>
+                            <span>28</span>
+                            <span>29</span>
+                            <span>30</span>
+
+                            <span class="muted">1</span>
+                            <span class="muted">2</span>
+                            <span class="muted">3</span>
+
+                        </div>
+
+
+                        <!-- Selected Date -->
+
+                        <div class="selected-date mt-4 p-3 rounded">
+
+                            <div class="small text-muted mb-1">
+                                Selected Date
+                            </div>
+
+                            <div class="fw-semibold">
+                                September 9, 2026
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- Quick Actions -->
+        <!-- ========================================= -->
+
+        <div class="card dashboard-card border-0 shadow-sm mt-3 mt-xl-4">
+
+            <div class="card-body p-4">
+
+                <div class="mb-3">
+
+                    <h2 class="h5 fw-semibold mb-1">
+                        Quick Actions
+                    </h2>
+
+                    <p class="text-muted small mb-0">
+                        Frequently used admin actions
+                    </p>
+
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-12 col-sm-6 col-lg-3">
+
+                        <a routerLink="/admin/bookings"
+                           class="quick-action">
+
+                            <i class="bi bi-calendar-plus"></i>
+
+                            <span>
+                                Manage Bookings
+                            </span>
+
+                            <i class="bi bi-chevron-right ms-auto"></i>
+
+                        </a>
+
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-lg-3">
+
+                        <a routerLink="/admin/content"
+                           class="quick-action">
+
+                            <i class="bi bi-images"></i>
+
+                            <span>
+                                Manage Content
+                            </span>
+
+                            <i class="bi bi-chevron-right ms-auto"></i>
+
+                        </a>
+
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-lg-3">
+
+                        <a routerLink="/admin/finance"
+                           class="quick-action">
+
+                            <i class="bi bi-wallet2"></i>
+
+                            <span>
+                                Finance
+                            </span>
+
+                            <i class="bi bi-chevron-right ms-auto"></i>
+
+                        </a>
+
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-lg-3">
+
+                        <a routerLink="/admin/reports"
+                           class="quick-action">
+
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+
+                            <span>
+                                Reports
+                            </span>
+
+                            <i class="bi bi-chevron-right ms-auto"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>

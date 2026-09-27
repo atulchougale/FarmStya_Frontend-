@@ -1,0 +1,52 @@
+<!-- <app-header></app-header>
+
+<div class="admin-body">
+
+    <app-admin-sidebar></app-admin-sidebar>
+
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+
+</div>
+
+<app-footer></app-footer> -->
+
+
+<div class="admin-layout">
+
+    <!-- ================= Header ================= -->
+    <header class="admin-header">
+        <app-header></app-header>
+    </header>
+
+
+    <!-- ================= Admin Body ================= -->
+    <div class="admin-body">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <app-admin-sidebar></app-admin-sidebar>
+        </aside>
+
+
+        <!-- Right Content Area -->
+        <div class="admin-content-wrapper">
+
+            <main class="admin-main-content">
+                <router-outlet></router-outlet>
+            </main>
+
+
+
+        </div>
+
+
+
+    </div>
+    <!-- Footer -->
+    <!-- <footer class="admin-footer">
+        <app-footer></app-footer>
+    </footer> -->
+
+</div>

@@ -1,0 +1,612 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.admin-dashboard {
+  width: 100%;
+  min-height: calc(100vh - 140px);
+}
+
+.gallery-page {
+  padding: 1.5rem 0;
+}
+
+/* =========================================
+   Header
+   ========================================= */
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.gallery-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* =========================================
+   Toolbar
+   ========================================= */
+
+.gallery-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-filter {
+  width: 260px;
+}
+
+.category-filter .form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.category-filter .form-select {
+  min-height: 42px;
+}
+
+.create-gallery-btn {
+  min-height: 42px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+/* =========================================
+   Gallery Card
+   ========================================= */
+
+.gallery-card {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.gallery-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================
+   Media
+   ========================================= */
+
+.gallery-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f1f3f5;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease;
+}
+
+/* Video thumbnail needs a black background instead of the light default */
+video.gallery-image {
+  background: #000;
+}
+
+/* Hover -> blur + darken (image only). Video keeps playing clearly, just dims a bit */
+.gallery-card:hover img.gallery-image {
+  transform: scale(1.08);
+  filter: blur(3px) brightness(0.65);
+}
+
+.gallery-card:hover video.gallery-image {
+  filter: brightness(0.7);
+}
+
+/* =========================================
+   Video Play Badge (always visible center icon
+   so users immediately know it's a video)
+   ========================================= */
+
+.video-play-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+
+  font-size: 1.1rem;
+
+  z-index: 2;
+  pointer-events: none;
+
+  transition: opacity 0.3s ease;
+}
+
+/* Fade the play icon out a bit when hover overlay/button appears,
+   so it doesn't clash visually with "Show Details" */
+.gallery-card:hover .video-play-badge {
+  opacity: 0.35;
+}
+
+/* =========================================
+   Favorite
+   ========================================= */
+
+.favorite-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
+.favorite-badge i {
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   Card Hover Overlay (Show Details button)
+   ========================================= */
+
+.gallery-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+.gallery-card:hover .gallery-card-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gallery-view-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #212529;
+  background: #ffffff;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transform: translateY(8px);
+  opacity: 0;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.gallery-card:hover .gallery-view-btn {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.gallery-view-btn:hover {
+  background: #f1f3f5;
+}
+
+/* =========================================
+   Loading
+   ========================================= */
+
+.gallery-loading {
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #6c757d;
+}
+
+/* =========================================
+   Empty State
+   ========================================= */
+
+.gallery-empty {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  border: 1px dashed #dee2e6;
+  border-radius: 0.75rem;
+  background: #fafafa;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: #f1f3f5;
+}
+
+.empty-icon i {
+  font-size: 1.75rem;
+  color: #6c757d;
+}
+
+/* =========================================
+   Gallery Grid
+   ========================================= */
+
+.gallery-grid {
+  position: relative;
+}
+
+/* =========================================
+   Popup Modal
+   ========================================= */
+
+.gallery-popup-backdrop {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  z-index: 1050;
+
+  animation: popupBackdropFade 0.25s ease;
+}
+
+@keyframes popupBackdropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gallery-popup {
+  position: relative;
+
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+
+  animation: popupPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popupPopIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.gallery-popup-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  cursor: pointer;
+
+  z-index: 5;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.gallery-popup-close:hover {
+  background: #f1f3f5;
+  transform: scale(1.05);
+}
+
+/* Image / Video on top — kept fully contained inside the popup,
+   never overflowing (fixes the earlier "only top-left corner visible" issue) */
+
+.gallery-popup-media {
+  position: relative;
+
+  width: 100%;
+  height: 360px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 1rem 1rem 0 0;
+
+  background: #000;
+}
+
+.gallery-popup-media img,
+.gallery-popup-media video {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+  background: #000;
+}
+
+/* Details at bottom */
+
+.gallery-popup-body {
+  padding: 1.5rem;
+}
+
+.gallery-popup-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin-bottom: 0.75rem;
+}
+
+.gallery-popup-title {
+  margin: 0;
+
+  font-size: 1.25rem;
+  font-weight: 600;
+
+  color: #212529;
+
+  word-break: break-word;
+}
+
+.gallery-popup-description {
+  margin: 0 0 1.25rem;
+
+  font-size: 0.9rem;
+  line-height: 1.6;
+
+  color: #6c757d;
+}
+
+.gallery-popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* -------- Large tablets / small laptops (≤1199.98px) -------- */
+@media (max-width: 1199.98px) {
+  .gallery-card {
+    height: 240px;
+  }
+}
+
+/* -------- Tablets (≤991.98px) -------- */
+@media (max-width: 991.98px) {
+  .gallery-card {
+    height: 220px;
+  }
+
+  .gallery-popup {
+    max-width: 540px;
+  }
+
+  .gallery-popup-media {
+    height: 300px;
+  }
+}
+
+/* -------- Small tablets / large phones (≤767.98px) -------- */
+@media (max-width: 767.98px) {
+  .gallery-page {
+    padding: 1rem 0;
+  }
+
+  .gallery-header {
+    margin-bottom: 1rem;
+  }
+
+  .gallery-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .gallery-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .category-filter {
+    width: 100%;
+  }
+
+  .create-gallery-btn {
+    width: 100%;
+  }
+
+  .gallery-card {
+    height: 200px;
+  }
+
+  img.gallery-image {
+    filter: brightness(0.78);
+  }
+
+  .gallery-card:hover img.gallery-image {
+    transform: none;
+  }
+
+  .gallery-card-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .gallery-view-btn {
+    opacity: 1;
+    transform: none;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .video-play-badge {
+    width: 38px;
+    height: 38px;
+    font-size: 0.95rem;
+  }
+
+  /* Popup bottom-sheet style */
+  .gallery-popup-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .gallery-popup {
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 1rem 1rem 0 0;
+    animation: popupSlideUp 0.3s ease;
+  }
+
+  @keyframes popupSlideUp {
+    from {
+      transform: translateY(40px);
+      opacity: 0.6;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .gallery-popup-media {
+    height: 220px;
+  }
+
+  .gallery-popup-body {
+    padding: 1.1rem;
+  }
+
+  .gallery-popup-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .gallery-popup-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* -------- Extra small phones (≤479.98px) -------- */
+@media (max-width: 479.98px) {
+  .gallery-card {
+    height: 180px;
+    border-radius: 0.6rem;
+  }
+
+  .gallery-popup-media {
+    height: 180px;
+  }
+
+  .gallery-view-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .gallery-popup-close {
+    width: 32px;
+    height: 32px;
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+
+  .gallery-popup-actions {
+    flex-wrap: wrap;
+  }
+
+  .gallery-popup-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

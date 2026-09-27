@@ -102,6 +102,7 @@ export class PublicSiteService {
     //const domain = window.location.hostname;
     const domain = 'greenvalley.com';
     //const domain = 'riversidefarm.com';
+    //const domain ='chougalefarm.com';
     alert(domain);
 
     const headers = new HttpHeaders({

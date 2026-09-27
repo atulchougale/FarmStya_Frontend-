@@ -6,6 +6,7 @@ import { NotFoundComponent } from './shared/components/not-found/not-found.compo
 
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
 import { authGuard } from './core/guards/auth.guard';
 
@@ -145,27 +146,53 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
-
-      // {
-      //   path: 'my-bookings',
-      //   loadComponent: () =>
-      //     import('./features/my-bookings/my-bookings.component').then(
-      //       (c) => c.MyBookingsComponent
-      //     ),
-      //   canActivate: [authGuard],
-      // },
-
-      // {
-      //   path: 'booking/:id',
-      //   loadComponent: () =>
-      //     import('./features/booking/booking.component').then(
-      //       (c) => c.BookingComponent
-      //     ),
-      //   canActivate: [authGuard],
-      // },
     ],
   },
 
+  // ==========================
+  // Admin Layout
+  // ==========================
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+            (c) => c.AdminDashboardComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // Gallery
+      {
+        path: 'website-settings/gallery',
+        loadComponent: () =>
+          import('./features/admin/gallery/gallery-view/gallery-view.component').then(
+            (c) => c.GalleryViewComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      {
+        path: 'website-settings/gallery/gallery-create',
+        loadComponent: () =>
+          import('./features/admin/gallery/gallery-create/gallery-create.component').then(
+            (c) => c.GalleryCreateComponent,
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'website-settings/gallery/gallery-create/:id',
+        loadComponent: () =>
+          import('./features/admin/gallery/gallery-create/gallery-create.component').then(
+            (c) => c.GalleryCreateComponent,
+          ),
+        canActivate: [authGuard],
+      },
+    ],
+  },
   // ==========================
   // 404
   // ==========================

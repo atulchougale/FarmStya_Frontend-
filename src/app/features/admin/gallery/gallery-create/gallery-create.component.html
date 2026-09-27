@@ -1,0 +1,229 @@
+<main class="admin-dashboard">
+    <div class="container-fluid px-3 px-md-4">
+        <div class="gallery-create-page">
+
+            <!-- Header -->
+            <div class="page-header">
+                <div>
+                    <h2 class="mb-1">{{ isEditMode ? 'Edit Gallery Item' : 'Create Gallery Item' }}</h2>
+                    <p class="text-muted mb-0">
+                        {{ isEditMode ? 'Update the details of this gallery item' : 'Add a new image or video to your
+                        gallery' }}
+                    </p>
+                </div>
+            </div>
+
+            @if (loadingItem) {
+            <div class="gallery-form-loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span>Loading item details...</span>
+            </div>
+            } @else {
+
+            <form [formGroup]="galleryForm" (ngSubmit)="onSubmit()" class="gallery-form">
+
+                <div class="row g-4 gallery-form-grid">
+
+                    <!-- ================================= -->
+                    <!-- Left: Media Preview + Upload -->
+                    <!-- ================================= -->
+
+                    <div class="col-12 col-lg-4">
+
+                        <label class="form-label">
+                            Image / Video <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="media-upload-panel">
+
+                            <div class="image-preview-box">
+
+                                @if (imagePreviewUrl) {
+
+                                @if (isPreviewVideo()) {
+                                <video [src]="imagePreviewUrl" controls></video>
+                                } @else {
+                                <img [src]="imagePreviewUrl" alt="Preview" />
+                                }
+
+                                } @else {
+
+                                <div class="image-preview-empty">
+                                    <i class="bi bi-image"></i>
+                                </div>
+
+                                }
+
+                            </div>
+
+                            <!-- Choose + Upload buttons (readonly filename field removed) -->
+                            <div class="upload-actions-row">
+
+                                <label class="btn btn-light upload-choose-btn mb-0">
+                                    <i class="bi bi-upload me-1"></i>
+                                    Choose File
+
+                                    <input type="file" hidden accept="image/*,video/*"
+                                        (change)="onFileSelected($event)" />
+                                </label>
+
+                                <button type="button" class="btn btn-success upload-submit-btn"
+                                    [disabled]="!selectedFile || uploadingFile" (click)="uploadSelectedFile()">
+
+                                    @if (uploadingFile) {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                    Uploading...
+                                    } @else {
+                                    <i class="bi bi-cloud-upload me-1"></i>
+                                    Upload
+                                    }
+
+                                </button>
+
+                            </div>
+
+                            <!-- Upload Progress Bar -->
+                            @if (uploadingFile) {
+                            <div class="upload-progress-wrap">
+                                <div class="progress" role="progressbar" [attr.aria-valuenow]="uploadProgress"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+                                </div>
+                                <span class="upload-progress-text">{{ uploadProgress }}%</span>
+                            </div>
+                            }
+
+                            @if (f['imageUrl'].invalid && f['imageUrl'].touched) {
+                            <div class="invalid-feedback d-block">
+                                Please upload an image or video before submitting.
+                            </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <!-- ================================= -->
+                    <!-- Right: Form Fields -->
+                    <!-- ================================= -->
+
+                    <div class="col-12 col-lg-8">
+
+                        <div class="row g-4">
+
+                            <!-- Image Name -->
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">
+                                    Image Name <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" formControlName="imageName"
+                                    placeholder="e.g. Sunset View"
+                                    [class.is-invalid]="f['imageName'].invalid && f['imageName'].touched" />
+                                @if (f['imageName'].invalid && f['imageName'].touched) {
+                                <div class="invalid-feedback">Image name is required.</div>
+                                }
+                            </div>
+
+                            <!-- Display Order -->
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">
+                                    Display Order <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" class="form-control" formControlName="displayOrder" min="0"
+                                    [class.is-invalid]="f['displayOrder'].invalid && f['displayOrder'].touched" />
+                                @if (f['displayOrder'].invalid && f['displayOrder'].touched) {
+                                <div class="invalid-feedback">Valid display order is required.</div>
+                                }
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">
+                                    Category <span class="text-danger">*</span>
+                                </label>
+
+                                <div class="category-field">
+
+                                    @if (!isNewCategory) {
+                                    <select class="form-select" formControlName="category"
+                                        [class.is-invalid]="f['category'].invalid && f['category'].touched">
+                                        <option value="" disabled selected>Select category</option>
+                                        @for (cat of categories; track cat.value) {
+                                        <option [value]="cat.value">{{ cat.label }}</option>
+                                        }
+                                    </select>
+                                    } @else {
+                                    <input type="text" class="form-control" formControlName="category"
+                                        placeholder="Type new category"
+                                        [class.is-invalid]="f['category'].invalid && f['category'].touched" />
+                                    }
+
+                                    <button type="button" class="btn btn-link btn-sm category-toggle-btn"
+                                        (click)="toggleNewCategory()">
+                                        @if (!isNewCategory) {
+                                        <i class="bi bi-plus-lg me-1"></i>New
+                                        } @else {
+                                        <i class="bi bi-list me-1"></i>Existing
+                                        }
+                                    </button>
+
+                                </div>
+
+                                @if (f['category'].invalid && f['category'].touched) {
+                                <div class="invalid-feedback d-block">Category is required.</div>
+                                }
+                            </div>
+
+                            <!-- Is Favorite -->
+                            <div class="col-12 col-md-6 d-flex align-items-end">
+                                <div class="form-check favorite-check">
+                                    <input type="checkbox" class="form-check-input" id="isFavorite"
+                                        formControlName="isFavorite" />
+                                    <label class="form-check-label" for="isFavorite">
+                                        Mark as Favorite
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-12">
+                                <label class="form-label">
+                                    Description <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control" rows="5" formControlName="description"
+                                    placeholder="Write a short description..."
+                                    [class.is-invalid]="f['description'].invalid && f['description'].touched"></textarea>
+                                @if (f['description'].invalid && f['description'].touched) {
+                                <div class="invalid-feedback">Description is required.</div>
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-light" (click)="onCancel()">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" [disabled]="submitting">
+                        @if (submitting) {
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        }
+                        {{ isEditMode ? 'Update Gallery Item' : 'Create Gallery Item' }}
+                    </button>
+                </div>
+
+            </form>
+
+            }
+
+        </div>
+    </div>
+</main>

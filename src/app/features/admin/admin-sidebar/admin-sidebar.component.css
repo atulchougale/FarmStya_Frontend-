@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.admin-sidebar {
+  width: 250px;
+  min-width: 250px;
+  height: 100%;
+  margin: 1rem;
+  border-radius: 20px;
+}
+
+/* =========================================
+   Brand
+========================================= */
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+
+  background: #c94b2c;
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* =========================================
+   Menu
+========================================= */
+
+.sidebar-menu-item {
+  color: #4f4640;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-menu-item i {
+  width: 20px;
+
+  font-size: 17px;
+
+  text-align: center;
+}
+
+.sidebar-menu-item:hover {
+  background-color: #faf1ec;
+  color: #c94b2c;
+}
+
+.sidebar-menu-item.active {
+  background-color: #c94b2c;
+  color: #ffffff;
+}
+
+/* =========================================
+   Back To Site
+========================================= */
+
+.back-to-site {
+  border: 1px dashed #ddd4ca;
+}
+
+.back-to-site:hover {
+  border-color: #c94b2c;
+}
