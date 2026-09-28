@@ -5,9 +5,11 @@
         "greenvalley",
         "pincode",
         "savegallery",
+        "skiptranslate",
         "Swal",
         "sweetalert",
         "taluka",
-        "Toastr"
+        "Toastr",
+        "मराठी"
     ]
 }
