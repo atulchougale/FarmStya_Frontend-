@@ -1,0 +1,717 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.admin-dashboard {
+  width: 100%;
+  min-height: calc(100vh - 140px);
+}
+
+/* =========================================
+   Amenity Page
+   ========================================= */
+
+.amenity-page {
+  padding: 1.5rem 0;
+}
+
+/* =========================================
+   Header
+   ========================================= */
+
+.amenity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+
+  border-bottom: 1px solid #e9ecef;
+}
+
+.amenity-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* =========================================
+   Toolbar
+   ========================================= */
+
+.amenity-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.create-amenity-btn {
+  min-height: 42px;
+  padding: 0.5rem 1rem;
+
+  font-weight: 500;
+}
+
+/* =========================================
+   Amenity Grid
+   ========================================= */
+
+.amenity-grid {
+  position: relative;
+}
+
+/* =========================================
+   Amenity Card
+   ========================================= */
+
+.amenity-card {
+  position: relative;
+
+  width: 100%;
+  height: 260px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  cursor: pointer;
+}
+
+.amenity-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================
+   Media
+   ========================================= */
+
+.amenity-media {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  background: #f1f3f5;
+}
+
+.amenity-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease;
+}
+
+/* Hover Image */
+
+.amenity-card:hover .amenity-image {
+  transform: scale(1.08);
+
+  filter: blur(3px) brightness(0.65);
+}
+
+/* =========================================
+   Empty Image
+   ========================================= */
+
+.amenity-image-empty {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f1f3f5;
+
+  color: #adb5bd;
+}
+
+.amenity-image-empty i {
+  font-size: 2.5rem;
+}
+
+/* =========================================
+   Type Badges
+   ========================================= */
+
+.amenity-type-badges {
+  position: absolute;
+
+  top: 0.75rem;
+  left: 0.75rem;
+
+  display: flex;
+
+  gap: 0.4rem;
+
+  z-index: 2;
+}
+
+.amenity-type-badges .badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* =========================================
+   Hover Overlay
+   ========================================= */
+
+.amenity-card-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: opacity 0.3s ease;
+
+  z-index: 3;
+}
+
+.amenity-card:hover .amenity-card-overlay {
+  opacity: 1;
+
+  pointer-events: auto;
+}
+
+/* =========================================
+   Show Details Button
+   ========================================= */
+
+.amenity-view-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.55rem 1.1rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  color: #212529;
+
+  background: #ffffff;
+
+  border: none;
+  border-radius: 2rem;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+
+  cursor: pointer;
+
+  transform: translateY(8px);
+
+  opacity: 0;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.2s ease;
+
+  white-space: nowrap;
+}
+
+.amenity-card:hover .amenity-view-btn {
+  transform: translateY(0);
+
+  opacity: 1;
+}
+
+.amenity-view-btn:hover {
+  background: #f1f3f5;
+}
+
+/* =========================================
+   Loading
+   ========================================= */
+
+.amenity-loading {
+  min-height: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.75rem;
+
+  color: #6c757d;
+}
+
+/* =========================================
+   Empty State
+   ========================================= */
+
+.amenity-empty {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 2rem;
+
+  border: 1px dashed #dee2e6;
+
+  border-radius: 0.75rem;
+
+  background: #fafafa;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+
+  border-radius: 50%;
+
+  background: #f1f3f5;
+}
+
+.empty-icon i {
+  font-size: 1.75rem;
+
+  color: #6c757d;
+}
+
+/* =========================================
+   Popup Backdrop
+   ========================================= */
+
+.amenity-popup-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+
+  background: rgba(0, 0, 0, 0.6);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  z-index: 1050;
+
+  animation: popupBackdropFade 0.25s ease;
+}
+
+@keyframes popupBackdropFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   Popup
+   ========================================= */
+
+.amenity-popup {
+  position: relative;
+
+  width: 100%;
+  max-width: 620px;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+
+  border-radius: 1rem;
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+
+  animation: popupPopIn 0.3s
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popupPopIn {
+  from {
+    transform: scale(0.9);
+
+    opacity: 0.5;
+  }
+
+  to {
+    transform: scale(1);
+
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   Popup Close Button
+   ========================================= */
+
+.amenity-popup-close {
+  position: absolute;
+
+  top: 0.85rem;
+  right: 0.85rem;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  cursor: pointer;
+
+  z-index: 5;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.amenity-popup-close:hover {
+  background: #f1f3f5;
+
+  transform: scale(1.05);
+}
+
+/* =========================================
+   Popup Image
+   ========================================= */
+
+.amenity-popup-media {
+  position: relative;
+
+  width: 100%;
+  height: 360px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 1rem 1rem 0 0;
+
+  background: #000;
+}
+
+.amenity-popup-media img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+  background: #000;
+}
+
+/* Empty Popup Image */
+
+.amenity-popup-empty {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #adb5bd;
+
+  background: #f1f3f5;
+}
+
+.amenity-popup-empty i {
+  font-size: 3rem;
+}
+
+/* =========================================
+   Popup Body
+   ========================================= */
+
+.amenity-popup-body {
+  padding: 1.5rem;
+}
+
+.amenity-popup-top {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 0.75rem;
+}
+
+.amenity-popup-title {
+  margin: 0;
+
+  font-size: 1.25rem;
+  font-weight: 600;
+
+  color: #212529;
+
+  word-break: break-word;
+}
+
+/* =========================================
+   Popup Badges
+   ========================================= */
+
+.amenity-popup-badges {
+  display: flex;
+
+  gap: 0.4rem;
+
+  flex-wrap: wrap;
+}
+
+.amenity-popup-badges .badge {
+  font-size: 0.75rem;
+}
+
+/* =========================================
+   Description
+   ========================================= */
+
+.amenity-popup-description {
+  margin: 0 0 1.25rem;
+
+  font-size: 0.9rem;
+
+  line-height: 1.6;
+
+  color: #6c757d;
+}
+
+/* =========================================
+   Popup Actions
+   ========================================= */
+
+.amenity-popup-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 0.5rem;
+}
+
+/* =========================================
+   Large Tablet
+   ========================================= */
+
+@media (max-width: 1199.98px) {
+  .amenity-card {
+    height: 240px;
+  }
+}
+
+/* =========================================
+   Tablet
+   ========================================= */
+
+@media (max-width: 991.98px) {
+  .amenity-card {
+    height: 220px;
+  }
+
+  .amenity-popup {
+    max-width: 540px;
+  }
+
+  .amenity-popup-media {
+    height: 300px;
+  }
+}
+
+/* =========================================
+   Mobile
+   ========================================= */
+
+@media (max-width: 767.98px) {
+  .amenity-page {
+    padding: 1rem 0;
+  }
+
+  .amenity-header {
+    margin-bottom: 1rem;
+  }
+
+  .amenity-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .amenity-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .create-amenity-btn {
+    width: 100%;
+  }
+
+  .amenity-card {
+    height: 200px;
+  }
+
+  /* Always show button on mobile */
+  .amenity-card-overlay {
+    opacity: 1;
+
+    pointer-events: auto;
+  }
+
+  .amenity-view-btn {
+    opacity: 1;
+
+    transform: none;
+
+    padding: 0.45rem 0.9rem;
+
+    font-size: 0.8rem;
+  }
+
+  /* Popup bottom sheet */
+  .amenity-popup-backdrop {
+    padding: 0;
+
+    align-items: flex-end;
+  }
+
+  .amenity-popup {
+    max-width: 100%;
+
+    max-height: 92vh;
+
+    border-radius: 1rem 1rem 0 0;
+
+    animation: popupSlideUp 0.3s ease;
+  }
+
+  @keyframes popupSlideUp {
+    from {
+      transform: translateY(40px);
+
+      opacity: 0.6;
+    }
+
+    to {
+      transform: translateY(0);
+
+      opacity: 1;
+    }
+  }
+
+  .amenity-popup-media {
+    height: 220px;
+  }
+
+  .amenity-popup-body {
+    padding: 1.1rem;
+  }
+
+  .amenity-popup-top {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 0.5rem;
+  }
+
+  .amenity-popup-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* =========================================
+   Small Phones
+   ========================================= */
+
+@media (max-width: 479.98px) {
+  .amenity-card {
+    height: 180px;
+
+    border-radius: 0.6rem;
+  }
+
+  .amenity-popup-media {
+    height: 180px;
+  }
+
+  .amenity-view-btn {
+    padding: 0.4rem 0.75rem;
+
+    font-size: 0.75rem;
+  }
+
+  .amenity-popup-close {
+    width: 32px;
+    height: 32px;
+
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+
+  .amenity-popup-actions {
+    flex-wrap: wrap;
+  }
+
+  .amenity-popup-actions .btn {
+    flex: 1;
+
+    justify-content: center;
+  }
+}

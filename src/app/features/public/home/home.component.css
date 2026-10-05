@@ -1,0 +1,1213 @@
+/* =========================================
+   HOST AND HERO SECTION
+========================================= */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: #172116;
+}
+
+.hero-section .carousel,
+.hero-section .carousel-inner,
+.hero-section .carousel-item {
+  width: 100%;
+}
+
+.hero-section .carousel-item {
+  position: relative;
+}
+
+.hero-slide {
+  position: relative;
+  width: 100%;
+  height: 78vh;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%; 
+}
+
+/* =========================================
+   HERO CONTENT CONTAINER
+   Width/padding/centering now come from the
+   shared .app-container (see styles.css) —
+   only hero-specific positioning stays here.
+========================================= */
+
+.hero-container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 768px;
+  color: #ffffff;
+}
+
+/* =========================================
+   LOCATION BADGE
+========================================= */
+
+.hero-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+.hero-location i {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+/* =========================================
+   HERO TITLE
+========================================= */
+
+.hero-title {
+  max-width: 768px;
+  margin: 0 0 20px;
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 4.5vw, 60px);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -1px;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+/* =========================================
+   HERO DESCRIPTION
+========================================= */
+
+.hero-description {
+  max-width: 576px;
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(15px, 1.1vw, 18px);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.1px;
+}
+
+/* =========================================
+   HERO BUTTONS
+========================================= */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hero-btn-primary,
+.hero-btn-outline {
+  min-height: 40px;
+  min-width: 130px;
+  padding: 8px 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hero-btn-primary {
+  color: #ffffff;
+  background-color: #c64024;
+  border: 1px solid #c64024;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+}
+
+.hero-btn-primary i {
+  font-size: 15px;
+  transition: transform 0.25s ease;
+}
+
+.hero-btn-primary:hover,
+.hero-btn-primary:focus-visible {
+  color: #ffffff;
+  background-color: #a9321b;
+  border-color: #a9321b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+}
+
+.hero-btn-primary:hover i {
+  transform: translateX(3px);
+}
+
+.hero-btn-outline {
+  color: #ffffff;
+  background-color: rgba(45, 70, 32, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.hero-btn-outline:hover,
+.hero-btn-outline:focus-visible {
+  color: #ffffff;
+  background-color: #2d4620;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   CAROUSEL INDICATORS
+   Fixed 16px offset, matching .app-container's
+   own padding — no more breakpoint-specific
+   calc() values to keep in sync.
+========================================= */
+
+.hero-section .carousel-indicators {
+  position: absolute;
+  right: auto;
+  bottom: 30px;
+  left: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: auto;
+  margin: 0;
+}
+
+.hero-section .carousel-indicators [data-bs-target] {
+  box-sizing: border-box;
+  width: 14px;
+  height: 8px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.hero-section .carousel-indicators .active {
+  width: 38px;
+  background-color: #ffffff;
+}
+
+/* =========================================
+   CAROUSEL NAVIGATION
+========================================= */
+
+.hero-section .hero-control {
+  z-index: 4;
+  width: 7%;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.hero-section:hover .hero-control,
+.hero-section .hero-control:focus-visible {
+  opacity: 0.85;
+}
+
+.hero-section .carousel-control-prev-icon,
+.hero-section .carousel-control-next-icon {
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+  background-size: 55% 55%;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+/* =========================================
+   LOADING AND EMPTY STATES
+========================================= */
+
+.hero-loading,
+.hero-empty {
+  min-height: 520px;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #faf8f1;
+}
+
+.hero-loading .spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.hero-loading p,
+.hero-empty p {
+  margin: 16px 0 0;
+  color: #68645c;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.hero-empty h2 {
+  margin: 0 0 12px;
+  color: #2e3b27;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* =========================================
+   LARGE DESKTOP
+========================================= */
+
+@media (min-width: 1600px) {
+  .hero-slide {
+    height: 78vh;
+    min-height: 650px;
+  }
+
+  .hero-content {
+    max-width: 768px;
+  }
+
+  .hero-title {
+    max-width: 768px;
+    font-size: 60px;
+    line-height: 1.15;
+  }
+
+  .hero-description {
+    max-width: 576px;
+    font-size: 18px;
+  }
+}
+
+/* =========================================
+   LAPTOP AND TABLET
+========================================= */
+
+@media (max-width: 991.98px) {
+  .hero-slide {
+    height: 68vh;
+    min-height: 520px;
+    background-position: center center;
+  }
+
+  .hero-content {
+    max-width: 600px;
+  }
+
+  .hero-title {
+    max-width: 580px;
+    font-size: clamp(30px, 6vw, 48px);
+    letter-spacing: -0.6px;
+  }
+
+  .hero-description {
+    max-width: 520px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .hero-section .carousel-indicators {
+    bottom: 28px;
+  }
+
+  .hero-section .hero-control {
+    width: 9%;
+    opacity: 0.7;
+  }
+}
+
+/* =========================================
+   MOBILE DEVICES
+========================================= */
+
+@media (max-width: 575.98px) {
+  .hero-slide {
+    width: 100%;
+    height: 78svh;
+    min-height: 540px;
+    max-height: 760px;
+    align-items: center;
+    background-position: 58% center;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    padding-bottom: 18px;
+  }
+
+  .hero-location {
+    gap: 6px;
+    padding: 5px 10px;
+    margin-bottom: 16px;
+    font-size: 11px;
+  }
+
+  .hero-location i {
+    font-size: 13px;
+  }
+
+  .hero-title {
+    max-width: 100%;
+    margin-bottom: 14px;
+    font-size: clamp(26px, 8vw, 34px);
+    line-height: 1.2;
+    letter-spacing: -0.4px;
+  }
+
+  .hero-description {
+    max-width: 100%;
+    margin-bottom: 22px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .hero-btn-primary,
+  .hero-btn-outline {
+    min-width: 0;
+    min-height: 42px;
+    flex: 1 1 0;
+    padding: 8px 12px;
+    gap: 6px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .hero-section .carousel-indicators {
+    bottom: 24px;
+    gap: 8px;
+  }
+
+  .hero-section .carousel-indicators [data-bs-target] {
+    width: 12px;
+    height: 7px;
+  }
+
+  .hero-section .carousel-indicators .active {
+    width: 30px;
+  }
+
+  .hero-section .hero-control {
+    width: 10%;
+    opacity: 0.65;
+  }
+
+  .hero-section .carousel-control-prev-icon,
+  .hero-section .carousel-control-next-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .hero-loading,
+  .hero-empty {
+    min-height: 400px;
+    padding: 40px 20px;
+  }
+}
+
+/* =========================================
+   EXTRA SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+  .hero-slide {
+    min-height: 520px;
+  }
+
+  .hero-title {
+    font-size: 26px;
+    letter-spacing: -0.3px;
+  }
+
+  .hero-description {
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    gap: 8px;
+  }
+
+  .hero-btn-primary,
+  .hero-btn-outline {
+    padding: 8px 8px;
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-section .carousel-indicators [data-bs-target],
+  .hero-btn-primary,
+  .hero-btn-outline,
+  .hero-section .hero-control,
+  .hero-btn-primary i {
+    transition: none;
+  }
+}
+
+
+
+/* =========================================
+   AMENITIES SECTION
+   Section now carries only vertical padding —
+   horizontal width/padding come from the
+   .app-container wrapping header+grid together.
+========================================= */
+
+.amenities-section {
+  width: 100%;
+  padding: 80px 0;
+  background-color: #faf8f1;
+  overflow: hidden;
+}
+
+/* Section Heading */
+
+.amenities-header {
+  max-width: 900px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.amenities-heading {
+  margin: 0 0 12px;
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+.amenities-subtitle {
+  max-width: 700px;
+  margin: 0 auto;
+  color: #68645c;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* Amenities Grid
+   (width/max-width/centering now come from the
+   parent .app-container — this is just the grid) */
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* Amenity Card */
+
+.amenity-card {
+  min-width: 0;
+  overflow: hidden;
+  background-color: #ffffff;
+  border: 1px solid #e2ded4;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(36, 31, 22, 0.08);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.amenity-card:hover {
+  transform: translateY(-4px);
+  border-color: #d6cfc1;
+  box-shadow: 0 8px 22px rgba(36, 31, 22, 0.12);
+}
+
+/* Amenity Image */
+
+.amenity-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 176px;
+  overflow: hidden;
+  background-color: #e8e4d9;
+}
+
+.amenity-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.45s ease;
+}
+
+.amenity-card:hover .amenity-image {
+  transform: scale(1.045);
+}
+
+/* Card Content */
+
+.amenity-content {
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+.amenity-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.amenity-title i {
+  flex-shrink: 0;
+  color: #c64024;
+  font-family: "bootstrap-icons";
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.amenity-description {
+  margin: 0;
+  color: #68645c;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+/* Loading and Empty States */
+
+.amenities-loading,
+.amenities-empty {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.amenities-loading p {
+  margin: 14px 0 0;
+  color: #68645c;
+  font-size: 16px;
+}
+
+.amenities-empty h3 {
+  margin: 0 0 10px;
+  color: #2e3b27;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.amenities-empty p {
+  margin: 0;
+  color: #68645c;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   TABLET (2 columns)
+========================================= */
+
+@media (max-width: 1023.98px) {
+  .amenities-section {
+    padding: 64px 0;
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .amenities-header {
+    margin-bottom: 40px;
+  }
+}
+
+/* =========================================
+   MOBILE (1 column)
+========================================= */
+
+@media (max-width: 767.98px) {
+  .amenities-section {
+    padding: 48px 0;
+  }
+
+  .amenities-header {
+    margin-bottom: 32px;
+    padding: 0 4px;
+  }
+
+  .amenities-heading {
+    margin-bottom: 10px;
+    font-size: clamp(24px, 7vw, 30px);
+    line-height: 1.25;
+    letter-spacing: -0.4px;
+  }
+
+  .amenities-subtitle {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .amenities-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .amenity-card {
+    border-radius: 10px;
+  }
+
+  .amenity-image-wrapper {
+    height: 190px;
+  }
+
+  .amenity-content {
+    padding: 18px;
+  }
+
+  .amenity-title {
+    gap: 9px;
+    margin-bottom: 8px;
+    font-size: 17px;
+  }
+
+  .amenity-title i {
+    font-size: 18px;
+  }
+
+  .amenity-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+/* =========================================
+   EXTRA SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+  .amenity-image-wrapper {
+    height: 170px;
+  }
+
+  .amenity-content {
+    padding: 16px;
+  }
+
+  .amenity-title {
+    font-size: 16px;
+  }
+
+  .amenity-description {
+    font-size: 13px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .amenity-card,
+  .amenity-image {
+    transition: none;
+  }
+}
+
+
+
+/* =========================================
+   BOOKING CTA SECTION
+   Width/padding come from .app-container,
+   which is applied directly on the flex
+   container (content + button).
+========================================= */
+
+.booking-cta-section {
+  width: 100%;
+  padding: 64px 0;
+  background: linear-gradient(
+    110deg,
+    #bd3e25 0%,
+    #d94c20 50%,
+    #f15b16 100%
+  );
+  overflow: hidden;
+}
+
+.booking-cta-container {
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* CTA Heading and Description */
+
+.booking-cta-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.booking-cta-title {
+  margin: 0 0 10px;
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+.booking-cta-description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* CTA Button */
+
+.booking-cta-action {
+  flex: 0 0 auto;
+}
+
+.booking-cta-button {
+  min-width: 180px;
+  min-height: 40px;
+  padding: 8px 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #b83e25;
+  background-color: #faf8f1;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 6px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.booking-cta-button i {
+  font-size: 15px;
+  transition: transform 0.25s ease;
+}
+
+.booking-cta-button:hover,
+.booking-cta-button:focus-visible {
+  color: #a9321b;
+  background-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+.booking-cta-button:hover i {
+  transform: translateX(4px);
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 991.98px) {
+  .booking-cta-section {
+    padding: 56px 0;
+  }
+
+  .booking-cta-container {
+    gap: 28px;
+  }
+
+  .booking-cta-title {
+    font-size: clamp(26px, 3.5vw, 32px);
+  }
+
+  .booking-cta-description {
+    font-size: 15px;
+  }
+
+  .booking-cta-button {
+    min-width: 160px;
+    padding: 8px 22px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 575.98px) {
+  .booking-cta-section {
+    padding: 40px 0;
+  }
+
+  .booking-cta-container {
+    min-height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .booking-cta-content {
+    width: 100%;
+  }
+
+  .booking-cta-title {
+    margin-bottom: 10px;
+    font-size: clamp(22px, 7vw, 28px);
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+  }
+
+  .booking-cta-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .booking-cta-action {
+    width: 100%;
+  }
+
+  .booking-cta-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 8px 18px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   EXTRA SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+  .booking-cta-section {
+    padding: 32px 0;
+  }
+
+  .booking-cta-title {
+    font-size: 22px;
+  }
+
+  .booking-cta-description {
+    font-size: 13px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-cta-button,
+  .booking-cta-button i {
+    transition: none;
+  }
+}
+
+
+
+
+/* =========================================
+   TESTIMONIALS SECTION
+   Section carries only vertical padding —
+   .app-container wraps header+grid together.
+========================================= */
+
+.testimonials-section {
+  width: 100%;
+  padding: 80px 0;
+  background-color: #faf8f1;
+  overflow: hidden;
+}
+
+/* Section Heading */
+
+.testimonials-header {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.testimonials-heading {
+  margin: 0;
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+/* Testimonials Grid
+   (width/max-width/centering now come from the
+   parent .app-container — this is just the grid) */
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Testimonial Card */
+
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 200px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e1ddd3;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(36, 31, 22, 0.08);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-3px);
+  border-color: #d7d0c4;
+  box-shadow: 0 7px 18px rgba(36, 31, 22, 0.1);
+}
+
+/* Star Rating */
+
+.testimonial-rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin-bottom: 14px;
+  color: #e99a16;
+}
+
+.testimonial-rating i {
+  display: inline-block;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Guest Review */
+
+.testimonial-review {
+  flex: 1 1 auto;
+  margin: 0 0 18px;
+  padding: 0;
+  color: #3f3f3f;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+}
+
+/* Guest Name and Date */
+
+.testimonial-guest {
+  margin-top: auto;
+}
+
+.testimonial-guest-name {
+  margin: 0 0 2px;
+  color: #171717;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.testimonial-date {
+  margin: 0;
+  color: #77736b;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Loading and Empty States */
+
+.testimonials-loading,
+.testimonials-empty {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.testimonials-loading p {
+  margin: 14px 0 0;
+  color: #68645c;
+  font-size: 16px;
+}
+
+.testimonials-empty h3 {
+  margin: 0 0 10px;
+  color: #2e3b27;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.testimonials-empty p {
+  margin: 0;
+  color: #68645c;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   MOBILE (1 column)
+========================================= */
+
+@media (max-width: 767.98px) {
+  .testimonials-section {
+    padding: 48px 0;
+  }
+
+  .testimonials-header {
+    margin-bottom: 28px;
+  }
+
+  .testimonials-heading {
+    font-size: clamp(24px, 7vw, 30px);
+    line-height: 1.25;
+    letter-spacing: -0.4px;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .testimonial-card {
+    min-height: 0;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .testimonial-rating {
+    margin-bottom: 12px;
+  }
+
+  .testimonial-rating i {
+    font-size: 15px;
+  }
+
+  .testimonial-review {
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .testimonial-guest-name {
+    font-size: 14px;
+  }
+
+  .testimonial-date {
+    font-size: 13px;
+  }
+}
+
+/* Extra Small Mobile */
+
+@media (max-width: 360px) {
+  .testimonial-card {
+    padding: 16px;
+  }
+
+  .testimonial-review {
+    font-size: 13px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-card {
+    transition: none;
+  }
+}

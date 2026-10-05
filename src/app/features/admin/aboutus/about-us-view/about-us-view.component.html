@@ -1,0 +1,203 @@
+<main class="admin-dashboard">
+
+    <div class="container-fluid px-3 px-md-4">
+
+        <!-- Page Header -->
+        <div
+            class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+
+            <div>
+                <h2 class="page-title mb-1">About Us</h2>
+
+                <p class="page-subtitle mb-0">
+                    View and manage your website About Us content.
+                </p>
+            </div>
+
+            <!-- Update Button -->
+            <button *ngIf="aboutUs" type="button" class="btn btn-primary" (click)="updateAboutUs()">
+
+                <i class="bi bi-pencil-square me-2" aria-hidden="true">
+                </i>
+
+                Update
+
+            </button>
+
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="isLoading" class="loading-container">
+
+            <div class="spinner-border" role="status" aria-label="Loading">
+            </div>
+
+            <p class="mb-0 mt-2">
+                Loading About Us content...
+            </p>
+
+        </div>
+
+        <!-- No About Us Content -->
+        <div *ngIf="!isLoading && !aboutUs" class="empty-state">
+
+            <div class="empty-state-icon">
+
+                <i class="bi bi-info-circle" aria-hidden="true">
+                </i>
+
+            </div>
+
+            <h4>No About Us Content</h4>
+
+            <p>
+                About Us content has not been created yet.
+            </p>
+
+            <button type="button" class="btn btn-primary" (click)="createAboutUs()">
+
+                <i class="bi bi-plus-lg me-2" aria-hidden="true">
+                </i>
+
+                Create New
+
+            </button>
+
+        </div>
+
+        <!-- About Us Content -->
+        <div *ngIf="!isLoading && aboutUs" class="about-us-content">
+
+            <!-- Hero Section -->
+            <div class="content-card hero-card">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        Hero Section
+                    </span>
+
+                </div>
+
+                <div class="row g-4">
+
+                    <div class="col-lg-8">
+
+                        <h3 class="hero-title">
+                            {{ aboutUs.heroTitle }}
+                        </h3>
+
+                        <p class="hero-subtitle">
+                            {{ aboutUs.heroSubtitle }}
+                        </p>
+
+                    </div>
+
+                    <div class="col-lg-4" *ngIf="aboutUs.heroImageUrl">
+
+                        <div class="hero-image-wrapper">
+
+                            <img [src]="aboutUs.heroImageUrl" [alt]="aboutUs.heroTitle" class="hero-image" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Story Section -->
+            <div class="content-card">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        Our Story
+                    </span>
+
+                </div>
+
+                <h3 class="story-title">
+                    {{ aboutUs.storyTitle }}
+                </h3>
+
+                <div class="story-description">
+                    {{ aboutUs.storyDescription }}
+                </div>
+
+            </div>
+
+            <!-- Features Section -->
+            <div class="content-card">
+
+                <div class="section-heading d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <span class="section-label">
+                            Features
+                        </span>
+
+                        <p class="section-description mb-0">
+                            Features available on your About Us page.
+                        </p>
+
+                    </div>
+
+                    <span class="feature-count">
+                        {{ aboutUs.features.length }}
+                    </span>
+
+                </div>
+
+                <!-- Features -->
+                <div *ngIf="aboutUs.features.length > 0" class="features-list">
+
+                    <div class="feature-item" *ngFor="
+                            let feature of aboutUs.features;
+                            trackBy: trackByFeatureId
+                        ">
+
+                        <div class="feature-icon">
+
+                            <i [class]="feature.icon" aria-hidden="true">
+                            </i>
+
+                        </div>
+
+                        <div class="feature-content">
+
+                            <h5>
+                                {{ feature.title }}
+                            </h5>
+
+                            <p class="mb-0">
+                                {{ feature.description }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- No Features -->
+                <div *ngIf="aboutUs.features.length === 0" class="no-features">
+
+                    <i class="bi bi-list-ul" aria-hidden="true">
+                    </i>
+
+                    <p class="mb-0">
+                        No features have been added.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>

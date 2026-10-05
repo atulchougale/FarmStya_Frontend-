@@ -1,0 +1,175 @@
+<main class="public-gallery-page">
+  <section class="public-gallery-section">
+    <div class="app-container">
+
+      <!-- Gallery Heading -->
+      <div class="public-gallery-header text-center mx-auto">
+        <h1 class="public-gallery-title">Gallery</h1>
+        <p class="public-gallery-subtitle mb-0">
+          A glimpse of life at Chougale Farms.
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div class="gallery-status" *ngIf="loading">
+        <div class="spinner-border text-warning" role="status">
+          <span class="visually-hidden">Loading gallery...</span>
+        </div>
+
+        <p class="mt-3 mb-0">Loading gallery...</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="gallery-status" *ngIf="!loading && errorMessage">
+        <i class="bi bi-exclamation-circle gallery-status-icon" aria-hidden="true"></i>
+
+        <p>{{ errorMessage }}</p>
+
+        <button type="button" class="btn gallery-retry-btn" (click)="loadGallery()">
+          Try Again
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div class="gallery-status" *ngIf="
+          !loading &&
+          !errorMessage &&
+          galleryItems.length === 0
+        ">
+        <i class="bi bi-images gallery-status-icon" aria-hidden="true"></i>
+
+        <h2>Gallery coming soon</h2>
+
+        <p>
+          Photos of our farmhouse will be available here soon.
+        </p>
+      </div>
+
+      <!-- Responsive Gallery Grid -->
+      <div class="row g-3 g-md-4 public-gallery-grid" *ngIf="
+          !loading &&
+          !errorMessage &&
+          galleryItems.length > 0
+        ">
+        <div class="col-12 col-sm-6 col-lg-4" *ngFor="
+            let item of galleryItems;
+            trackBy: trackByImageId
+          ">
+          <article class="public-gallery-card" role="button" tabindex="0" [attr.aria-label]="
+              'View ' + (item.imageName || 'gallery media')
+            " (click)="openGalleryModal(item)" (keydown.enter)="openGalleryModal(item)" (keydown.space)="
+              $event.preventDefault();
+              openGalleryModal(item)
+            ">
+            <div class="public-gallery-media">
+
+              <!-- Video Preview -->
+              <video *ngIf="isVideo(item.imageUrl); else galleryImage" class="public-gallery-image"
+                [src]="item.imageUrl" [attr.aria-label]="item.imageName || 'Farmhouse gallery video'" [muted]="true"
+                [autoplay]="true" [loop]="true" playsinline preload="metadata" #videoEl
+                (loadedmetadata)="videoEl.muted = true" tabindex="-1">
+              </video>
+
+              <!-- Image Preview -->
+              <ng-template #galleryImage>
+                <img class="public-gallery-image" [src]="item.imageUrl" [alt]="
+                    item.imageName ||
+                    'Chougale Farms gallery image'
+                  " loading="lazy" width="1024" height="768" />
+              </ng-template>
+
+              <!-- Hover Overlay -->
+              <div class="public-gallery-overlay">
+                <div class="gallery-overlay-content">
+
+                  <!-- Video Play Icon -->
+                  <span class="gallery-play-button" *ngIf="isVideo(item.imageUrl)" aria-hidden="true">
+                    <i class="bi bi-play-fill"></i>
+                  </span>
+
+                  <!-- Image View Icon -->
+                  <span class="gallery-view-button" *ngIf="!isVideo(item.imageUrl)" aria-hidden="true">
+                    <i class="bi bi-arrows-fullscreen"></i>
+                  </span>
+
+                  <span class="gallery-overlay-title">
+                    {{ item.imageName || 'Chougale Farms' }}
+                  </span>
+
+                  <span class="gallery-overlay-subtitle" *ngIf="item.category">
+                    {{ item.category }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Video Badge -->
+              <span class="gallery-media-badge" *ngIf="isVideo(item.imageUrl)">
+                <i class="bi bi-camera-video-fill"></i>
+                Video
+              </span>
+
+              <!-- Media Open Hint -->
+              <span class="gallery-open-hint" aria-hidden="true">
+                <i class="bi bi-plus-lg"></i>
+              </span>
+
+            </div>
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- Gallery Popup Modal -->
+<div class="gallery-modal-backdrop" *ngIf="selectedGalleryItem as selectedItem" (click)="closeGalleryModal()">
+  <section class="gallery-modal-dialog" role="dialog" aria-modal="true" [attr.aria-label]="
+      selectedItem.imageName || 'Gallery media preview'
+    " (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <header class="gallery-modal-header">
+      <div class="gallery-modal-heading">
+        <h2>
+          {{ selectedItem.imageName || 'Chougale Farms' }}
+        </h2>
+
+        <p *ngIf="selectedItem.category">
+          {{ selectedItem.category }}
+        </p>
+      </div>
+
+      <button type="button" class="gallery-modal-close" aria-label="Close gallery popup" title="Close"
+        (click)="closeGalleryModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </header>
+
+    <!-- Modal Media -->
+    <div class="gallery-modal-media">
+
+      <!-- Large Video -->
+      <ng-container *ngIf="isVideo(selectedItem.imageUrl); else modalImage">
+        <video #modalVideo class="gallery-modal-video" [src]="selectedItem.imageUrl" controls autoplay playsinline
+          preload="metadata" [muted]="modalMuted">
+        </video>
+      </ng-container>
+
+      <!-- Large Image -->
+      <ng-template #modalImage>
+        <img class="gallery-modal-image" [src]="selectedItem.imageUrl" [alt]="
+            selectedItem.imageName ||
+            'Chougale Farms gallery image'
+          " />
+      </ng-template>
+
+    </div>
+
+    <!-- Modal Description -->
+    <footer class="gallery-modal-footer" *ngIf="selectedItem.description">
+      <p>{{ selectedItem.description }}</p>
+    </footer>
+
+  </section>
+</div>

@@ -1,0 +1,222 @@
+<main class="admin-dashboard">
+    <div class="container-fluid px-3 px-md-4">
+        <div class="amenity-page">
+
+            <!-- Page Header -->
+            <div
+                class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+
+                <div>
+                    <h2 class="page-title mb-1">Contact Messages</h2>
+                    <p class="page-subtitle mb-0">
+                        View and manage messages received from your website.
+                    </p>
+                </div>
+
+                <div class="message-count">
+                    <span class="count-label">Total Messages</span>
+                    <span class="count-value">{{ dataSource.data.length }}</span>
+                </div>
+
+            </div>
+
+            <!-- Messages Table -->
+            <div class="message-card">
+
+                <!-- Table Heading and Search -->
+                <div class="table-heading">
+
+                    <div class="table-title-section">
+                        <h5 class="mb-1">All Messages</h5>
+                        <p class="mb-0">Messages submitted through Contact Us</p>
+                    </div>
+
+                    <div class="search-box">
+                        <i class="bi bi-search search-icon" aria-hidden="true"></i>
+
+                        <input type="text" class="search-input" placeholder="Search name, mobile or message..."
+                            aria-label="Search contact messages" [value]="searchText" (input)="applyFilter($event)" />
+
+                        <button *ngIf="searchText" type="button" class="clear-search-button" aria-label="Clear search"
+                            title="Clear Search" (click)="clearFilter()">
+                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Responsive Table -->
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="messages-table">
+
+                        <!-- Sr No -->
+                        <ng-container matColumnDef="srNo">
+                            <th mat-header-cell *matHeaderCellDef class="sr-column">
+                                Sr. No.
+                            </th>
+
+                            <td mat-cell *matCellDef="let message; let i = index" class="sr-column">
+                                {{ ((paginator?.pageIndex || 0) * (paginator?.pageSize || 10)) + i + 1 }}
+                            </td>
+                        </ng-container>
+
+                        <!-- Full Name -->
+                        <ng-container matColumnDef="fullName">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+
+                            <td mat-cell *matCellDef="let message">
+                                <span class="customer-name">{{ message.fullName }}</span>
+                            </td>
+                        </ng-container>
+
+                        <!-- Mobile Number -->
+                        <ng-container matColumnDef="mobileNo">
+                            <th mat-header-cell *matHeaderCellDef>Mobile Number</th>
+
+                            <td mat-cell *matCellDef="let message">
+                                <a class="mobile-link" [href]="'tel:' + message.mobileNo">
+                                    {{ message.mobileNo }}
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <!-- Message -->
+                        <ng-container matColumnDef="message">
+                            <th mat-header-cell *matHeaderCellDef>Message</th>
+
+                            <td mat-cell *matCellDef="let message">
+                                <span class="message-preview" [title]="message.message">
+                                    {{ message.message }}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <!-- Actions -->
+                        <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef class="actions-column">
+                                Actions
+                            </th>
+
+                            <td mat-cell *matCellDef="let message" class="actions-column">
+                                <div class="action-buttons">
+
+                                    <!-- View Button -->
+                                    <button mat-icon-button type="button" class="view-button" aria-label="View message"
+                                        title="View Message" (click)="viewMessage(message)">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                    </button>
+
+                                    <!-- Delete Button -->
+                                    <button mat-icon-button type="button" class="delete-button"
+                                        aria-label="Delete message" title="Delete Message"
+                                        (click)="deleteMessage(message.contactId)">
+                                        <i class="bi bi-trash3" aria-hidden="true"></i>
+                                    </button>
+
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Table Header and Rows -->
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+                        <!-- Empty State -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell empty-state" [attr.colspan]="displayedColumns.length">
+
+                                <i class="bi bi-inbox empty-state-icon" aria-hidden="true"></i>
+
+                                <h6>
+                                    {{ searchText ? 'No matching messages found' : 'No messages found' }}
+                                </h6>
+
+                                <p class="mb-0">
+                                    {{
+                                    searchText
+                                    ? 'Try another search term.'
+                                    : 'Contact Us messages will appear here.'
+                                    }}
+                                </p>
+
+                                <button *ngIf="searchText" type="button" class="btn btn-outline-secondary btn-sm mt-3"
+                                    (click)="clearFilter()">
+                                    Clear Search
+                                </button>
+
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 50]" [showFirstLastButtons]="true"
+                        aria-label="Contact messages pagination">
+                    </mat-paginator>
+                </div>
+
+                <!-- Table Footer -->
+                <div class="table-footer">
+                    Showing {{ dataSource.filteredData.length }} message(s)
+                </div>
+
+            </div>
+
+            <!-- View Message Modal -->
+            <div class="message-modal-backdrop" *ngIf="selectedMessage" (click)="closeMessage()">
+
+                <div class="message-modal" role="dialog" aria-modal="true" aria-labelledby="message-modal-title"
+                    (click)="$event.stopPropagation()">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header-custom">
+                        <div>
+                            <h5 id="message-modal-title" class="mb-1">Contact Message</h5>
+                            <p class="mb-0">Message details</p>
+                        </div>
+
+                        <button type="button" class="modal-close-button" aria-label="Close" title="Close"
+                            (click)="closeMessage()">
+                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body-custom">
+
+                        <div class="detail-group">
+                            <label>Full Name</label>
+                            <p>{{ selectedMessage.fullName }}</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <label>Mobile Number</label>
+                            <p>
+                                <a [href]="'tel:' + selectedMessage.mobileNo">
+                                    {{ selectedMessage.mobileNo }}
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="detail-group">
+                            <label>Message</label>
+                            <div class="full-message">{{ selectedMessage.message }}</div>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer-custom">
+                        <button type="button" class="btn btn-secondary modal-close-action" (click)="closeMessage()">
+                            Close
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>

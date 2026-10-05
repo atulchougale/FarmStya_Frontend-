@@ -1,0 +1,362 @@
+
+<main class="admin-dashboard">
+    <div class="container-fluid px-3 px-md-4">
+        <div class="gallery-create-page">
+
+            <!-- Header -->
+            <div class="page-header">
+                <div>
+                    <h2 class="mb-1">
+                        {{ isEditMode ? 'Edit Amenity' : 'Create Amenity' }}
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        {{
+                        isEditMode
+                        ? 'Update the details of this amenity'
+                        : 'Add a new amenity to your farmhouse'
+                        }}
+                    </p>
+                </div>
+            </div>
+
+            @if (loadingItem) {
+
+            <!-- Loading -->
+            <div class="gallery-form-loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+
+                <span>Loading amenity details...</span>
+            </div>
+
+            } @else {
+
+            <!-- Form -->
+            <form [formGroup]="amenityForm"
+                  (ngSubmit)="onSubmit()"
+                  class="gallery-form">
+
+                <div class="row g-4 gallery-form-grid">
+
+                    <!-- ================================= -->
+                    <!-- Left: Image Preview + Upload -->
+                    <!-- ================================= -->
+
+                    <div class="col-12 col-lg-4">
+
+                        <label class="form-label">
+                            Image <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="media-upload-panel">
+
+                            <!-- Image Preview -->
+                            <div class="image-preview-box">
+
+                                @if (imagePreviewUrl) {
+
+                                <img [src]="imagePreviewUrl"
+                                     alt="Amenity Preview" />
+
+                                } @else {
+
+                                <div class="image-preview-empty">
+                                    <i class="bi bi-image"></i>
+                                </div>
+
+                                }
+
+                            </div>
+
+                            <!-- Choose + Upload -->
+                            <div class="upload-actions-row">
+
+                                <label class="btn btn-light upload-choose-btn mb-0">
+
+                                    <i class="bi bi-upload me-1"></i>
+                                    Choose File
+
+                                    <input type="file"
+                                           hidden
+                                           accept="image/*"
+                                           (change)="onFileSelected($event)" />
+
+                                </label>
+
+                                <button type="button"
+                                        class="btn btn-success upload-submit-btn"
+                                        [disabled]="!selectedFile || uploadingFile"
+                                        (click)="uploadSelectedFile()">
+
+                                    @if (uploadingFile) {
+
+                                    <span class="spinner-border spinner-border-sm me-1"
+                                          role="status">
+                                    </span>
+
+                                    Uploading...
+
+                                    } @else {
+
+                                    <i class="bi bi-cloud-upload me-1"></i>
+                                    Upload
+
+                                    }
+
+                                </button>
+
+                            </div>
+
+                            <!-- Upload Progress -->
+                            @if (uploadingFile) {
+
+                            <div class="upload-progress-wrap">
+
+                                <div class="progress"
+                                     role="progressbar"
+                                     [attr.aria-valuenow]="uploadProgress"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+
+                                    <div class="progress-bar"
+                                         [style.width.%]="uploadProgress">
+                                    </div>
+
+                                </div>
+
+                                <span class="upload-progress-text">
+                                    {{ uploadProgress }}%
+                                </span>
+
+                            </div>
+
+                            }
+
+                            <!-- Image Validation -->
+                            @if (f['imageUrl'].invalid &&
+                            f['imageUrl'].touched) {
+
+                            <div class="invalid-feedback d-block">
+                                Please upload an image before submitting.
+                            </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- Right: Form Fields -->
+                    <!-- ================================= -->
+
+                    <div class="col-12 col-lg-8">
+
+                        <div class="row g-4">
+
+                            <!-- Title -->
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Title <span class="text-danger">*</span>
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       formControlName="title"
+                                       placeholder="e.g. Swimming Pool"
+                                       maxlength="100"
+                                       [class.is-invalid]="
+                                           f['title'].invalid &&
+                                           f['title'].touched
+                                       " />
+
+                                @if (f['title'].invalid &&
+                                f['title'].touched) {
+
+                                @if (f['title'].errors?.['required']) {
+
+                                <div class="invalid-feedback">
+                                    Title is required.
+                                </div>
+
+                                }
+
+                                @if (f['title'].errors?.['maxlength']) {
+
+                                <div class="invalid-feedback">
+                                    Title cannot exceed 100 characters.
+                                </div>
+
+                                }
+
+                                }
+
+                            </div>
+
+
+                            <!-- Description -->
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Description
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <textarea class="form-control"
+                                          rows="5"
+                                          formControlName="description"
+                                          maxlength="500"
+                                          placeholder="Write a short description about this amenity..."
+                                          [class.is-invalid]="
+                                              f['description'].invalid &&
+                                              f['description'].touched
+                                          ">
+                                </textarea>
+
+                                @if (f['description'].invalid &&
+                                f['description'].touched) {
+
+                                @if (f['description'].errors?.['required']) {
+
+                                <div class="invalid-feedback">
+                                    Description is required.
+                                </div>
+
+                                }
+
+                                @if (f['description'].errors?.['maxlength']) {
+
+                                <div class="invalid-feedback">
+                                    Description cannot exceed 500 characters.
+                                </div>
+
+                                }
+
+                                }
+
+                            </div>
+
+
+                            <!-- Amenity / Carousel -->
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Display Type
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <div class="amenity-type-options">
+
+                                    <!-- Is Amenity -->
+                                    <div class="form-check">
+
+                                        <input type="checkbox"
+                                               class="form-check-input"
+                                               id="isAmenity"
+                                               formControlName="isAmenity" />
+
+                                        <label class="form-check-label"
+                                               for="isAmenity">
+
+                                            <i class="bi bi-house-check me-1"></i>
+                                            Show as Amenity
+
+                                        </label>
+
+                                    </div>
+
+
+                                    <!-- Is Carousel -->
+                                    <div class="form-check">
+
+                                        <input type="checkbox"
+                                               class="form-check-input"
+                                               id="isCarasoul"
+                                               formControlName="isCarasoul" />
+
+                                        <label class="form-check-label"
+                                               for="isCarasoul">
+
+                                            <i class="bi bi-images me-1"></i>
+                                            Show in Carousel
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Checkbox Validation -->
+                                @if (amenityForm.errors?.['atLeastOneRequired'] &&
+                                (f['isAmenity'].touched ||
+                                f['isCarasoul'].touched)) {
+
+                                <div class="invalid-feedback d-block">
+
+                                    Please select at least one option:
+                                    <strong>Amenity</strong> or
+                                    <strong>Carousel</strong>.
+
+                                </div>
+
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================= -->
+                <!-- Actions -->
+                <!-- ================================= -->
+
+                <div class="form-actions">
+
+                    <button type="button"
+                            class="btn btn-light"
+                            (click)="onCancel()">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button type="submit"
+                            class="btn btn-primary"
+                            [disabled]="submitting">
+
+                        @if (submitting) {
+
+                        <span class="spinner-border spinner-border-sm me-1"
+                              role="status">
+                        </span>
+
+                        }
+
+                        {{
+                        isEditMode
+                        ? 'Update Amenity'
+                        : 'Create Amenity'
+                        }}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            }
+
+        </div>
+    </div>
+</main>
+

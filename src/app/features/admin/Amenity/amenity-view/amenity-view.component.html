@@ -1,0 +1,343 @@
+<main class="admin-dashboard">
+  <div class="container-fluid px-3 px-md-4">
+    <div class="amenity-page">
+
+      <!-- ========================================= -->
+      <!-- Header -->
+      <!-- ========================================= -->
+
+      <div class="amenity-header">
+        <div>
+          <h2 class="mb-1">Amenities</h2>
+
+          <p class="text-muted mb-0">
+            Manage your amenities and carousel images
+          </p>
+        </div>
+      </div>
+
+
+      <!-- ========================================= -->
+      <!-- Toolbar -->
+      <!-- ========================================= -->
+
+      <div class="amenity-toolbar">
+
+        <div></div>
+
+        <button
+          type="button"
+          class="btn btn-primary create-amenity-btn"
+          (click)="AmenityCreate()"
+        >
+          <i class="bi bi-plus-lg me-1"></i>
+          Create New
+        </button>
+
+      </div>
+
+
+      <!-- ========================================= -->
+      <!-- Loading -->
+      <!-- ========================================= -->
+
+      @if (loading) {
+
+        <div class="amenity-loading">
+
+          <div
+            class="spinner-border text-primary"
+            role="status"
+          >
+            <span class="visually-hidden">
+              Loading...
+            </span>
+          </div>
+
+          <span>
+            Loading amenities...
+          </span>
+
+        </div>
+
+      }
+
+
+      <!-- ========================================= -->
+      <!-- Empty State -->
+      <!-- ========================================= -->
+
+      @if (!loading && filteredAmenityItems.length === 0) {
+
+        <div class="amenity-empty">
+
+          <div class="empty-icon">
+            <i class="bi bi-stars"></i>
+          </div>
+
+          <h5>
+            No Amenities Found
+          </h5>
+
+          <p class="text-muted mb-3">
+            Start adding amenities to your farmhouse.
+          </p>
+
+          <button
+            type="button"
+            class="btn btn-primary create-amenity-btn"
+            (click)="AmenityCreate()"
+          >
+            <i class="bi bi-plus-lg me-1"></i>
+            Create New
+          </button>
+
+        </div>
+
+      }
+
+
+      <!-- ========================================= -->
+      <!-- Amenity Grid -->
+      <!-- ========================================= -->
+
+      @if (!loading && filteredAmenityItems.length > 0) {
+
+        <div class="row g-4 amenity-grid">
+
+          @for (
+            item of filteredAmenityItems;
+            track item.imageId
+          ) {
+
+            <div class="col-12 col-sm-6 col-lg-4">
+
+              <div
+                class="amenity-card"
+                (click)="openPopup(item)"
+              >
+
+                <!-- Image -->
+                <div class="amenity-media">
+
+                  @if (item.imageUrl) {
+
+                    <img
+                      [src]="item.imageUrl"
+                      [alt]="item.title"
+                      class="amenity-image"
+                    />
+
+                  } @else {
+
+                    <div class="amenity-image-empty">
+                      <i class="bi bi-image"></i>
+                    </div>
+
+                  }
+
+
+                  <!-- Type Badges -->
+                  <div class="amenity-type-badges">
+
+                    @if (item.isAmenity) {
+
+                      <span class="badge bg-primary">
+                        Amenity
+                      </span>
+
+                    }
+
+                    @if (item.isCarasoul) {
+
+                      <span class="badge bg-secondary">
+                        Carousel
+                      </span>
+
+                    }
+
+                  </div>
+
+
+                  <!-- Hover Overlay -->
+                  <div class="amenity-card-overlay">
+
+                    <button
+                      type="button"
+                      class="amenity-view-btn"
+                      (click)="$event.stopPropagation(); openPopup(item)"
+                    >
+                      <i class="bi bi-eye me-1"></i>
+                      Show Details
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- Popup Modal -->
+  <!-- ========================================= -->
+
+  @if (selectedItem) {
+
+    <div
+      class="amenity-popup-backdrop"
+      (click)="closePopup()"
+    >
+
+      <div
+        class="amenity-popup"
+        (click)="$event.stopPropagation()"
+      >
+
+
+        <!-- Close Button -->
+        <button
+          type="button"
+          class="amenity-popup-close"
+          (click)="closePopup()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+
+
+        <!-- ========================================= -->
+        <!-- Popup Image -->
+        <!-- ========================================= -->
+
+        <div class="amenity-popup-media">
+
+          @if (selectedItem.imageUrl) {
+
+            <img
+              [src]="selectedItem.imageUrl"
+              [alt]="selectedItem.title"
+            />
+
+          } @else {
+
+            <div class="amenity-popup-empty">
+
+              <i class="bi bi-image"></i>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- Popup Details -->
+        <!-- ========================================= -->
+
+        <div class="amenity-popup-body">
+
+          <div class="amenity-popup-top">
+
+            <h4 class="amenity-popup-title">
+              {{ selectedItem.title }}
+            </h4>
+
+
+            <!-- Type -->
+            <div class="amenity-popup-badges">
+
+              @if (selectedItem.isAmenity) {
+
+                <span class="badge bg-primary">
+                  Amenity
+                </span>
+
+              }
+
+              @if (selectedItem.isCarasoul) {
+
+                <span class="badge bg-secondary">
+                  Carousel
+                </span>
+
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- Description -->
+
+          @if (selectedItem.description) {
+
+            <p class="amenity-popup-description">
+              {{ selectedItem.description }}
+            </p>
+
+          }
+
+
+          <!-- ========================================= -->
+          <!-- Actions -->
+          <!-- ========================================= -->
+
+          <div class="amenity-popup-actions">
+
+            <button
+              type="button"
+              class="btn btn-sm btn-light"
+              (click)="editItem(selectedItem)"
+            >
+              <i class="bi bi-pencil me-1"></i>
+              Edit
+            </button>
+
+
+            <button
+              type="button"
+              class="btn btn-sm btn-light text-danger"
+              [disabled]="deleting"
+              (click)="confirmDelete(selectedItem)"
+            >
+
+              @if (deleting) {
+
+                <span
+                  class="spinner-border spinner-border-sm me-1"
+                  role="status"
+                ></span>
+
+              } @else {
+
+                <i class="bi bi-trash me-1"></i>
+
+              }
+
+              Delete
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</main>

@@ -1,68 +1,78 @@
 /* ===========================
    Header
+   position/z-index Bootstrap's position-sticky + top-0
+   utilities (in HTML) already handle; kept here too as a
+   safety net against ancestor overflow/transform breaking
+   sticky (see the scroll-fix note below).
 =========================== */
 
+
+:host {
+  display: block;
+  width: 100%;
+}
+
 .main-header {
-  background: #f8f5ee;
-  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
   z-index: 1050;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* Bootstrap has no color/blur utilities for this exact
+     translucent-glass effect, so it stays custom */
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid #e2ded4;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* ===========================
-   Navbar
+   Navbar height
+   Bootstrap's navbar has no fixed-height utility, only padding
 =========================== */
 
 .navbar {
-  min-height: 72px;
-  padding: 0.5rem 0;
-}
-
-.container-fluid {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  min-height: 64px;
 }
 
 /* ===========================
-   Brand
+   Container width
+   Bootstrap's own .container breakpoints (max 1320px at xxl)
+   don't include our custom 1400px step at 1600px+, which we
+   set on Home to keep every section in sync. So the max-width
+   itself stays custom; horizontal padding now comes from
+   Bootstrap's .container.
 =========================== */
 
-.navbar-brand {
-  text-decoration: none;
-  color: inherit;
-  margin-right: 0;
+.header-container {
+  max-width: 1320px;
 }
 
-.navbar-brand:hover {
-  color: inherit;
+@media (min-width: 1600px) {
+  .header-container {
+    max-width: 1400px;
+  }
 }
 
 /* ===========================
    Logo
+   Brand gradient/colors are project-specific, not in Bootstrap
 =========================== */
 
 .logo-box {
-  width: 48px;
-  height: 48px;
-  background: #d45b28;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: linear-gradient(110deg, #bd3e25 0%, #d94c20 50%, #f15b16 100%);
 
-  overflow: hidden;
-
-  color: #fff;
-  font-size: 22px;
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
   font-weight: 700;
-
-  flex-shrink: 0;
 }
 
 .header-logo-image {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
@@ -70,52 +80,58 @@
 
 /* ===========================
    Title
+   Bootstrap's fs-* utilities only cover heading-scale sizes
+   (fs-6 = 1rem/16px and up), nothing at 16px serif / 10px caps,
+   so the exact typography stays custom.
 =========================== */
 
 .logo-title {
-  margin: 0;
-  color: #2d2d2d;
-  font-family: Georgia, serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  line-height: 1.1;
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .logo-subtitle {
-  color: #777;
-  font-size: 11px;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
+  color: #68645c;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
 /* ===========================
    Navigation
+   Layout/spacing/radius now come from Bootstrap utility
+   classes in the HTML (gap-1, rounded-2, px-3, py-2); only
+   the brand color and hover/active tint stay custom.
 =========================== */
 
-.navbar-nav {
-  gap: 6px;
-}
-
 .nav-link {
-  color: #4d423c;
-  font-size: 15px;
+  color: rgba(23, 23, 23, 0.75);
+  font-size: 14px;
   font-weight: 500;
-
-  padding: 10px 18px;
-
-  border-radius: 8px;
-
-  transition: all 0.25s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .nav-link:hover {
-  background: rgba(196, 85, 45, 0.08);
-  color: #c4552d;
+  background: rgba(198, 64, 36, 0.08);
+  color: #c64024;
 }
 
 .nav-link.active {
-  background: #c4552d;
-  color: #fff !important;
+  background: rgba(198, 64, 36, 0.1);
+  color: #c64024;
+}
+
+/* ===========================
+   Actions (right side)
+=========================== */
+
+.header-actions {
+  margin-left: 8px;
 }
 
 /* ===========================
@@ -123,40 +139,39 @@
 =========================== */
 
 .login-link {
-  color: #2d2d2d;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: 0.25s;
+  color: rgba(23, 23, 23, 0.75);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .login-link:hover {
-  color: #c4552d;
+  color: #c64024;
 }
 
 /* ===========================
    Register
+   Height/padding/font-size are brand-specific pixel values
+   that don't map onto Bootstrap's spacing/font scale
 =========================== */
 
 .register-btn {
-  background: #c4552d;
-  color: #fff;
+  height: 36px;
+  padding: 0 18px;
 
-  border-radius: 10px;
-
-  padding: 9px 20px;
-
-  font-size: 14px;
-  font-weight: 600;
-
+  background: #c64024;
+  color: #ffffff;
   border: none;
 
-  transition: 0.25s;
+  font-size: 13px;
+  font-weight: 500;
+
+  transition: background-color 0.2s ease;
 }
 
 .register-btn:hover {
-  background: #a94420;
-  color: #fff;
+  background: #a9321b;
+  color: #ffffff;
 }
 
 /* ===========================
@@ -164,39 +179,38 @@
 =========================== */
 
 .profile-btn {
-  background: #c4552d;
-  color: #fff;
+  height: 36px;
+  padding: 0 14px;
 
-  border: none;
+  background: #ffffff;
+  color: #171717;
+  border: 1px solid #e2ded4;
 
-  border-radius: 10px;
-
-  padding: 9px 18px;
-
+  font-size: 13px;
   font-weight: 500;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .profile-btn:hover {
-  background: #a94420;
-  color: #fff;
+  background: rgba(198, 64, 36, 0.06);
+  border-color: #d6cfc1;
+  color: #171717;
 }
 
 /* ===========================
    Dropdown
+   min-width/margin-top and hover tint are brand-specific;
+   radius/padding/shadow now come from Bootstrap utilities
+   (rounded-3, p-1, shadow-sm) in the HTML.
 =========================== */
 
 .dropdown-menu {
-  display: block;
-
-  min-width: 230px;
-
-  margin-top: 10px;
-
-  border: none;
-
-  border-radius: 12px;
-
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  min-width: 210px;
+  margin-top: 8px;
+  border: 1px solid #e2ded4;
 }
 
 .dropdown-menu:not(.show) {
@@ -204,71 +218,62 @@
 }
 
 .dropdown-item {
-  padding: 10px 18px;
-  transition: 0.2s;
+  color: rgba(23, 23, 23, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .dropdown-item:hover {
-  background: #f8f5ee;
-  color: #c4552d;
-}
-
-/* ===========================
-   Toggler
-=========================== */
-
-.navbar-toggler {
-  border: none;
-}
-
-.navbar-toggler:focus {
-  box-shadow: none;
+  background: rgba(198, 64, 36, 0.08);
+  color: #c64024;
 }
 
 /* ===========================
    Mobile
 =========================== */
 
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
   .navbar {
-    min-height: auto;
-    padding: 10px 0;
+    min-height: 60px;
   }
 
   .navbar-collapse {
-    margin-top: 15px;
+    margin-top: 12px;
+    padding-bottom: 16px;
   }
 
   .navbar-nav {
-    gap: 0;
     text-align: center;
   }
 
   .nav-link {
     display: block;
-    padding: 12px;
   }
 
-  .d-flex {
+  .header-actions {
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 12px;
+    margin-left: 0;
+  }
+
+  .logo-box,
+  .header-logo-image {
+    width: 32px;
+    height: 32px;
   }
 
   .logo-box {
-    width: 42px;
-    height: 42px;
+    font-size: 16px;
   }
 
   .logo-title {
-    font-size: 1rem;
+    font-size: 15px;
   }
 
   .logo-subtitle {
-    font-size: 10px;
-  }
-
-  .header-logo-image {
-    width: 42px;
-    height: 42px;
+    font-size: 9px;
   }
 }

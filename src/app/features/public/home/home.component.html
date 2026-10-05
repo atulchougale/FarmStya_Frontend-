@@ -1,0 +1,274 @@
+<!-- Hero Carousel -->
+<section class="hero-section" *ngIf="carouselImages.length > 0">
+
+    <div id="homeHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000"
+        data-bs-pause="hover" data-bs-touch="true">
+
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+            <button *ngFor="let slide of carouselImages; let i = index" type="button" data-bs-target="#homeHeroCarousel"
+                [attr.data-bs-slide-to]="i" [class.active]="i === 0" [attr.aria-current]="i === 0 ? 'true' : null"
+                [attr.aria-label]="'Slide ' + (i + 1)">
+            </button>
+        </div>
+
+        <!-- Carousel Slides -->
+        <div class="carousel-inner">
+
+            <div *ngFor="let slide of carouselImages; let i = index" class="carousel-item" [class.active]="i === 0">
+
+                <!-- Background Image and Overlay -->
+                <div class="hero-slide" [style.background-image]="
+            'linear-gradient(90deg, rgba(20,29,17,0.78) 0%, rgba(20,29,17,0.48) 48%, rgba(20,29,17,0.12) 100%), url(&quot;'
+            + slide.imageUrl
+            + '&quot;)'
+          ">
+
+                    <!-- Hero Content -->
+                    <div class="app-container hero-container">
+                        <div class="hero-content">
+
+                            <!-- Location Badge -->
+                            <div class="hero-location">
+                                <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                                <span>Experience Nature &amp; Comfort</span>
+                            </div>
+
+                            <!-- Dynamic Title -->
+                            <h1 class="hero-title">
+                                {{ slide.title }}
+                            </h1>
+
+                            <!-- Dynamic Description -->
+                            <p class="hero-description">
+                                {{ slide.description }}
+                            </p>
+
+                            <!-- Action Buttons -->
+                            <div class="hero-actions">
+
+                                <a routerLink="/book-now" class="btn hero-btn-primary">
+                                    <span>Book Now</span>
+                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                </a>
+
+                                <a routerLink="/gallery" class="btn hero-btn-outline">
+                                    View Gallery
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Previous Button -->
+        <button class="carousel-control-prev hero-control" type="button" data-bs-target="#homeHeroCarousel"
+            data-bs-slide="prev" aria-label="Previous slide">
+
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+
+        <!-- Next Button -->
+        <button class="carousel-control-next hero-control" type="button" data-bs-target="#homeHeroCarousel"
+            data-bs-slide="next" aria-label="Next slide">
+
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+
+    </div>
+</section>
+
+<!-- Loading State -->
+<section class="hero-loading" *ngIf="isLoading && carouselImages.length === 0">
+
+    <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <p>Loading farmhouse experience...</p>
+</section>
+
+<!-- Empty State -->
+<section class="hero-empty" *ngIf="!isLoading && carouselImages.length === 0">
+
+    <div class="app-container text-center">
+        <h2>Welcome to Our Farmhouse</h2>
+        <p>Relax, reconnect with nature, and enjoy your stay.</p>
+    </div>
+</section>
+
+
+<!-- =========================================
+     AMENITIES SECTION
+========================================= -->
+
+<section class="amenities-section" id="amenities">
+
+    <div class="app-container">
+
+        <!-- Section Heading -->
+        <div class="amenities-header">
+            <h2 class="amenities-heading">Everything you need</h2>
+
+            <p class="amenities-subtitle">
+                Our farmhouse comes equipped with everything that makes your stay unforgettable.
+            </p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="amenities-loading" *ngIf="amenitiesLoading && amenities.length === 0">
+
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Loading amenities...</span>
+            </div>
+
+            <p>Loading farmhouse amenities...</p>
+        </div>
+
+        <!-- Amenities Cards -->
+        <div class="amenities-grid" *ngIf="amenities.length > 0">
+
+            <article class="amenity-card" *ngFor="let amenity of amenities">
+
+                <!-- Amenity Image -->
+                <div class="amenity-image-wrapper">
+                    <img class="amenity-image" [src]="amenity.imageUrl" [alt]="amenity.title" loading="lazy" />
+                </div>
+
+                <!-- Amenity Details -->
+                <div class="amenity-content">
+
+                    <h3 class="amenity-title">
+                        <i class="bi" [ngClass]="getAmenityIcon(amenity.title)" aria-hidden="true">
+                        </i>
+
+                        <span>{{ amenity.title }}</span>
+                    </h3>
+
+                    <p class="amenity-description">
+                        {{ amenity.description }}
+                    </p>
+
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Empty State -->
+        <div class="amenities-empty" *ngIf="!amenitiesLoading && amenities.length === 0">
+
+            <h3>Amenities coming soon</h3>
+            <p>We're preparing everything for your comfortable stay.</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     BOOKING CTA SECTION
+========================================= -->
+
+<section class="booking-cta-section">
+    <div class="app-container booking-cta-container">
+
+        <!-- CTA Text -->
+        <div class="booking-cta-content">
+            <h2 class="booking-cta-title">
+                Ready for your getaway?
+            </h2>
+
+            <p class="booking-cta-description">
+                Real-time slot availability — book in just a few minutes.
+            </p>
+        </div>
+
+        <!-- CTA Button -->
+        <div class="booking-cta-action">
+            <a routerLink="/book-now" class="booking-cta-button">
+
+                <span>Check Availability</span>
+
+                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- =========================================
+     GUEST FEEDBACK / TESTIMONIALS SECTION
+========================================= -->
+
+<section class="testimonials-section" id="testimonials">
+
+    <div class="app-container">
+
+        <!-- Section Heading -->
+        <div class="testimonials-header">
+            <h2 class="testimonials-heading">What our guests say</h2>
+        </div>
+
+        <!-- Loading State -->
+        <div class="testimonials-loading" *ngIf="feedbackLoading && feedbacks.length === 0">
+
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Loading feedback...</span>
+            </div>
+
+            <p>Loading guest reviews...</p>
+        </div>
+
+        <!-- Testimonials Grid -->
+        <div class="testimonials-grid" *ngIf="feedbacks.length > 0">
+
+            <article class="testimonial-card" *ngFor="let feedback of feedbacks">
+
+                <!-- Star Rating -->
+                <div class="testimonial-rating" [attr.aria-label]="feedback.rating + ' out of 5 stars'">
+
+                    <i *ngFor="let star of [1, 2, 3, 4, 5]" class="bi"
+                        [ngClass]="star <= feedback.rating ? 'bi-star-fill' : 'bi-star'" aria-hidden="true">
+                    </i>
+
+                </div>
+
+                <!-- Guest Review -->
+                <blockquote class="testimonial-review">
+                    “{{ feedback.review }}”
+                </blockquote>
+
+                <!-- Guest Details -->
+                <div class="testimonial-guest">
+                    <p class="testimonial-guest-name">
+                        {{ feedback.createdByName || 'Guest' }}
+                    </p>
+
+                    <p class="testimonial-date">
+                        {{ feedback.createdDate | date:'MMM d, y' }}
+                    </p>
+                </div>
+
+            </article>
+
+        </div>
+
+        <!-- Empty State -->
+        <div class="testimonials-empty" *ngIf="!feedbackLoading && feedbacks.length === 0">
+
+            <h3>Guest reviews coming soon</h3>
+            <p>We look forward to hearing about your farmhouse experience.</p>
+
+        </div>
+
+    </div>
+
+</section>

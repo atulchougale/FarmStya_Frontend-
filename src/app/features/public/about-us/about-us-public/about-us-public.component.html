@@ -1,0 +1,110 @@
+<div class="about-page">
+
+    <!-- Loading -->
+    <div class="about-state" *ngIf="loading">
+
+        <div class="loading-spinner"></div>
+
+        <p>
+            Loading About Us...
+        </p>
+
+    </div>
+
+    <!-- Error -->
+    <div class="about-state error-state" *ngIf="!loading && errorMessage">
+
+        <h3>
+            About Us
+        </h3>
+
+        <p>
+            {{ errorMessage }}
+        </p>
+
+        <button class="retry-button" (click)="loadAboutUs()">
+
+            Try Again
+
+        </button>
+
+    </div>
+
+    <ng-container *ngIf="!loading && aboutUs as about">
+
+        <!-- Hero Section -->
+        <section class="about-hero d-flex align-items-end" [style.background-image]="
+                'linear-gradient(90deg, rgba(0,0,0,0.68), rgba(0,0,0,0.20)), url('
+                + about.heroImageUrl + ')'
+            ">
+
+            <div class="container app-container hero-container">
+
+                <div class="hero-content">
+
+                    <h1>
+                        {{ about.heroTitle }}
+                    </h1>
+
+                    <p>
+                        {{ about.heroSubtitle }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Our Story and Features -->
+        <section class="about-content">
+
+            <div class="container app-container story-section d-grid align-items-center">
+
+                <!-- Story -->
+                <div class="story-content">
+
+                    <h2>
+                        {{ about.storyTitle }}
+                    </h2>
+
+                    <p class="story-description">
+                        {{ about.storyDescription }}
+                    </p>
+
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="features-grid">
+
+                    <article class="feature-card text-center" *ngFor="
+                            let feature of about.features;
+                            trackBy: trackByFeatureId
+                        ">
+
+                        <div class="feature-icon mx-auto">
+
+                            <i [class]="feature.icon" aria-hidden="true">
+                            </i>
+
+                        </div>
+
+                        <h3 class="mb-2">
+                            {{ feature.title }}
+                        </h3>
+
+                        <p class="mb-0">
+                            {{ feature.description }}
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </ng-container>
+
+</div>

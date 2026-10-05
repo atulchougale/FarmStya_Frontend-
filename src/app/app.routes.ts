@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 
-import { RegisterComponent } from './features/auth/register/register.component';
-import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
@@ -14,7 +12,6 @@ export const routes: Routes = [
   // ==========================
   // Default Route
   // ==========================
-
   {
     path: '',
     redirectTo: 'home',
@@ -24,11 +21,11 @@ export const routes: Routes = [
   // ==========================
   // Authentication Layout
   // ==========================
-
   {
     path: '',
     component: AuthLayoutComponent,
     children: [
+      // Login
       {
         path: 'login',
         loadComponent: () =>
@@ -37,11 +34,16 @@ export const routes: Routes = [
           ),
       },
 
+      // Register - Lazy Loaded
       {
         path: 'register',
-        component: RegisterComponent,
+        loadComponent: () =>
+          import('./features/auth/register/register.component').then(
+            (c) => c.RegisterComponent,
+          ),
       },
 
+      // Verify Email
       {
         path: 'verify-email',
         loadComponent: () =>
@@ -50,16 +52,16 @@ export const routes: Routes = [
           ),
       },
 
+      // Forgot Password - Lazy Loaded
       {
         path: 'forgot-password',
-        component: ForgotPasswordComponent,
+        loadComponent: () =>
+          import('./features/auth/forgot-password/forgot-password.component').then(
+            (c) => c.ForgotPasswordComponent,
+          ),
       },
 
-      // ==========================
       // Reset Password
-      // Email + OTP
-      // ==========================
-
       {
         path: 'reset-password',
         loadComponent: () =>
@@ -73,21 +75,20 @@ export const routes: Routes = [
   // ==========================
   // Client Layout
   // ==========================
-
   {
     path: '',
     component: ClientLayoutComponent,
     children: [
-      // Home (Public)
-
+      // Home - Public
       {
         path: 'home',
         loadComponent: () =>
-          import('./features/home/home.component').then((c) => c.HomeComponent),
+          import('./features/public/home/home.component').then(
+            (c) => c.HomeComponent,
+          ),
       },
 
-      // Dashboard (Protected)
-
+      // Dashboard - Protected
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -97,35 +98,34 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
 
-      // Future Public Pages
+      // Public Gallery
+      {
+        path: 'gallery',
+        loadComponent: () =>
+          import('./features/public/gallery-public/gallery-public.component').then(
+            (c) => c.GalleryPublicComponent,
+          ),
+      },
 
-      // {
-      //   path: 'gallery',
-      //   loadComponent: () =>
-      //     import('./features/gallery/gallery.component').then(
-      //       (c) => c.GalleryComponent
-      //     ),
-      // },
+      // Public About Us
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./features/public/about-us/about-us-public/about-us-public.component').then(
+            (c) => c.AboutUsPublicComponent,
+          ),
+      },
 
-      // {
-      //   path: 'about',
-      //   loadComponent: () =>
-      //     import('./features/about/about.component').then(
-      //       (c) => c.AboutComponent
-      //     ),
-      // },
+      // Public Contact Us
+      {
+        path: 'contact',
+        loadComponent: () =>
+          import('./features/public/contact-us/contact-us/contact-us.component').then(
+            (c) => c.ContactUsComponent,
+          ),
+      },
 
-      // {
-      //   path: 'contact',
-      //   loadComponent: () =>
-      //     import('./features/contact/contact.component').then(
-      //       (c) => c.ContactComponent
-      //     ),
-      // },
-
-      // ==========================
-      // Profile (Protected)
-      // ==========================
+      // Profile - Protected
       {
         path: 'profile',
         loadComponent: () =>
@@ -135,9 +135,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
 
-      // ==========================
-      // Change Password (Protected)
-      // ==========================
+      // Change Password - Protected
       {
         path: 'change-password',
         loadComponent: () =>
@@ -156,6 +154,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
+      // Admin Dashboard
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -165,7 +164,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
 
-      // Gallery
+      // Gallery List
       {
         path: 'website-settings/gallery',
         loadComponent: () =>
@@ -175,6 +174,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
 
+      // Gallery Create
       {
         path: 'website-settings/gallery/gallery-create',
         loadComponent: () =>
@@ -183,6 +183,8 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+
+      // Gallery Edit
       {
         path: 'website-settings/gallery/gallery-create/:id',
         loadComponent: () =>
@@ -191,12 +193,82 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+
+      // Amenity List
+      {
+        path: 'website-settings/amenity',
+        loadComponent: () =>
+          import('./features/admin/amenity/amenity-view/amenity-view.component').then(
+            (c) => c.AmenityViewComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // Amenity Create
+      {
+        path: 'website-settings/amenity/amenity-create',
+        loadComponent: () =>
+          import('./features/admin/amenity/amenity-create/amenity-create.component').then(
+            (c) => c.AmenityCreateComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // Amenity Edit
+      {
+        path: 'website-settings/amenity/amenity-create/:id',
+        loadComponent: () =>
+          import('./features/admin/amenity/amenity-create/amenity-create.component').then(
+            (c) => c.AmenityCreateComponent,
+          ),
+        canActivate: [authGuard],
+      },
+       // Contact Message List
+      {
+        path: 'website-settings/message',
+        loadComponent: () =>
+          import('./features/admin/ContactUsMessage/contact-messages/contact-messages.component').then(
+            (c) => c.ContactMessagesComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // About Us View
+      {
+        path: 'website-settings/aboutus',
+        loadComponent: () =>
+          import('./features/admin/aboutus/about-us-view/about-us-view.component').then(
+            (c) => c.AboutUsViewComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // About Us Create
+      {
+        path: 'website-settings/aboutus/create',
+        loadComponent: () =>
+          import('./features/admin/aboutus/about-us-form/about-us-form.component').then(
+            (c) => c.AboutUsFormComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // About Us Edit
+      {
+        path: 'website-settings/aboutus/edit/:id',
+        loadComponent: () =>
+          import('./features/admin/aboutus/about-us-form/about-us-form.component').then(
+            (c) => c.AboutUsFormComponent,
+          ),
+        canActivate: [authGuard],
+      },
+      
     ],
   },
-  // ==========================
-  // 404
-  // ==========================
 
+  // ==========================
+  // 404 - Not Found
+  // ==========================
   {
     path: '**',
     component: NotFoundComponent,

@@ -1,41 +1,41 @@
-<header class="main-header sticky-top">
+<header class="main-header position-sticky top-0 start-0 end-0">
 
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg py-0">
 
-        <div class="container-fluid">
+        <div class="container-fluid  d-flex align-items-center justify-content-between">
 
             <!-- ================= Logo ================= -->
 
-            <a class="navbar-brand d-flex align-items-center" routerLink="/home">
+            <a class="navbar-brand d-flex align-items-center gap-2 m-0 p-0" routerLink="/home">
 
                 @if(site?.logoUrl)
                 {
-                <img [src]="logoUrl" [alt]="site?.farmHouseName" class="header-logo-image">
+                <img [src]="logoUrl" [alt]="site?.farmHouseName" class="header-logo-image rounded-2">
                 }
                 @else
                 {
-                <div class="logo-box">
+                <div class="logo-box rounded-2 d-flex align-items-center justify-content-center flex-shrink-0">
 
                     {{ site?.farmHouseName?.charAt(0) || 'F' }}
 
                 </div>
                 }
 
-                <div class="ms-3">
+                <div class="lh-sm">
 
-                    <h6 class="logo-title">
+                    <div class="logo-title">
 
                         {{ site?.farmHouseName }}
 
-                    </h6>
+                    </div>
 
-                    <small class="logo-subtitle">
+                    <div class="logo-subtitle text-uppercase">
 
                         {{ site?.taluka | uppercase }}
                         ·
                         {{ site?.district | uppercase }}
 
-                    </small>
+                    </div>
 
                 </div>
 
@@ -43,9 +43,10 @@
 
             <!-- ================= Mobile Button ================= -->
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <button class="navbar-toggler border-0 p-1 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar">
 
-                <span class="navbar-toggler-icon"></span>
+                <i class="bi bi-list"></i>
 
             </button>
 
@@ -53,34 +54,34 @@
 
             <div class="collapse navbar-collapse" id="mainNavbar">
 
-                <ul class="navbar-nav mx-auto">
+                <ul class="navbar-nav mx-auto gap-1">
 
                     <li class="nav-item">
-                        <a routerLink="/home" routerLinkActive="active" class="nav-link">
+                        <a routerLink="/home" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
                             Home
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a routerLink="/about" routerLinkActive="active" class="nav-link">
+                        <a routerLink="/about" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
                             About
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a routerLink="/gallery" routerLinkActive="active" class="nav-link">
+                        <a routerLink="/gallery" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
                             Gallery
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a routerLink="/farmhouses" routerLinkActive="active" class="nav-link">
+                        <a routerLink="/farmhouses" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
                             Farm Houses
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a routerLink="/contact" routerLinkActive="active" class="nav-link">
+                        <a routerLink="/contact" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
                             Contact
                         </a>
                     </li>
@@ -92,13 +93,13 @@
                 @if(!isLoggedIn)
                 {
 
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3 header-actions">
 
-                    <a routerLink="/login" class="login-link">
+                    <a routerLink="/login" class="login-link text-decoration-none">
                         Login
                     </a>
 
-                    <a routerLink="/register" class="btn register-btn">
+                    <a routerLink="/register" class="btn register-btn rounded-2 d-flex align-items-center">
                         Register
                     </a>
 
@@ -111,37 +112,38 @@
                 @if(isLoggedIn)
                 {
 
-                <div class="dropdown position-relative" (click)="stopPropagation($event)">
+                <div class="dropdown position-relative header-actions" (click)="stopPropagation($event)">
 
-                    <button class="btn profile-btn" type="button" (click)="toggleDropdown()">
+                    <button class="btn profile-btn rounded-2 d-flex align-items-center shadow-sm" type="button"
+                        (click)="toggleDropdown()">
 
-                        <i class="bi bi-person-circle me-2"></i>
+                        <i class="bi bi-person-circle me-1"></i>
 
                         {{ currentUser?.fullName }}
 
-                        <i class="bi bi-chevron-down ms-2"></i>
+                        <i class="bi bi-chevron-down ms-1"></i>
 
                     </button>
 
                     @if(isDropdownOpen)
                     {
 
-                    <ul class="dropdown-menu dropdown-menu-end shadow show">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm show rounded-3 p-1">
 
                         <li>
-                            <a routerLink="/dashboard" class="dropdown-item" (click)="closeDropdown()">
+                            <a routerLink="/dashboard" class="dropdown-item rounded-2" (click)="closeDropdown()">
                                 Dashboard
                             </a>
                         </li>
 
                         <li>
-                            <a routerLink="/profile" class="dropdown-item" (click)="closeDropdown()">
+                            <a routerLink="/profile" class="dropdown-item rounded-2" (click)="closeDropdown()">
                                 Profile
                             </a>
                         </li>
 
                         <li>
-                            <a routerLink="/my-bookings" class="dropdown-item" (click)="closeDropdown()">
+                            <a routerLink="/my-bookings" class="dropdown-item rounded-2" (click)="closeDropdown()">
                                 My Bookings
                             </a>
                         </li>
@@ -151,7 +153,7 @@
                         </li>
 
                         <li>
-                            <button class="dropdown-item" (click)="logout()">
+                            <button class="dropdown-item rounded-2" (click)="logout()">
                                 Logout
                             </button>
                         </li>

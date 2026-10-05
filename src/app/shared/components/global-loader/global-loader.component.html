@@ -1,0 +1,22 @@
+
+<div class="loader-overlay" *ngIf="isLoading$ | async">
+  <div class="loader-container">
+    <div class="loader-wrapper">
+      <ng-container *ngIf="farmhouseName$ | async as farmhouseName">
+        <span
+          class="loader-letter"
+          *ngFor="let letter of farmhouseName.split(''); let i = index"
+          [style.animation-delay]="(i * 0.1) + 's'"
+        >
+          {{ letter }}
+        </span>
+      </ng-container>
+
+      <div class="loader"></div>
+    </div>
+
+    <div class="loader-message">
+      <span class="loading-text">Please wait...</span>
+    </div>
+  </div>
+</div>

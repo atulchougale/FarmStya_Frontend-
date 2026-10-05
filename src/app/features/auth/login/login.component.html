@@ -18,6 +18,35 @@
                             Sign in to continue to your FarmStay account.
                         </p>
 
+                        <!-- Login Mode Toggle -->
+
+                        <div class="login-mode-toggle mb-4" role="radiogroup" aria-label="Login method">
+
+                            <input type="radio" class="btn-check" name="loginMode" id="modePassword" autocomplete="off"
+                                [checked]="loginMode === 'password'" (change)="setLoginMode('password')">
+
+                            <label class="mode-option" for="modePassword">
+                                <i class="bi bi-envelope me-2"></i>
+                                Email &amp; Password
+                            </label>
+
+                            <input type="radio" class="btn-check" name="loginMode" id="modeOtp" autocomplete="off"
+                                [checked]="loginMode === 'otp'" (change)="setLoginMode('otp')">
+
+                            <label class="mode-option" for="modeOtp">
+                                <i class="bi bi-phone me-2"></i>
+                                Mobile OTP
+                            </label>
+
+                        </div>
+
+                        @if (loginMode === 'password')
+                        {
+
+                        <!-- ======================================= -->
+                        <!-- Email + Password Login -->
+                        <!-- ======================================= -->
+
                         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
 
                             <!-- Email -->
@@ -137,25 +166,213 @@
 
                             </button>
 
-                            <!-- Register -->
+                        </form>
 
-                            <div class="text-center mt-4">
+                        }
+                        @else
+                        {
 
-                                <p class="mb-0">
+                        <!-- ======================================= -->
+                        <!-- Mobile OTP Login -->
+                        <!-- ======================================= -->
 
-                                    Don't have an account?
+                        <form [formGroup]="otpForm" (ngSubmit)="otpSent ? verifyOtp() : sendOtp()" autocomplete="off">
 
-                                    <a routerLink="/register" class="fw-semibold text-decoration-none">
+                            <!-- Mobile Number -->
 
-                                        Register
+                            <div class="mb-3">
 
-                                    </a>
+                                <label class="form-label fw-semibold">
+                                    Mobile Number
+                                </label>
 
-                                </p>
+                                <div class="input-group">
+
+                                    <span class="input-group-text mobile-prefix">+91</span>
+
+                                    <input type="tel" inputmode="numeric" maxlength="10"
+                                        class="form-control custom-input" placeholder="Enter 10 digit mobile number"
+                                        formControlName="mobileNumber" autocomplete="tel-national" [readonly]="otpSent"
+                                        (input)="onDigitsInput('mobileNumber', 10)"
+                                        [class.is-invalid]="o['mobileNumber'].touched && o['mobileNumber'].invalid"
+                                        [class.is-valid]="o['mobileNumber'].touched && o['mobileNumber'].valid">
+
+                                </div>
+
+                                @if(
+                                o['mobileNumber'].touched &&
+                                o['mobileNumber'].errors?.['required']
+                                )
+                                {
+                                <small class="text-danger">
+                                    Mobile number is required
+                                </small>
+                                }
+
+                                @if(
+                                o['mobileNumber'].touched &&
+                                o['mobileNumber'].errors?.['pattern']
+                                )
+                                {
+                                <small class="text-danger">
+                                    Enter a valid 10 digit mobile number
+                                </small>
+                                }
 
                             </div>
 
+                            @if (!otpSent)
+                            {
+
+                            <p class="text-muted small mb-4">
+                                We will send a one-time password (OTP) to this number on WhatsApp.
+                            </p>
+
+                            <!-- Send OTP Button -->
+
+                            <button type="button" class="btn btn-register btn-lg w-100"
+                                [disabled]="o['mobileNumber'].invalid || isSendingOtp" (click)="sendOtp()">
+
+                                @if(isSendingOtp)
+                                {
+                                <span class="spinner-border spinner-border-sm me-2">
+                                </span>
+
+                                Sending OTP...
+                                }
+                                @else
+                                {
+                                Send OTP
+                                }
+
+                            </button>
+
+                            }
+                            @else
+                            {
+
+                            <!-- OTP -->
+
+                            <div class="mb-2">
+
+                                <label class="form-label fw-semibold">
+                                    Enter OTP
+                                </label>
+
+                                <input type="text" inputmode="numeric" maxlength="6"
+                                    class="form-control custom-input otp-input" placeholder="------"
+                                    formControlName="otpCode" autocomplete="one-time-code"
+                                    (input)="onDigitsInput('otpCode', 6)"
+                                    [class.is-invalid]="o['otpCode'].touched && o['otpCode'].invalid"
+                                    [class.is-valid]="o['otpCode'].touched && o['otpCode'].valid">
+
+                                @if(
+                                o['otpCode'].touched &&
+                                o['otpCode'].errors?.['required']
+                                )
+                                {
+                                <small class="text-danger">
+                                    OTP is required
+                                </small>
+                                }
+
+                                @if(
+                                o['otpCode'].touched &&
+                                o['otpCode'].errors?.['pattern']
+                                )
+                                {
+                                <small class="text-danger">
+                                    OTP must be 6 digits
+                                </small>
+                                }
+
+                            </div>
+
+                            <p class="text-muted small mb-3">
+                                OTP sent to +91 {{ maskedMobile }} on WhatsApp.
+                            </p>
+
+                            <!-- Change Number / Resend -->
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                <button type="button" class="btn btn-link p-0 auth-link" (click)="changeNumber()">
+                                    Change number
+                                </button>
+
+                                @if (resendSeconds > 0)
+                                {
+                                <small class="text-muted">
+                                    Resend OTP in {{ resendSeconds }}s
+                                </small>
+                                }
+                                @else
+                                {
+                                <button type="button" class="btn btn-link p-0 auth-link" [disabled]="isSendingOtp"
+                                    (click)="resendOtp()">
+                                    Resend OTP
+                                </button>
+                                }
+
+                            </div>
+
+                            <!-- Remember Me -->
+
+                            <div class="form-check mb-4">
+
+                                <input class="form-check-input" type="checkbox" id="rememberMeOtp"
+                                    formControlName="rememberMe">
+
+                                <label class="form-check-label" for="rememberMeOtp">
+
+                                    Remember Me
+
+                                </label>
+
+                            </div>
+
+                            <!-- Verify Button -->
+
+                            <button type="submit" class="btn btn-register btn-lg w-100"
+                                [disabled]="otpForm.invalid || isVerifyingOtp">
+
+                                @if(isVerifyingOtp)
+                                {
+                                <span class="spinner-border spinner-border-sm me-2">
+                                </span>
+
+                                Verifying...
+                                }
+                                @else
+                                {
+                                Verify &amp; Login
+                                }
+
+                            </button>
+
+                            }
+
                         </form>
+
+                        }
+
+                        <!-- Register -->
+
+                        <div class="text-center mt-4">
+
+                            <p class="mb-0">
+
+                                Don't have an account?
+
+                                <a routerLink="/register" class="fw-semibold text-decoration-none">
+
+                                    Register
+
+                                </a>
+
+                            </p>
+
+                        </div>
 
                     </div>
 

@@ -1,0 +1,810 @@
+<main class="admin-dashboard">
+
+    <div class="container-fluid px-3 px-md-4">
+
+        <!-- Page Header -->
+        <div
+            class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+
+            <div>
+
+                <h2 class="page-title mb-1">
+
+                    {{ isEditMode ? 'Update About Us' : 'Create About Us' }}
+
+                </h2>
+
+                <p class="page-subtitle mb-0">
+
+                    {{
+                        isEditMode
+                            ? 'Update your website About Us content and manage its features.'
+                            : 'Create your website About Us content and add multiple features.'
+                    }}
+
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="cancel()">
+
+                <i
+                    class="bi bi-arrow-left me-2"
+                    aria-hidden="true">
+                </i>
+
+                Back
+
+            </button>
+
+        </div>
+
+        <form
+            [formGroup]="aboutUsForm"
+            (ngSubmit)="submitAboutUs()">
+
+            <!-- ========================================= -->
+            <!-- About Us Master -->
+            <!-- ========================================= -->
+
+            <div class="content-card">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            About Us
+                        </span>
+
+                        <h4 class="section-title">
+                            Main Content
+                        </h4>
+
+                        <p class="section-description mb-0">
+                            Add the main About Us information for your farmhouse website.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="row g-4">
+
+                    <!-- Hero Title -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Hero Title
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            formControlName="heroTitle"
+                            placeholder="Enter hero title"
+                            maxlength="200"
+                            [class.is-invalid]="isInvalid(aboutUsForm, 'heroTitle')" />
+
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="isInvalid(aboutUsForm, 'heroTitle')">
+
+                            Hero title is required.
+
+                        </div>
+
+                    </div>
+
+                    <!-- Hero Subtitle -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Hero Subtitle
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            formControlName="heroSubtitle"
+                            placeholder="Enter hero subtitle"
+                            maxlength="500"
+                            [class.is-invalid]="isInvalid(aboutUsForm, 'heroSubtitle')" />
+
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="isInvalid(aboutUsForm, 'heroSubtitle')">
+
+                            Hero subtitle is required.
+
+                        </div>
+
+                    </div>
+
+                    <!-- Hero Image Upload -->
+                    <div class="col-12">
+
+                        <label class="form-label">
+
+                            Hero Image
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <div class="about-image-upload-panel">
+
+                            <!-- Image Preview -->
+                            <div class="about-image-preview-box">
+
+                                <ng-container *ngIf="imagePreviewUrl; else emptyImagePreview">
+
+                                    <img
+                                        [src]="imagePreviewUrl"
+                                        alt="Hero Image Preview" />
+
+                                </ng-container>
+
+                                <ng-template #emptyImagePreview>
+
+                                    <div class="about-image-preview-empty">
+
+                                        <i
+                                            class="bi bi-image"
+                                            aria-hidden="true">
+                                        </i>
+
+                                        <span>
+                                            No image selected
+                                        </span>
+
+                                    </div>
+
+                                </ng-template>
+
+                            </div>
+
+                            <!-- Upload Actions -->
+                            <div class="upload-actions-row">
+
+                                <label
+                                    class="btn btn-light upload-choose-btn mb-0">
+
+                                    <i
+                                        class="bi bi-upload me-1"
+                                        aria-hidden="true">
+                                    </i>
+
+                                    Choose Image
+
+                                    <input
+                                        type="file"
+                                        hidden
+                                        accept="image/*"
+                                        (change)="onFileSelected($event)" />
+
+                                </label>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-success upload-submit-btn"
+                                    [disabled]="!selectedFile || uploadingFile"
+                                    (click)="uploadSelectedFile()">
+
+                                    <ng-container *ngIf="uploadingFile; else uploadButtonText">
+
+                                        <span
+                                            class="spinner-border spinner-border-sm me-1"
+                                            role="status">
+                                        </span>
+
+                                        Uploading...
+
+                                    </ng-container>
+
+                                    <ng-template #uploadButtonText>
+
+                                        <i
+                                            class="bi bi-cloud-upload me-1"
+                                            aria-hidden="true">
+                                        </i>
+
+                                        Upload
+
+                                    </ng-template>
+
+                                </button>
+
+                            </div>
+
+                            <!-- Upload Progress -->
+                            <div
+                                *ngIf="uploadingFile"
+                                class="upload-progress-wrap">
+
+                                <div
+                                    class="progress"
+                                    role="progressbar"
+                                    [attr.aria-valuenow]="uploadProgress"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100">
+
+                                    <div
+                                        class="progress-bar"
+                                        [style.width.%]="uploadProgress">
+                                    </div>
+
+                                </div>
+
+                                <span class="upload-progress-text">
+                                    {{ uploadProgress }}%
+                                </span>
+
+                            </div>
+
+                            <!-- Selected File Information -->
+                            <div
+                                *ngIf="selectedFile"
+                                class="selected-file-info">
+
+                                <div>
+
+                                    <i
+                                        class="bi bi-file-earmark-image me-2"
+                                        aria-hidden="true">
+                                    </i>
+
+                                    <span>
+                                        {{ selectedFile.name }}
+                                    </span>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    [disabled]="uploadingFile"
+                                    (click)="removeSelectedFile()">
+
+                                    <i
+                                        class="bi bi-x-lg me-1"
+                                        aria-hidden="true">
+                                    </i>
+
+                                    Remove
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <span class="form-hint">
+                            Select an image and upload it before saving About Us.
+                        </span>
+
+                        <div
+                            class="invalid-feedback d-block"
+                            *ngIf="isInvalid(aboutUsForm, 'heroImageUrl')">
+
+                            Please upload a hero image before saving.
+
+                        </div>
+
+                    </div>
+
+                    <!-- Story Title -->
+                    <div class="col-12">
+
+                        <label class="form-label">
+
+                            Story Title
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            formControlName="storyTitle"
+                            placeholder="Enter story title"
+                            maxlength="200"
+                            [class.is-invalid]="isInvalid(aboutUsForm, 'storyTitle')" />
+
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="isInvalid(aboutUsForm, 'storyTitle')">
+
+                            Story title is required.
+
+                        </div>
+
+                    </div>
+
+                    <!-- Story Description -->
+                    <div class="col-12">
+
+                        <label class="form-label">
+
+                            Story Description
+
+                        </label>
+
+                        <textarea
+                            class="form-control story-textarea"
+                            formControlName="storyDescription"
+                            rows="6"
+                            placeholder="Enter story description">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- Feature Form -->
+            <!-- ========================================= -->
+
+            <div class="content-card mt-4">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            Features
+                        </span>
+
+                        <h4 class="section-title">
+
+                            {{ editingFeatureIndex !== null ? 'Edit Feature' : 'Add Feature' }}
+
+                        </h4>
+
+                        <p class="section-description mb-0">
+                            Add multiple features to your About Us page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="feature-form"
+                    [formGroup]="featureForm">
+
+                    <div class="row g-4">
+
+                        <!-- Feature Title -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+
+                                Feature Title
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                formControlName="title"
+                                placeholder="Enter feature title"
+                                maxlength="200"
+                                [class.is-invalid]="isInvalid(featureForm, 'title')" />
+
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="isInvalid(featureForm, 'title')">
+
+                                Feature title is required.
+
+                            </div>
+
+                        </div>
+
+                        <!-- Icon -->
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+
+                                Icon
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <div class="icon-select-wrapper">
+
+                                <select
+                                    class="form-select icon-select"
+                                    formControlName="icon"
+                                    [class.is-invalid]="isInvalid(featureForm, 'icon')">
+
+                                    <option
+                                        *ngFor="let icon of iconOptions"
+                                        [value]="icon.value">
+
+                                        {{ icon.label }}
+
+                                    </option>
+
+                                </select>
+
+                                <span class="icon-preview">
+
+                                    <i
+                                        [class]="featureForm.get('icon')?.value"
+                                        aria-hidden="true">
+                                    </i>
+
+                                </span>
+
+                            </div>
+
+                            <div
+                                class="invalid-feedback d-block"
+                                *ngIf="isInvalid(featureForm, 'icon')">
+
+                                Icon is required.
+
+                            </div>
+
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+
+                            <label class="form-label">
+
+                                Feature Description
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                formControlName="description"
+                                rows="4"
+                                placeholder="Enter feature description"
+                                [class.is-invalid]="isInvalid(featureForm, 'description')">
+                            </textarea>
+
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="isInvalid(featureForm, 'description')">
+
+                                Feature description is required.
+
+                            </div>
+
+                        </div>
+
+                        <!-- Display Order -->
+                        <div class="col-md-4">
+
+                            <label class="form-label">
+
+                                Display Order
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                formControlName="displayOrder"
+                                min="1"
+                                [class.is-invalid]="isInvalid(featureForm, 'displayOrder')" />
+
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="isInvalid(featureForm, 'displayOrder')">
+
+                                Display order must be at least 1.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Feature Form Buttons -->
+                    <div class="feature-form-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            (click)="saveFeature()">
+
+                            <i
+                                [class]="
+                                    editingFeatureIndex !== null
+                                        ? 'bi bi-check-lg'
+                                        : 'bi bi-plus-lg'
+                                "
+                                aria-hidden="true">
+                            </i>
+
+                            {{
+                                editingFeatureIndex !== null
+                                    ? 'Update Feature'
+                                    : 'Add Feature'
+                            }}
+
+                        </button>
+
+                        <button
+                            *ngIf="editingFeatureIndex !== null"
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            (click)="cancelFeatureEdit()">
+
+                            <i
+                                class="bi bi-x-lg me-2"
+                                aria-hidden="true">
+                            </i>
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- Features Table -->
+            <!-- ========================================= -->
+
+            <div class="content-card mt-4">
+
+                <div
+                    class="section-header d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <span class="section-label">
+                            Feature List
+                        </span>
+
+                        <h4 class="section-title">
+                            About Us Features
+                        </h4>
+
+                        <p class="section-description mb-0">
+                            Review, edit or remove features before saving.
+                        </p>
+
+                    </div>
+
+                    <span class="feature-count">
+                        {{ features.length }}
+                    </span>
+
+                </div>
+
+                <!-- Table -->
+                <div
+                    class="table-responsive"
+                    *ngIf="features.length > 0">
+
+                    <table class="table features-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="order-column">
+                                    #
+                                </th>
+
+                                <th class="icon-column">
+                                    Icon
+                                </th>
+
+                                <th>
+                                    Title
+                                </th>
+
+                                <th>
+                                    Description
+                                </th>
+
+                                <th class="order-column">
+                                    Order
+                                </th>
+
+                                <th class="actions-column">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr
+                                *ngFor="
+                                    let feature of features;
+                                    let i = index;
+                                    trackBy: trackByFeatureId
+                                ">
+
+                                <td class="order-column">
+                                    {{ i + 1 }}
+                                </td>
+
+                                <td class="icon-column">
+
+                                    <span class="table-icon">
+
+                                        <i
+                                            [class]="feature.icon"
+                                            aria-hidden="true">
+                                        </i>
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="feature-title">
+                                        {{ feature.title }}
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="feature-description">
+                                        {{ feature.description }}
+                                    </span>
+
+                                </td>
+
+                                <td class="order-column">
+                                    {{ feature.displayOrder }}
+                                </td>
+
+                                <td class="actions-column">
+
+                                    <div class="action-buttons">
+
+                                        <button
+                                            type="button"
+                                            class="action-button edit-button"
+                                            title="Edit Feature"
+                                            aria-label="Edit Feature"
+                                            (click)="editFeature(i)">
+
+                                            <i
+                                                class="bi bi-pencil-square"
+                                                aria-hidden="true">
+                                            </i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="action-button delete-button"
+                                            title="Delete Feature"
+                                            aria-label="Delete Feature"
+                                            (click)="deleteFeature(i)">
+
+                                            <i
+                                                class="bi bi-trash3"
+                                                aria-hidden="true">
+                                            </i>
+
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- Empty Feature Table -->
+                <div
+                    *ngIf="features.length === 0"
+                    class="empty-features">
+
+                    <div class="empty-feature-icon">
+
+                        <i
+                            class="bi bi-list-ul"
+                            aria-hidden="true">
+                        </i>
+
+                    </div>
+
+                    <h5>
+                        No Features Added
+                    </h5>
+
+                    <p class="mb-0">
+                        Add a feature using the form above.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- Main Form Actions -->
+            <!-- ========================================= -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    [disabled]="isSubmitting"
+                    (click)="cancel()">
+
+                    <i
+                        class="bi bi-x-lg me-2"
+                        aria-hidden="true">
+                    </i>
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary save-button"
+                    [disabled]="isSubmitting || uploadingFile">
+
+                    <span
+                        *ngIf="isSubmitting"
+                        class="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true">
+                    </span>
+
+                    <i
+                        *ngIf="!isSubmitting"
+                        [class]="
+                            isEditMode
+                                ? 'bi bi-check-lg me-2'
+                                : 'bi bi-save me-2'
+                        "
+                        aria-hidden="true">
+                    </i>
+
+                    {{
+                        isSubmitting
+                            ? 'Saving...'
+                            : (isEditMode ? 'Update About Us' : 'Create About Us')
+                    }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>

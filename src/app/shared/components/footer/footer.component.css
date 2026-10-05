@@ -2,6 +2,11 @@
    Footer
 ========================================== */
 
+:host {
+  display: block;
+  width: 100%;
+}
+
 .footer {
   background: linear-gradient(to bottom, #fdfcf9, #f8f1e3);
   border-top: 1px solid #e8d8be;

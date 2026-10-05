@@ -1,0 +1,191 @@
+<main class="contact-page">
+  <section class="contact-section">
+    <div class="app-container">
+
+      <!-- Heading -->
+      <div class="contact-header mx-auto text-center">
+        <h1 class="contact-title">Contact us</h1>
+        <p class="contact-subtitle">
+          Have a question? We respond fastest on WhatsApp.
+        </p>
+      </div>
+
+      <div class="contact-grid">
+
+        <!-- ================================= -->
+        <!-- Left: Contact Form -->
+        <!-- ================================= -->
+        <div class="contact-card">
+          <h2 class="contact-card-title">Send a message</h2>
+
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" autocomplete="off">
+
+            <!-- Full Name -->
+            <div class="mb-3">
+              <label class="form-label" for="name">Full name</label>
+
+              <input type="text" id="name" class="form-control contact-input" placeholder="Your name"
+                formControlName="fullName" [class.is-invalid]="f['fullName'].touched && f['fullName'].invalid" />
+
+              @if (f['fullName'].touched && f['fullName'].errors?.['required']) {
+              <small class="text-danger">Full name is required</small>
+              }
+            </div>
+
+            <!-- Mobile -->
+            <div class="mb-3">
+              <label class="form-label" for="mobile">Mobile (WhatsApp)</label>
+
+              <input type="tel" id="mobile" inputmode="numeric" maxlength="10" class="form-control contact-input"
+                placeholder="99999 99999" formControlName="mobileNo"
+                [class.is-invalid]="f['mobileNo'].touched && f['mobileNo'].invalid" />
+
+              @if (f['mobileNo'].touched && f['mobileNo'].errors?.['required']) {
+              <small class="text-danger">Mobile number is required</small>
+              }
+
+              @if (f['mobileNo'].touched && f['mobileNo'].errors?.['pattern']) {
+              <small class="text-danger">Enter a valid 10 digit mobile number</small>
+              }
+            </div>
+
+            <!-- Message -->
+            <div class="mb-4">
+              <label class="form-label" for="message">Message</label>
+
+              <textarea id="message" rows="4" class="form-control contact-input" placeholder="How can we help?"
+                formControlName="message" [class.is-invalid]="f['message'].touched && f['message'].invalid"></textarea>
+
+              @if (f['message'].touched && f['message'].errors?.['required']) {
+              <small class="text-danger">Message is required</small>
+              }
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn contact-submit-btn w-100" [disabled]="submitting">
+              @if (submitting) {
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Sending...
+              } @else {
+              Send message
+              }
+            </button>
+
+          </form>
+        </div>
+
+        <!-- ================================= -->
+        <!-- Right: Contact Info + Map -->
+        <!-- ================================= -->
+        <div class="contact-info-col">
+          <div class="contact-card">
+
+            <!-- Loading -->
+            @if (loading) {
+            <div class="contact-info-text">
+              Loading contact information...
+            </div>
+            }
+
+            <!-- Error -->
+            @else if (errorMessage) {
+            <div class="contact-info-text text-danger">
+              {{ errorMessage }}
+            </div>
+            }
+
+            <!-- Dynamic Contact Information -->
+            @else if (contactInfo) {
+
+            <!-- Address -->
+            <div class="contact-info-row">
+              <i class="bi bi-geo-alt-fill contact-info-icon" aria-hidden="true"></i>
+
+              <div>
+                <div class="contact-info-label">Address</div>
+
+                <p class="contact-info-text">
+                  {{ contactInfo.address }}
+                  @if (contactInfo.village) {
+                  , {{ contactInfo.village }}
+                  }
+                  , {{ contactInfo.taluka }},
+                  {{ contactInfo.district }},
+                  {{ contactInfo.state }}
+                  @if (contactInfo.pincode) {
+                  - {{ contactInfo.pincode }}
+                  }
+                </p>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="contact-info-row">
+              <i class="bi bi-telephone-fill contact-info-icon" aria-hidden="true"></i>
+
+              <div>
+                <div class="contact-info-label">Phone</div>
+
+                <a [href]="'tel:' + contactInfo.mobileNumber" class="contact-info-link">
+                  {{ contactInfo.mobileNumber }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Alternate Phone -->
+            @if (contactInfo.alternateMobileNumber) {
+            <div class="contact-info-row">
+              <i class="bi bi-telephone contact-info-icon" aria-hidden="true"></i>
+
+              <div>
+                <div class="contact-info-label">Alternate Phone</div>
+
+                <a [href]="'tel:' + contactInfo.alternateMobileNumber" class="contact-info-link">
+                  {{ contactInfo.alternateMobileNumber }}
+                </a>
+              </div>
+            </div>
+            }
+
+            <!-- WhatsApp -->
+            <div class="contact-info-row">
+              <i class="bi bi-whatsapp contact-info-icon" aria-hidden="true"></i>
+
+              <div>
+                <div class="contact-info-label">WhatsApp</div>
+
+                <a [href]="'https://wa.me/' + contactInfo.mobileNumber.replace('+', '').replace(' ', '')"
+                  target="_blank" rel="noopener noreferrer" class="contact-info-link">
+                  Chat with us
+                </a>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="contact-info-row contact-info-row-last">
+              <i class="bi bi-envelope-fill contact-info-icon" aria-hidden="true"></i>
+
+              <div>
+                <div class="contact-info-label">Email</div>
+
+                <a [href]="'mailto:' + contactInfo.email" class="contact-info-link">
+                  {{ contactInfo.email }}
+                </a>
+              </div>
+            </div>
+
+            }
+          </div>
+
+          <!-- Map -->
+          <div class="contact-map-wrapper" *ngIf="mapSafeUrl">
+            <iframe [title]="(contactInfo?.farmHouseName || 'Farmhouse') + ' location'" [src]="mapSafeUrl" width="100%"
+              height="280" loading="lazy" style="border: 0">
+            </iframe>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

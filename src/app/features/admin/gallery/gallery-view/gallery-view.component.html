@@ -62,11 +62,13 @@
                     <div class="gallery-card" (click)="openPopup(item)">
 
                         <!-- Media -->
+                        <!-- Media -->
                         <div class="gallery-media">
 
                             @if (isVideo(item.imageUrl)) {
-                            <video class="gallery-image" [src]="item.imageUrl" autoplay muted loop playsinline
-                                preload="metadata"></video>
+                            <video class="gallery-image" [src]="item.imageUrl" [muted]="true" [autoplay]="true"
+                                [loop]="true" playsinline preload="metadata" #videoEl
+                                (loadedmetadata)="videoEl.muted = true"></video>
 
                             <div class="video-play-badge">
                                 <i class="bi bi-play-fill"></i>

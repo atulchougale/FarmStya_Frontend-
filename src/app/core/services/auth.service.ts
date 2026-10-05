@@ -10,6 +10,8 @@ import { ResetPasswordEmailRequest } from '../../features/auth/models/reset-pass
 import { ResetPasswordOtpRequest } from '../../features/auth/models/reset-password-otp-request.model';
 import { LoginRequest } from '../../features/auth/models/login-request.model';
 import { LoginResponse } from '../../features/auth/models/login-response.model';
+import { SendLoginOtpRequest } from '../../features/auth/models/send-login-otp-request.model';
+import { VerifyLoginOtpRequest } from '../../features/auth/models/verify-login-otp-request.model';
 import { ResendOtpRequest } from '../../features/auth/models/resend-otp-request.model';
 import { Profile } from '../../features/profile/models/profile.model';
 import { ChangePasswordRequest } from '../../features/profile/models/change-password-request.model';
@@ -29,7 +31,7 @@ export class AuthService {
   }
 
   // ============================================
-  // Login
+  // Login (Email + Password)
   // ============================================
 
   login(request: LoginRequest): Observable<{
@@ -42,6 +44,38 @@ export class AuthService {
       message: string;
       data: LoginResponse;
     }>(`${environment.apiUrl}/auth/login`, request);
+  }
+
+  // ============================================
+  // Login (Mobile OTP) - Send OTP
+  // ============================================
+
+  sendLoginOtp(request: SendLoginOtpRequest): Observable<{
+    success: boolean;
+    message: string;
+    data: boolean;
+  }> {
+    return this.http.post<{
+      success: boolean;
+      message: string;
+      data: boolean;
+    }>(`${environment.apiUrl}/auth/send-login-otp`, request);
+  }
+
+  // ============================================
+  // Login (Mobile OTP) - Verify OTP
+  // ============================================
+
+  verifyLoginOtp(request: VerifyLoginOtpRequest): Observable<{
+    success: boolean;
+    message: string;
+    data: LoginResponse;
+  }> {
+    return this.http.post<{
+      success: boolean;
+      message: string;
+      data: LoginResponse;
+    }>(`${environment.apiUrl}/auth/verify-login-otp`, request);
   }
 
   // ============================================
@@ -120,10 +154,6 @@ export class AuthService {
       request,
     );
   }
-
-  // ============================================
-  // Get Profile
-  // ============================================
 
   // ============================================
   // Get Profile

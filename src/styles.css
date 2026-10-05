@@ -4,3 +4,50 @@
 *{
     margin: 0px;
 }
+
+
+/* =========================================
+   SHARED RESPONSIVE CONTAINER
+   Matches Tailwind's default `container` utility —
+   5 breakpoint steps, same as the reference design.
+========================================= */
+
+.app-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 640px) {
+  .app-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .app-container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .app-container {
+    max-width: 1536px;
+  }
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
