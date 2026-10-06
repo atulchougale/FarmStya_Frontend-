@@ -262,6 +262,16 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+
+      // Feedback list 
+      {
+        path: 'website-settings/feedback',
+        loadComponent: () =>
+          import('./features/admin/Feedback/feedback-view/feedback-view.component').then(
+            (c) => c.FeedbackViewComponent,
+          ),
+        canActivate: [authGuard],
+      },
       
     ],
   },

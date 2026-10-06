@@ -1,0 +1,201 @@
+<div class="feedback-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2>Feedback</h2>
+      <p>View and manage guest feedback</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="refreshFeedback()"
+      [disabled]="loading">
+
+      <span>↻</span>
+      Refresh
+
+    </button>
+
+  </div>
+
+
+  <!-- LOADING -->
+  <div class="loading-container" *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>Loading feedback...</p>
+
+  </div>
+
+
+  <!-- EMPTY -->
+  <div
+    class="empty-container"
+    *ngIf="!loading && feedbackItems.length === 0">
+
+    <div class="empty-icon">💬</div>
+
+    <h3>No Feedback Found</h3>
+
+    <p>There is no feedback available.</p>
+
+  </div>
+
+
+  <!-- TABLE -->
+  <div
+    class="table-wrapper"
+    *ngIf="!loading && feedbackItems.length > 0">
+
+    <table mat-table [dataSource]="feedbackItems">
+
+
+      <!-- NUMBER -->
+      <ng-container matColumnDef="number">
+
+        <th mat-header-cell *matHeaderCellDef>
+          #
+        </th>
+
+        <td mat-cell *matCellDef="let feedback; let i = index">
+
+          {{ i + 1 }}
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- GUEST -->
+      <ng-container matColumnDef="guest">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Guest
+        </th>
+
+        <td mat-cell *matCellDef="let feedback">
+
+          <div class="guest-name">
+
+            {{ feedback.createdByName || 'Guest' }}
+
+          </div>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- RATING -->
+      <ng-container matColumnDef="rating">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Rating
+        </th>
+
+        <td mat-cell *matCellDef="let feedback">
+
+          <div class="rating">
+
+            <span
+              *ngFor="let star of getStars()"
+              class="star"
+              [class.filled]="isStarFilled(star, feedback.rating)">
+
+              ★
+
+            </span>
+
+            <span class="rating-value">
+              {{ feedback.rating }}/5
+            </span>
+
+          </div>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- REVIEW -->
+      <ng-container matColumnDef="review">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Review
+        </th>
+
+        <td mat-cell *matCellDef="let feedback">
+
+          <div class="review-text">
+
+            {{ feedback.review }}
+
+          </div>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- DATE -->
+      <ng-container matColumnDef="date">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Date
+        </th>
+
+        <td mat-cell *matCellDef="let feedback">
+
+          {{ feedback.createdDate | date:'dd/MM/yyyy' }}
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- ACTION -->
+      <ng-container matColumnDef="action">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Action
+        </th>
+
+        <td mat-cell *matCellDef="let feedback">
+
+          <button
+            type="button"
+            class="delete-btn"
+            (click)="confirmDelete(feedback)"
+            [disabled]="deleting">
+
+            🗑 Delete
+
+          </button>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- HEADER ROW -->
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns">
+      </tr>
+
+
+      <!-- DATA ROW -->
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+
+    </table>
+
+  </div>
+
+</div>

@@ -28,6 +28,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   amenitiesLoading = true;
   feedbackLoading = true;
 
+  paginatedFeedbacks: FeedbackResponseDto[] = [];
+  currentFeedbackSlide = 0;
+  feedbackSlideCount = 0;
+
+  private readonly feedbacksPerSlide = 6;
+  private readonly feedbackSlideInterval = 30000;
+  private feedbackAutoSlideTimer: ReturnType<typeof setInterval> | null = null;
+
   private destroy$ = new Subject<void>();
 
   constructor(private publicSiteService: PublicSiteService) {}
@@ -46,7 +54,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadCarousel();
     this.loadAmenities();
     this.loadFeedback();
-  
   }
 
   /**
@@ -75,6 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         },
       });
   }
+
   /**
    * Load Amenities
    */
@@ -153,6 +161,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
           this.feedbackLoading = false;
 
+          this.setupFeedbackPagination();
+
           // console.log('Feedback API Response:', response);
           // console.log('Feedbacks:', this.feedbacks);
         },
@@ -161,16 +171,114 @@ export class HomeComponent implements OnInit, OnDestroy {
 
           this.feedbacks = [];
           this.feedbackLoading = false;
+
+          this.resetFeedbackPagination();
         },
       });
   }
 
- 
+  /**
+   * Setup Feedback Pagination
+   */
+  private setupFeedbackPagination(): void {
+    this.currentFeedbackSlide = 0;
+
+    this.feedbackSlideCount = Math.ceil(
+      this.feedbacks.length / this.feedbacksPerSlide
+    );
+
+    this.updatePaginatedFeedbacks();
+    this.startFeedbackAutoSlide();
+  }
+
+  /**
+   * Update Feedbacks For Current Slide
+   */
+  private updatePaginatedFeedbacks(): void {
+    const startIndex = this.currentFeedbackSlide * this.feedbacksPerSlide;
+    const endIndex = startIndex + this.feedbacksPerSlide;
+
+    this.paginatedFeedbacks = this.feedbacks.slice(startIndex, endIndex);
+  }
+
+  /**
+   * Go To Selected Feedback Slide
+   */
+  goToFeedbackSlide(slideIndex: number): void {
+    if (
+      slideIndex < 0 ||
+      slideIndex >= this.feedbackSlideCount ||
+      slideIndex === this.currentFeedbackSlide
+    ) {
+      return;
+    }
+
+    this.currentFeedbackSlide = slideIndex;
+    this.updatePaginatedFeedbacks();
+    this.restartFeedbackAutoSlide();
+  }
+
+  /**
+   * Go To Next Feedback Slide
+   */
+  private goToNextFeedbackSlide(): void {
+    if (this.feedbackSlideCount <= 1) {
+      return;
+    }
+
+    this.currentFeedbackSlide =
+      (this.currentFeedbackSlide + 1) % this.feedbackSlideCount;
+
+    this.updatePaginatedFeedbacks();
+  }
+
+  /**
+   * Start Feedback Auto Slide
+   */
+  private startFeedbackAutoSlide(): void {
+    this.stopFeedbackAutoSlide();
+
+    if (this.feedbackSlideCount <= 1) {
+      return;
+    }
+
+    this.feedbackAutoSlideTimer = setInterval(() => {
+      this.goToNextFeedbackSlide();
+    }, this.feedbackSlideInterval);
+  }
+
+  /**
+   * Restart Feedback Auto Slide
+   */
+  private restartFeedbackAutoSlide(): void {
+    this.startFeedbackAutoSlide();
+  }
+
+  /**
+   * Stop Feedback Auto Slide
+   */
+  private stopFeedbackAutoSlide(): void {
+    if (this.feedbackAutoSlideTimer !== null) {
+      clearInterval(this.feedbackAutoSlideTimer);
+      this.feedbackAutoSlideTimer = null;
+    }
+  }
+
+  /**
+   * Reset Feedback Pagination
+   */
+  private resetFeedbackPagination(): void {
+    this.stopFeedbackAutoSlide();
+    this.paginatedFeedbacks = [];
+    this.currentFeedbackSlide = 0;
+    this.feedbackSlideCount = 0;
+  }
 
   /**
    * Cleanup Subscriptions
    */
   ngOnDestroy(): void {
+    this.stopFeedbackAutoSlide();
     this.destroy$.next();
     this.destroy$.complete();
   }

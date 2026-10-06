@@ -230,7 +230,7 @@
         <!-- Testimonials Grid -->
         <div class="testimonials-grid" *ngIf="feedbacks.length > 0">
 
-            <article class="testimonial-card" *ngFor="let feedback of feedbacks">
+            <article class="testimonial-card" *ngFor="let feedback of paginatedFeedbacks">
 
                 <!-- Star Rating -->
                 <div class="testimonial-rating" [attr.aria-label]="feedback.rating + ' out of 5 stars'">
@@ -258,6 +258,24 @@
                 </div>
 
             </article>
+
+        </div>
+
+        <!-- Testimonials Pagination Dots -->
+        <div
+            class="testimonials-pagination"
+            *ngIf="feedbackSlideCount > 1"
+            aria-label="Guest feedback slides">
+
+            <button
+                *ngFor="let slide of [].constructor(feedbackSlideCount); let i = index"
+                type="button"
+                class="testimonial-pagination-dot"
+                [class.active]="i === currentFeedbackSlide"
+                [attr.aria-label]="'Go to feedback slide ' + (i + 1)"
+                [attr.aria-current]="i === currentFeedbackSlide ? 'true' : null"
+                (click)="goToFeedbackSlide(i)">
+            </button>
 
         </div>
 
