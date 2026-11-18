@@ -177,10 +177,24 @@ export class TokenService {
     this.isLoggedInSubject.next(false);
   }
 
+  isAccessTokenExpired(): boolean {
+    const expiry = this.getAccessTokenExpiry();
+    return expiry === null || expiry <= Date.now();
+  }
+
+  getAccessTokenExpiry(): number | null {
+    const token = this.getAccessToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      return typeof payload.exp === 'number' ? payload.exp * 1000 : null;
+    } catch { return null; }
+  }
+
   isLoggedIn(): boolean {
     return (
-      this.getAccessToken() !== null &&
-      this.getRefreshToken() !== null
+      !!this.getAccessToken()?.trim() &&
+      !!this.getRefreshToken()?.trim()
     );
   }
 

@@ -35,7 +35,7 @@
   overflow: hidden;
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 100% 100%; 
+  background-size: 100% 100%;
 }
 
 /* =========================================
@@ -496,8 +496,6 @@
   }
 }
 
-
-
 /* =========================================
    AMENITIES SECTION
    Section now carries only vertical padding —
@@ -773,8 +771,6 @@
   }
 }
 
-
-
 /* =========================================
    BOOKING CTA SECTION
    Width/padding come from .app-container,
@@ -785,12 +781,7 @@
 .booking-cta-section {
   width: 100%;
   padding: 64px 0;
-  background: linear-gradient(
-    110deg,
-    #bd3e25 0%,
-    #d94c20 50%,
-    #f15b16 100%
-  );
+  background: linear-gradient(110deg, #bd3e25 0%, #d94c20 50%, #f15b16 100%);
   overflow: hidden;
 }
 
@@ -980,9 +971,6 @@
     transition: none;
   }
 }
-
-
-
 
 /* =========================================
    TESTIMONIALS SECTION
@@ -1271,5 +1259,510 @@
 @media (prefers-reduced-motion: reduce) {
   .testimonial-pagination-dot {
     transition: none;
+  }
+}
+
+
+
+
+/* =========================================
+   BOOKING CALENDAR - UPDATED STYLES
+   Existing CTA background and design preserved
+========================================= */
+
+.booking-calendar-container {
+  position: relative;
+  flex: 0 1 560px;
+  min-width: 0;
+  overflow: visible;
+  z-index: 1001;
+}
+
+/* =========================================
+   DATE FIELDS
+========================================= */
+
+.booking-date-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.booking-date-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.booking-date-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.booking-date-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 11px;
+  color: #111111;
+  background: #f5f5f5;
+  border: 1px solid #d6d6d6;
+  border-radius: 11px;
+  text-align: left;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.booking-date-trigger span {
+  max-width: 100%;
+}
+
+.booking-date-trigger .booking-date-label {
+  color: #555555;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.booking-date-trigger .booking-date-value {
+  color: #111111;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.booking-date-trigger:hover {
+  border-color: #bdbdbd;
+}
+
+.booking-date-trigger:focus-visible,
+.booking-calendar-day:focus-visible,
+.calendar-nav-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* =========================================
+   BACKDROP + BLUR
+   Requires the backdrop element in HTML
+========================================= */
+
+.booking-calendar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(20, 20, 20, 0.12);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* =========================================
+   CALENDAR POPUP
+   Centered and opens BELOW the date fields
+========================================= */
+
+.booking-calendar-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  bottom: auto;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 32px));
+  max-height: 75vh;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: #292929;
+  background: #ffffff;
+  border: 1px solid #e2ded4;
+  border-radius: 12px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  z-index: 1002;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   MONTH NAVIGATION
+========================================= */
+
+.booking-calendar-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendar-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #333333;
+  background: #faf8f1;
+  border: 1px solid #e2ded4;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.calendar-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   CALENDAR MONTHS
+========================================= */
+
+.booking-calendar-months {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.booking-calendar-month {
+  min-width: 0;
+}
+
+.booking-calendar-month-title {
+  margin: 0 0 14px;
+  color: #2e3b27;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.booking-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.booking-calendar-weekday {
+  padding: 6px 0;
+  color: #68645c;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.booking-calendar-day,
+.booking-calendar-empty-day {
+  min-width: 0;
+  min-height: 42px;
+}
+
+.booking-calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px 1px;
+  color: #292929;
+  background: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.booking-calendar-day:hover:not(:disabled) {
+  background: #f4eee5;
+  border-color: #d6cfc1;
+}
+
+.booking-calendar-day:disabled {
+  color: #aaa69e;
+  background: #f7f6f3;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.calendar-day-number {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.calendar-day-today {
+  border-color: #c64024;
+}
+
+.calendar-day-checkin,
+.calendar-day-checkout {
+  color: #ffffff !important;
+  background: #c64024 !important;
+  border-color: #c64024 !important;
+}
+
+.booking-calendar-day.calendar-day-in-range {
+  background: #f8e4db;
+}
+
+.booking-calendar-day.calendar-day-available {
+  color: #176b35;
+  background: #e2f4e7;
+  border-color: #b6dfc2;
+}
+
+.booking-calendar-day.calendar-day-unavailable {
+  color: #a32222;
+  background: #fbe4e4;
+  border-color: #efbcbc;
+}
+
+.calendar-day-festival {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: #8a4a12;
+  font-size: 8px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================================
+   AVAILABILITY LEGEND
+========================================= */
+
+.booking-calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e8e4dc;
+}
+
+.booking-calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.calendar-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.calendar-legend-available {
+  background: #2b914d;
+}
+
+.calendar-legend-unavailable {
+  background: #c93333;
+}
+
+/* =========================================
+   FESTIVAL LIST
+========================================= */
+
+.booking-calendar-festivals {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #e8e4dc;
+}
+
+.booking-calendar-festivals h4 {
+  margin: 0 0 10px;
+  color: #2e3b27;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.booking-calendar-festivals ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.booking-calendar-festivals li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.booking-calendar-festivals li span {
+  color: #68645c;
+}
+
+.booking-calendar-festivals li strong {
+  color: #333333;
+  font-weight: 600;
+}
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.booking-calendar-close {
+  display: block;
+  margin: 16px 0 0 auto;
+  padding: 7px 12px;
+  color: #333333;
+  background: #faf8f1;
+  border: 1px solid #e2ded4;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* =========================================
+   AVAILABILITY ACTION + MESSAGES
+========================================= */
+
+.booking-calendar-action .booking-cta-button {
+  width: 100%;
+}
+
+.booking-calendar-action .booking-cta-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.availability-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.availability-success {
+  color: #155c2c;
+  background: #e5f5e9;
+  border: 1px solid #b9e0c3;
+}
+
+.availability-error {
+  color: #8c2020;
+  background: #fff0f0;
+  border: 1px solid #edc3c3;
+}
+
+/* =========================================
+   CTA LAYOUT SUPPORT
+   Background color remains unchanged
+========================================= */
+
+.booking-cta-section {
+  position: relative;
+  overflow: visible;
+}
+
+.booking-cta-container {
+  position: relative;
+  overflow: visible;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 991.98px) {
+  .booking-calendar-container {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .booking-calendar-popup {
+    width: min(720px, calc(100vw - 32px));
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 575.98px) {
+  .booking-date-fields {
+    gap: 6px;
+  }
+
+  .booking-date-trigger {
+    padding: 8px;
+  }
+
+  .booking-date-trigger .booking-date-label {
+    font-size: 12px;
+  }
+
+  .booking-date-trigger .booking-date-value {
+    font-size: 15px;
+    white-space: normal;
+  }
+
+  .booking-calendar-popup {
+    top: calc(100% + 8px);
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: calc(100vw - 24px);
+    max-height: 65vh;
+    padding: 14px;
+    overflow-y: auto;
+  }
+
+  .booking-calendar-months {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .booking-calendar-day,
+  .booking-calendar-empty-day {
+    min-height: 42px;
+  }
+
+  .booking-calendar-festivals ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+.booking-calendar-popup {
+  position: fixed;
+  top: auto;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  z-index: 1002;
+}
+
+.booking-calendar-popup.calendar-popup-above {
+  top: auto;
+  bottom: 16px;
+}
+
+@media (max-width: 575.98px) {
+  .booking-calendar-popup {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
   }
 }

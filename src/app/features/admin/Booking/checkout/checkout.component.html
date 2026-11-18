@@ -1,0 +1,39 @@
+<main class="container py-4" style="max-width: 760px">
+  <a [routerLink]="['/admin/booking', id]" class="btn btn-outline-secondary mb-3">Back to booking</a>
+  <h1 class="h3 mb-3">Check Out</h1>
+  <p *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</p>
+  <p *ngIf="notice" class="alert alert-success" role="status">{{ notice }}</p>
+  <section *ngIf="booking && balance" class="card shadow-sm p-4">
+    <h2 class="h5">{{ booking.bookingReference }} · {{ booking.fullName }}</h2>
+    <p>{{ booking.checkInDate | date:'mediumDate' }} to {{ booking.checkOutDate | date:'mediumDate' }} · {{ booking.bookingType }}</p>
+    <ul *ngIf="booking.eventDates?.length" class="list-unstyled">
+      <li *ngFor="let event of booking.eventDates">{{ event.eventType }} · {{ event.eventDate | date:'mediumDate' }}</li>
+    </ul>
+    <dl class="row mb-2">
+      <dt class="col-7">Booking total</dt><dd class="col-5 text-end">{{ balance.total | currency:balance.currency }}</dd>
+      <dt class="col-7">Advance paid</dt><dd class="col-5 text-end">{{ balance.advancePaid | currency:balance.currency }}</dd>
+      <dt *ngIf="balance.discount" class="col-7">Saved discount</dt>
+      <dd *ngIf="balance.discount" class="col-5 text-end">{{ balance.discount | currency:balance.currency }}</dd>
+    </dl>
+    <p *ngIf="balance.paymentStatus === 'Pending'">Waiting for {{ balance.payable | currency:balance.currency }} through My Bookings.</p>
+    <p *ngIf="balance.paymentStatus === 'Success'">Payment and check out completed.</p>
+    <form *ngIf="booking.status === 'CheckedIn' && !balance.paymentStatus" #checkout="ngForm" (ngSubmit)="submit()">
+      <label class="form-label" for="method">Payment method</label>
+      <select class="form-select mb-3" id="method" name="method" [(ngModel)]="method">
+        <option value="Cash">Cash</option>
+        <option value="Online">Online</option>
+      </select>
+      <label class="form-check mb-3"><input class="form-check-input" type="checkbox" name="applyDiscount" [(ngModel)]="applyDiscount"> Apply discount</label>
+      <div *ngIf="applyDiscount" class="mb-3">
+        <label class="form-label" for="discount">Discount amount (INR)</label>
+        <input class="form-control mb-2" id="discount" name="discount" type="number" min="0.01" [max]="balance.payable" step="0.01" required [(ngModel)]="discount">
+        <label class="form-label" for="reason">Discount reason</label>
+        <textarea class="form-control" id="reason" name="reason" maxlength="500" required [(ngModel)]="reason"></textarea>
+      </div>
+      <p class="fw-semibold">Total payable {{ payable | currency:balance.currency }}</p>
+      <button class="btn btn-success" type="submit" [disabled]="busy || checkout.invalid || (applyDiscount && !reason.trim())">
+        {{ payable === 0 ? 'Complete checkout' : method === 'Cash' ? 'Confirm cash collected' : 'Request payment' }}
+      </button>
+    </form>
+  </section>
+</main>

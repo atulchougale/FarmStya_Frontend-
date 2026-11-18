@@ -3,8 +3,11 @@
         "aboutus",
         "byid",
         "Carasoul",
+        "checkin",
         "farmstay",
         "greenvalley",
+        "Jayanti",
+        "nums",
         "pincode",
         "savegallery",
         "skiptranslate",
@@ -12,6 +15,7 @@
         "sweetalert",
         "taluka",
         "Toastr",
+        "vcard",
         "मराठी"
     ]
 }

@@ -102,6 +102,236 @@
 
 
 <!-- =========================================
+    BOOKING CTA SECTION
+========================================= -->
+
+<section class="booking-cta-section mt-5">
+    <div class="app-container booking-cta-container">
+
+        <!-- CTA Text -->
+        <div class="booking-cta-content">
+            <h2 class="booking-cta-title">
+                Ready for your getaway?
+            </h2>
+
+            <p class="booking-cta-description">
+                Real-time slot availability — book in just a few minutes.
+            </p>
+        </div>
+
+        <!-- Custom Booking Calendar -->
+        <div class="booking-calendar-container">
+
+            <!-- Date Inputs -->
+            <div class="booking-date-fields">
+
+                <!-- Check-in -->
+                <div class="booking-date-field">
+                    <button type="button" id="checkInDate" class="booking-date-trigger"
+                        aria-label="Select check-in date"
+                        [attr.aria-expanded]="isCalendarOpen && activeCalendarField === 'checkIn'"
+                        aria-haspopup="dialog" (click)="toggleCalendar('checkIn')">
+
+                        <span class="booking-date-label">
+                            CHECK-IN
+                        </span>
+
+                        <span class="booking-date-value">
+                            {{ checkInDate ? (checkInDate | date:'EEE, dd MMM yyyy') : 'Select date' }}
+                        </span>
+
+                    </button>
+                </div>
+
+                <!-- Check-out -->
+                <div class="booking-date-field">
+                    <button type="button" id="checkOutDate" class="booking-date-trigger"
+                        aria-label="Select check-out date"
+                        [attr.aria-expanded]="isCalendarOpen && activeCalendarField === 'checkOut'"
+                        aria-haspopup="dialog" (click)="toggleCalendar('checkOut')">
+
+                        <span class="booking-date-label">
+                            CHECK-OUT
+                        </span>
+
+                        <span class="booking-date-value">
+                            {{ checkOutDate ? (checkOutDate | date:'EEE, dd MMM yyyy') : 'Select date' }}
+                        </span>
+
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Calendar Backdrop: click outside to close -->
+            <div *ngIf="isCalendarOpen" class="booking-calendar-backdrop" aria-hidden="true" (click)="closeCalendar()">
+            </div>
+
+            <!-- Calendar Popup -->
+            <div *ngIf="isCalendarOpen" class="booking-calendar-popup" role="dialog" aria-label="Choose booking dates"
+                (click)="$event.stopPropagation()">
+
+                <!-- Month Navigation -->
+                <div class="booking-calendar-navigation">
+
+                    <button type="button" class="calendar-nav-btn" aria-label="Previous month" (click)="previousMonth()"
+                        [disabled]="isPreviousMonthDisabled">
+
+                        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                    </button>
+
+                    <button type="button" class="calendar-nav-btn" aria-label="Next month" (click)="nextMonth()">
+
+                        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+
+                <!-- Calendar Months -->
+                <div class="booking-calendar-months">
+
+                    <div class="booking-calendar-month" *ngFor="let month of getCalendarMonths()">
+
+                        <h3 class="booking-calendar-month-title">
+                            {{ month.label }}
+                        </h3>
+
+                        <div class="booking-calendar-grid">
+
+                            <!-- Weekday Names -->
+                            <span class="booking-calendar-weekday" *ngFor="let day of weekDays">
+
+                                {{ day }}
+
+                            </span>
+
+                            <!-- Calendar Days -->
+                            <ng-container *ngFor="let day of month.days">
+
+                                <button *ngIf="day.isCurrentMonth; else emptyCalendarCell" type="button"
+                                    class="booking-calendar-day" [class.calendar-day-today]="day.isToday"
+                                    [class.calendar-day-checkin]="day.isCheckIn"
+                                    [class.calendar-day-checkout]="day.isCheckOut"
+                                    [class.calendar-day-in-range]="day.isInSelectedRange"
+                                    [class.calendar-day-available]="hasAvailabilityResult() && day.isAvailable"
+                                    [class.calendar-day-unavailable]="hasAvailabilityResult() && day.isUnavailable"
+                                    [disabled]="isDateDisabled(day.dateKey)" [attr.aria-label]="day.dateKey"
+                                    (click)="selectCalendarDate(day.dateKey)">
+
+                                    <span class="calendar-day-number">
+                                        {{ day.dayNumber }}
+                                    </span>
+
+                                    <span class="calendar-day-festival" *ngFor="let festival of day.festivals">
+
+                                        {{ festival.name }}
+
+                                    </span>
+
+                                </button>
+
+                                <!-- Empty Calendar Cell -->
+                                <ng-template #emptyCalendarCell>
+                                    <span class="booking-calendar-empty-day"></span>
+                                </ng-template>
+
+                            </ng-container>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Availability Legend -->
+                <div class="booking-calendar-legend" *ngIf="hasAvailabilityResult()">
+
+                    <span>
+                        <i class="calendar-legend-dot calendar-legend-available"></i>
+                        Available
+                    </span>
+
+                    <span>
+                        <i class="calendar-legend-dot calendar-legend-unavailable"></i>
+                        Unavailable
+                    </span>
+
+                </div>
+
+                <!-- Festival List -->
+                <div class="booking-calendar-festivals" *ngIf="getFestivalListForVisibleMonths().length > 0">
+
+                    <h4>Festivals &amp; Holidays</h4>
+
+                    <ul>
+                        <li *ngFor="let festival of getFestivalListForVisibleMonths()">
+
+                            <span>
+                                {{ festival.date | date:'d MMM' }}
+                            </span>
+
+                            <strong>
+                                {{ festival.name }}
+                            </strong>
+
+                        </li>
+                    </ul>
+
+                </div>
+
+                <!-- Close Calendar -->
+                <button type="button" class="booking-calendar-close" (click)="closeCalendar()">
+
+                    Close calendar
+
+                </button>
+
+            </div>
+
+            <!-- Check Availability -->
+            <div class="booking-calendar-action">
+
+                <button type="button" class="booking-cta-button" (click)="checkAvailability()"
+                    [disabled]="availabilityLoading">
+
+                    <span>
+                        {{ availabilityLoading ? 'Checking...' : 'Check Availability' }}
+                    </span>
+
+                    <i class="bi" [ngClass]="availabilityLoading ? 'bi-arrow-repeat' : 'bi-arrow-right'"
+                        aria-hidden="true">
+                    </i>
+
+                </button>
+
+            </div>
+
+            <!-- Availability Success -->
+            <div #availabilityFeedback *ngIf="availabilityMessage" class="availability-note availability-success"
+                tabindex="-1" role="status">
+
+                <i class="bi bi-check-circle" aria-hidden="true"></i>
+
+                {{ availabilityMessage }}
+
+            </div>
+
+            <!-- Availability Error -->
+            <div #availabilityFeedback *ngIf="availabilityError" class="availability-note availability-error"
+                tabindex="-1" role="alert">
+
+                <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+
+                {{ availabilityError }}
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================
      AMENITIES SECTION
 ========================================= -->
 
@@ -171,36 +401,11 @@
 
 
 
-<!-- =========================================
-     BOOKING CTA SECTION
-========================================= -->
 
-<section class="booking-cta-section">
-    <div class="app-container booking-cta-container">
 
-        <!-- CTA Text -->
-        <div class="booking-cta-content">
-            <h2 class="booking-cta-title">
-                Ready for your getaway?
-            </h2>
 
-            <p class="booking-cta-description">
-                Real-time slot availability — book in just a few minutes.
-            </p>
-        </div>
 
-        <!-- CTA Button -->
-        <div class="booking-cta-action">
-            <a routerLink="/book-now" class="booking-cta-button">
 
-                <span>Check Availability</span>
-
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-            </a>
-        </div>
-
-    </div>
-</section>
 
 
 
@@ -262,19 +467,12 @@
         </div>
 
         <!-- Testimonials Pagination Dots -->
-        <div
-            class="testimonials-pagination"
-            *ngIf="feedbackSlideCount > 1"
-            aria-label="Guest feedback slides">
+        <div class="testimonials-pagination" *ngIf="feedbackSlideCount > 1" aria-label="Guest feedback slides">
 
-            <button
-                *ngFor="let slide of [].constructor(feedbackSlideCount); let i = index"
-                type="button"
-                class="testimonial-pagination-dot"
-                [class.active]="i === currentFeedbackSlide"
+            <button *ngFor="let slide of [].constructor(feedbackSlideCount); let i = index" type="button"
+                class="testimonial-pagination-dot" [class.active]="i === currentFeedbackSlide"
                 [attr.aria-label]="'Go to feedback slide ' + (i + 1)"
-                [attr.aria-current]="i === currentFeedbackSlide ? 'true' : null"
-                (click)="goToFeedbackSlide(i)">
+                [attr.aria-current]="i === currentFeedbackSlide ? 'true' : null" (click)="goToFeedbackSlide(i)">
             </button>
 
         </div>

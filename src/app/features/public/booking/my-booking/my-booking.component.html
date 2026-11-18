@@ -1,0 +1,157 @@
+
+<div class="my-bookings-page">
+
+  <div class="container py-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">My Bookings</h2>
+        <p class="text-muted mb-0">
+          View your farm stay reservations.
+        </p>
+      </div>
+
+      <button
+        class="btn btn-outline-success"
+        (click)="refreshBookings()"
+        [disabled]="loading">
+
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="loading">
+      <div class="spinner-border text-success"></div>
+      <p class="text-muted mt-3">Loading your bookings...</p>
+    </div>
+
+    <!-- Error -->
+    <div
+      class="alert alert-danger"
+      *ngIf="!loading && errorMessage">
+
+      {{ errorMessage }}
+    </div>
+
+    <!-- Empty -->
+    <div
+      class="text-center empty-state py-5"
+      *ngIf="!loading && !errorMessage && bookings.length === 0">
+
+      <i class="bi bi-calendar-x empty-icon"></i>
+      <h4 class="mt-3">No Bookings Found</h4>
+      <p class="text-muted">Your bookings will appear here.</p>
+    </div>
+
+    <!-- Booking Cards -->
+    <div class="row g-4"
+         *ngIf="!loading && bookings.length > 0">
+
+      <div class="col-12"
+           *ngFor="let booking of bookings">
+
+        <div class="card booking-card shadow-sm" [class.border-success]="booking.bookingReference === selectedReference">
+
+          <div class="card-body p-4">
+
+            <!-- Booking Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+              <div>
+                <small class="text-muted">Booking Reference</small>
+                <h5 class="fw-bold mb-0">
+                  {{ booking.bookingReference }}
+                </h5>
+              </div>
+
+              <span
+                class="booking-status"
+                [ngClass]="getStatusClass(booking.status)">
+
+                {{ booking.status || 'Unknown' }}
+              </span>
+
+            </div>
+
+            <hr>
+
+            <!-- Basic Booking Details -->
+            <div class="row g-3">
+
+              <div class="col-md-4">
+                <small class="text-muted">Guest Name</small>
+                <div class="fw-semibold">{{ booking.fullName }}</div>
+              </div>
+
+              <div class="col-md-4">
+                <small class="text-muted">Mobile Number</small>
+                <div class="fw-semibold">
+                  {{ booking.mobileNumber || '-' }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <small class="text-muted">Total Guests</small>
+                <div class="fw-semibold">{{ booking.personCount }}</div>
+              </div>
+
+              <div class="col-md-4">
+                <small class="text-muted">Check In</small>
+                <div class="fw-semibold">
+                  {{ booking.checkInDate | date:'dd MMM yyyy' }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <small class="text-muted">Check Out</small>
+                <div class="fw-semibold">
+                  {{ booking.checkOutDate | date:'dd MMM yyyy' }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <small class="text-muted">Booking Date</small>
+                <div class="fw-semibold">
+                  {{ booking.createdDate | date:'dd MMM yyyy' }}
+                </div>
+              </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end flex-wrap gap-2">
+
+              <!-- View Details -->
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="viewBookingDetails(booking.bookingId)">
+
+                <i class="bi bi-eye me-2"></i>
+
+                View Details
+              </button>
+              <button *ngIf="booking.status === 'Approved'" type="button" class="btn btn-success"
+                (click)="viewBookingDetails(booking.bookingId)">Confirm Booking</button>
+
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <nav class="d-flex align-items-center justify-content-center gap-3 mt-3" aria-label="My booking pages">
+      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || page === 1" (click)="changePage(-1)">Previous</button>
+      <span>Page {{ page }}</span>
+      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || bookings.length < pageSize" (click)="changePage(1)">Next</button>
+    </nav>
+  </div>
+</div>

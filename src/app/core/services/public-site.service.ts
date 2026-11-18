@@ -82,6 +82,10 @@ export class PublicSiteService {
     return this.publicSiteSubject.value?.farmHouseId ?? null;
   }
 
+  get currentFarmHouseName(): string | null {
+    return this.publicSiteSubject.value?.farmHouseName ?? null;
+  }
+
   /**
    * Refresh Site
    */

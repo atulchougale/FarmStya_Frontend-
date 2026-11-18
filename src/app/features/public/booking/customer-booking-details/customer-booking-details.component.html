@@ -1,0 +1,368 @@
+<main class="container py-4 customer-booking-details">
+  <div class="booking-dialog-header">
+    <div>
+      <h2 id="booking-dialog-title">Booking details</h2>
+      <p *ngIf="selectedBooking">{{ selectedBooking.bookingReference }} · {{ selectedBooking.status }}</p>
+    </div>
+  </div>
+  <div class="booking-dialog-content">
+    <!-- Details Loading -->
+    <div
+      class="text-center py-4"
+      *ngIf="
+        detailsLoading
+      ">
+
+      <div class="spinner-border spinner-border-sm text-success"></div>
+      <p class="text-muted mt-2 mb-0">
+        Loading booking details...
+      </p>
+    </div>
+
+    <!-- Details Error -->
+    <div
+      class="alert alert-danger mt-3"
+      *ngIf="
+        detailsError
+      ">
+
+      {{ detailsError }}
+    </div>
+
+    <!-- Complete Booking Details -->
+    <div
+      class="booking-detail-section mt-4"
+      *ngIf="
+        selectedBooking &&
+        !detailsLoading
+      ">
+
+      <!-- Customer Information -->
+      <h6 class="detail-heading">Customer Information</h6>
+
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+          <small class="text-muted">Full Name</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.fullName }}
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <small class="text-muted">Email</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.email || '-' }}
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <small class="text-muted">Mobile Number</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.mobileNumber || '-' }}
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <small class="text-muted">Customer Notes</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.customerNotes || '-' }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Stay Information -->
+      <h6 class="detail-heading">Stay Information</h6>
+
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+          <small class="text-muted">Scheduled check-in</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.checkInDate | date:'dd MMM yyyy' }}
+          </div>
+          <div *ngIf="selectedBooking.actualCheckInAt" class="mt-2">
+            <small class="text-muted">Actual check-in</small>
+            <div class="fw-semibold">{{ selectedBooking.actualCheckInAt | date:'dd MMM yyyy, h:mm a' }}</div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <small class="text-muted">Scheduled check-out</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.checkOutDate | date:'dd MMM yyyy' }}
+          </div>
+          <div *ngIf="selectedBooking.actualCheckOutAt" class="mt-2">
+            <small class="text-muted">Actual check-out</small>
+            <div class="fw-semibold">{{ selectedBooking.actualCheckOutAt | date:'dd MMM yyyy, h:mm a' }}</div>
+          </div>
+          <div *ngIf="selectedBooking.checkoutPaidAt" class="mt-2">
+            <small class="text-muted">Checkout payment</small>
+            <div class="fw-semibold">{{ selectedBooking.checkoutPaidAt | date:'dd MMM yyyy, h:mm a' }}</div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <small class="text-muted">Stay Days</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.stayDays ?? '-' }}
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <small class="text-muted">Booking Type</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.bookingType || '-' }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Guest Information -->
+      <h6 class="detail-heading">Guest Information</h6>
+
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+          <small class="text-muted">Adults</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.adultCount }}
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <small class="text-muted">Children</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.childrenCount }}
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <small class="text-muted">Total Persons</small>
+          <div class="fw-semibold">
+            {{ selectedBooking.personCount }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pricing Information -->
+      <h6 class="detail-heading">Pricing Information</h6>
+      <app-payment-receipts [bookingId]="selectedBooking.bookingId" [customer]="true" [bookingStatus]="selectedBooking.status" />
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle">
+
+          <tbody>
+            <tr>
+              <th>Base Amount</th>
+              <td>{{ selectedBooking.baseAmount ?? '-' }}</td>
+            </tr>
+
+            <tr>
+              <th>Event Amount</th>
+              <td>{{ selectedBooking.eventAmount ?? '-' }}</td>
+            </tr>
+
+            <tr>
+              <th>Booking Daily Rate</th>
+              <td>{{ selectedBooking.bookingDailyRateSnapshot ?? '-' }}</td>
+            </tr>
+
+            <tr>
+              <th>Event Daily Rate</th>
+              <td>{{ selectedBooking.eventDailyRateSnapshot ?? '-' }}</td>
+            </tr>
+
+            <tr>
+              <th>Advance Daily Rate</th>
+              <td>{{ selectedBooking.advanceDailyRateSnapshot ?? '-' }}</td>
+            </tr>
+
+            <tr>
+              <th>Advance paid</th>
+              <td>{{ selectedBooking.advancePaid | currency:selectedBooking.currencyCode }}</td>
+            </tr>
+
+            <tr *ngIf="selectedBooking.discountAmount > 0">
+              <th>Discount</th>
+              <td>{{ selectedBooking.discountAmount | currency:selectedBooking.currencyCode }}</td>
+            </tr>
+            <tr>
+              <th>Total paid</th>
+              <td>{{ selectedBooking.totalPaid | currency:selectedBooking.currencyCode }}</td>
+            </tr>
+            <tr *ngIf="selectedBooking.remainingAmount > 0">
+              <th>Remaining</th>
+              <td>{{ selectedBooking.remainingAmount | currency:selectedBooking.currencyCode }}</td>
+            </tr>
+            <tr class="table-success">
+              <th>Total Amount</th>
+              <td class="fw-bold">
+                {{ selectedBooking.totalAmount | currency:selectedBooking.currencyCode }}
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+      <!-- Event Dates -->
+      <h6 class="detail-heading">Event Dates</h6>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+
+          <thead>
+            <tr>
+              <th>Event Date</th>
+              <th>Event Type</th>
+              <th>Daily Rate</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let event of selectedBooking.eventDates">
+              <td>{{ event.eventDate | date:'dd MMM yyyy' }}</td>
+              <td>{{ event.eventType }}</td>
+              <td>{{ event.dailyRateSnapshot }}</td>
+            </tr>
+
+            <tr *ngIf="!selectedBooking.eventDates?.length">
+              <td colspan="3" class="text-center text-muted">
+                No event dates available.
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Status History -->
+      <h6 class="detail-heading">Booking Status History</h6>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+
+          <thead>
+            <tr>
+              <th>Old Status</th>
+              <th>New Status</th>
+              <th>Reason</th>
+              <th>Actor</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let history of selectedBooking.statusHistory">
+              <td>{{ history.oldStatus || '-' }}</td>
+              <td>{{ history.newStatus }}</td>
+              <td>{{ history.reason || '-' }}</td>
+              <td>{{ history.actorType }}</td>
+              <td>
+                {{ history.createdDate | date:'dd MMM yyyy, h:mm a' }}
+              </td>
+            </tr>
+
+            <tr *ngIf="!selectedBooking.statusHistory?.length">
+              <td colspan="5" class="text-center text-muted">
+                No status history available.
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Rejection Reason -->
+      <div
+        class="alert alert-warning"
+        *ngIf="selectedBooking.rejectionReason">
+
+        <strong>Rejection Reason:</strong>
+        {{ selectedBooking.rejectionReason }}
+      </div>
+
+      <!-- Cancellation Reason -->
+      <div
+        class="alert alert-danger"
+        *ngIf="selectedBooking.cancellationReason">
+
+        <strong>Cancellation Reason:</strong>
+        {{ selectedBooking.cancellationReason }}
+      </div>
+
+    </div>
+
+  </div>
+  <section *ngIf="selectedBooking && !detailsLoading" class="booking-detail-section">
+    <h2 class="detail-heading">Documents and payments</h2>
+    <section *ngIf="selectedBooking && (identity || identityLoading || identityError || canUploadIdentity)" class="identity-step">
+      <h3>ID proof</h3>
+      <p *ngIf="identityLoading" role="status">Checking ID proof status…</p>
+      <p *ngIf="identityError" role="alert" class="text-danger">{{ identityError }}</p>
+      <p *ngIf="identity?.status === 'ReuploadRequested'">
+        Please upload a replacement ID proof. {{ identity?.reason }} Your booking remains confirmed.
+      </p>
+      <p *ngIf="identity && identity.status !== 'ReuploadRequested' && selectedBooking.status !== 'CheckedOut'">
+        {{ identity.fileName }} · {{ identity.status === 'Verified' ? 'Verified' : 'Uploaded' }}
+      </p>
+      <div *ngIf="canUploadIdentity && !identityLoading">
+        <label for="booking-id-proof" class="form-label">{{ identity ? 'Replace ID proof' : 'Upload ID proof' }}</label>
+        <input id="booking-id-proof" class="form-control" type="file" accept=".pdf,.jpg,.jpeg,.png"
+          [disabled]="uploadingIdentity" (change)="uploadIdentity($event)">
+        <small class="text-muted">PDF, JPG or PNG, up to 5 MB.</small>
+        <p *ngIf="uploadingIdentity" role="status">Uploading…</p>
+      </div>
+      <div *ngIf="confirmView && selectedBooking.status === 'Approved' && identity?.status === 'Uploaded'">
+        <p class="mt-3 mb-1">Advance {{ selectedBooking.advanceAmount | currency:selectedBooking.currencyCode }}</p>
+        <button type="button" class="btn btn-success" (click)="payAdvance()"
+          [disabled]="openingCheckout || verifyingAdvance || uploadingIdentity || paymentReceived || !canUploadIdentity">
+          {{ openingCheckout ? 'Opening checkout…' : 'Pay Now' }}
+        </button>
+        <small class="d-block mt-1">Razorpay Test Mode</small>
+        <button type="button" class="btn btn-outline-success mt-2" (click)="verifyAdvance()"
+          [disabled]="openingCheckout || verifyingAdvance || uploadingIdentity">
+          {{ verifyingAdvance ? 'Verifying…' : 'Verify Existing Payment' }}
+        </button>
+      </div>
+      <p *ngIf="paymentMessage" class="mt-2" role="status">{{ paymentMessage }}</p>
+      <p *ngIf="paymentError" class="mt-2 text-danger" role="alert">{{ paymentError }}</p>
+      <button *ngIf="identity" type="button" class="btn btn-outline-success mt-2"
+        [disabled]="uploadingIdentity" (click)="viewDocument()">View Document</button>
+      <p *ngIf="identity && selectedBooking.status !== 'CheckedOut'" class="mt-2 mb-0">Bring the original ID documents you uploaded when checking in.</p>
+    </section>
+  <section *ngIf="checkoutBalance?.paymentStatus === 'Pending'" class="p-3">
+    <p>Checkout amount {{ checkoutBalance?.payable | currency:checkoutBalance?.currency }}</p>
+    <button class="btn btn-success me-2" type="button" [disabled]="openingCheckout" (click)="payCheckout()">Pay and Check Out</button>
+    <button class="btn btn-outline-secondary" type="button" [disabled]="openingCheckout" (click)="payCheckout(true)">Check payment status</button>
+  </section>
+  <p *ngIf="checkoutNotice" class="px-3 pt-2" role="status">{{ checkoutNotice }}</p>
+  </section>
+  <div class="booking-dialog-footer">
+    <a *ngIf="selectedBooking?.status === 'CheckedOut'" class="btn btn-success"
+      routerLink="/feedback" [queryParams]="{ bookingId: selectedBooking?.bookingId }">Give Feedback</a>
+    <button type="button" class="btn btn-outline-secondary" (click)="closeDetails()">Back</button>
+    <button *ngIf="selectedBooking?.status === 'Approved' && !confirmView" type="button" class="btn btn-success"
+      (click)="viewBookingDetails(selectedBookingId!, true)">Confirm Booking</button>
+  </div>
+</main>
+<dialog #documentDialog class="document-dialog" aria-labelledby="document-title" (close)="clearPreview()">
+  <header class="d-flex justify-content-between align-items-center p-3 border-bottom">
+    <h2 id="document-title" class="h5 mb-0">Uploaded ID proof</h2>
+    <button type="button" class="btn-close" aria-label="Close document" (click)="closeDocument()"></button>
+  </header>
+  <div class="document-preview p-3">
+    <p *ngIf="previewLoading" role="status">Loading document…</p>
+    <p *ngIf="previewError" role="alert" class="text-danger">{{ previewError }}</p>
+    <img *ngIf="previewImage" [src]="previewImage" alt="Your uploaded ID proof">
+    <iframe *ngIf="previewPdf" [src]="previewPdf" title="Your uploaded ID proof"></iframe>
+  </div>
+  <footer class="p-3 border-top text-end">
+    <button type="button" class="btn btn-outline-secondary" (click)="closeDocument()">Back</button>
+  </footer>
+</dialog>

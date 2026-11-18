@@ -1,0 +1,635 @@
+<section class="booking-page">
+  <div class="booking-container">
+
+    <!-- Page Header -->
+    <header class="booking-header">
+      <a class="brand-label" href="/" aria-label="FarmStay home">
+        <span class="brand-icon">
+          <i class="bi bi-house-heart"></i>
+        </span>
+        <span>FARMSTAY</span>
+      </a>
+
+      <p class="eyebrow">YOUR NEXT GETAWAY</p>
+      <h1>Book Your Farmhouse</h1>
+      <p class="header-description">
+        A few simple steps to plan your perfect stay.
+      </p>
+    </header>
+
+    <!-- Booking Layout -->
+    <main class="booking-layout">
+
+      <!-- Step Progress -->
+      <nav class="step-navigation" aria-label="Booking progress">
+        <div class="step-item" *ngFor="let step of bookingSteps; let i = index" [class.active]="currentStep === i + 1"
+          [class.completed]="currentStep > i + 1">
+
+          <button type="button" class="step-indicator" [attr.aria-current]="currentStep === i + 1 ? 'step' : null"
+            [attr.aria-label]="'Step ' + (i + 1) + ': ' + step.title" (click)="goToStep(i + 1)">
+
+            <i *ngIf="currentStep > i + 1" class="bi bi-check-lg">
+            </i>
+
+            <span *ngIf="currentStep <= i + 1">
+              {{ i + 1 }}
+            </span>
+          </button>
+
+          <div class="step-label">
+            <strong>{{ step.title }}</strong>
+            <span>{{ step.subtitle }}</span>
+          </div>
+
+          <div *ngIf="i < bookingSteps.length - 1" class="step-connector">
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <section class="booking-card">
+
+        <div class="card-topline">
+          <span class="section-tag">
+            STEP {{ currentStep }} OF {{ bookingSteps.length }}
+          </span>
+
+          <span class="secure-label">
+            <i class="bi bi-shield-check"></i>
+            Secure booking
+          </span>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">LET'S GET STARTED</p>
+
+            <h2>
+              {{ currentStepInfo.title }}
+            </h2>
+
+            <p>
+              {{ currentStepInfo.subtitle }}
+            </p>
+          </div>
+
+          <!-- Reservation Countdown - Visible Across Booking Steps -->
+          <div class="reservation-countdown" *ngIf="selectionId || reservationExpired"
+            [class.warning]="reservationRemainingSeconds <= 120 && !reservationExpired"
+            [class.expired]="reservationExpired">
+            <div class="countdown-icon">
+              <i class="bi bi-clock-history"></i>
+            </div>
+
+            <div class="countdown-content" *ngIf="!reservationExpired">
+              <strong>Temporary Reservation Active</strong>
+
+              <p *ngIf="!reservationReminderVisible">
+                Complete your booking before your reservation expires.
+              </p>
+
+              <p *ngIf="reservationReminderVisible" class="countdown-reminder">
+                Your reservation will expire soon! Please complete your booking
+                within the remaining time.
+              </p>
+            </div>
+
+            <div class="countdown-content" *ngIf="reservationExpired">
+              <strong>Reservation Expired</strong>
+              <p>Your selected dates are no longer reserved. Please select your dates again.</p>
+              <button *ngIf="currentStep > 3" type="button" class="back-button" (click)="goToStep(3)">
+                Select new dates
+              </button>
+            </div>
+
+            <div class="countdown-time" *ngIf="!reservationExpired">
+              {{ reservationCountdownText }}
+            </div>
+
+            <div class="countdown-time" *ngIf="reservationExpired">
+              00:00
+            </div>
+          </div>
+
+          <div class="heading-icon">
+            <i [ngClass]="[
+                'bi',
+                currentStep === 1 ? 'bi-person-vcard' :
+                currentStep === 2 ? 'bi-people' :
+                currentStep === 3 ? 'bi-calendar-week' :
+                currentStep === 4 ? 'bi-stars' :
+                currentStep === 5 ? 'bi-receipt' :
+                'bi-check2-circle'
+              ]">
+            </i>
+          </div>
+        </div>
+
+
+
+        <!-- Step 1: Customer Details -->
+        <div *ngIf="currentStep === 1" class="step-content">
+
+          <div class="customer-info-banner">
+            <i class="bi bi-person-check"></i>
+            <div>
+              <strong>Your Contact Details</strong>
+              <p>
+                Enter your details to continue with your booking.
+                For logged-in users, use the mobile number and email
+                registered with your account.
+              </p>
+            </div>
+          </div>
+
+          <div class="customer-form">
+
+            <!-- Full Name -->
+            <div class="form-field">
+              <label for="customerFullName">Full Name</label>
+
+              <div class="input-wrapper">
+                <i class="bi bi-person"></i>
+                <input id="customerFullName" name="fullName" type="text" [(ngModel)]="customerDetails.fullName"
+                  placeholder="Enter your full name" autocomplete="name" required />
+              </div>
+
+              <small class="customer-error" *ngIf="customerDetailsError.fullName" role="alert">
+                {{ customerDetailsError.fullName }}
+              </small>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="form-field">
+              <label for="customerMobile">Mobile Number</label>
+
+              <div class="input-wrapper">
+                <i class="bi bi-telephone"></i>
+                <input id="customerMobile" name="mobileNumber" type="tel" [(ngModel)]="customerDetails.mobileNumber"
+                  placeholder="Enter registered mobile number" autocomplete="tel" maxlength="10" required />
+              </div>
+
+              <small class="customer-error" *ngIf="customerDetailsError.mobileNumber" role="alert">
+                {{ customerDetailsError.mobileNumber }}
+              </small>
+            </div>
+
+            <!-- Email -->
+            <div class="form-field">
+              <label for="customerEmail">Email Address</label>
+
+              <div class="input-wrapper">
+                <i class="bi bi-envelope"></i>
+                <input id="customerEmail" name="email" type="email" [(ngModel)]="customerDetails.email"
+                  placeholder="Enter registered email" autocomplete="email" required />
+              </div>
+
+              <small class="customer-error" *ngIf="customerDetailsError.email" role="alert">
+                {{ customerDetailsError.email }}
+              </small>
+            </div>
+
+          </div>
+
+          <div class="customer-profile-note">
+            <i class="bi bi-info-circle"></i>
+            <span>
+              Logged-in customers must enter the mobile number and email
+              registered with their account. These details will be used
+              for booking communication.
+            </span>
+          </div>
+
+        </div>
+
+
+
+        <!-- Step 2: Guest Details -->
+        <div *ngIf="currentStep === 2" class="step-content">
+
+          <div class="customer-info-banner">
+            <i class="bi bi-people"></i>
+            <div>
+              <strong>Guest Information</strong>
+              <p>
+                Please provide the total number of guests for your stay.
+                At least one adult is required.
+              </p>
+            </div>
+          </div>
+
+          <div class="customer-form">
+
+            <!-- Adult Count -->
+            <div class="form-field">
+              <label for="adultCount">Adults <span>*</span></label>
+
+              <div class="input-wrapper">
+                <i class="bi bi-person"></i>
+                <input id="adultCount" name="AdultCount" type="number" [(ngModel)]="guestDetails.AdultCount"
+                  (ngModelChange)="updatePersonCount()" min="1" step="1" required placeholder="Enter adult count" />
+              </div>
+
+              <small class="customer-error" *ngIf="guestDetailsError.AdultCount" role="alert">
+                {{ guestDetailsError.AdultCount }}
+              </small>
+            </div>
+
+            <!-- Children Count -->
+            <div class="form-field">
+              <label for="childrenCount">Children</label>
+
+              <div class="input-wrapper">
+                <i class="bi bi-person-hearts"></i>
+                <input id="childrenCount" name="ChildrenCount" type="number" [(ngModel)]="guestDetails.ChildrenCount"
+                  (ngModelChange)="updatePersonCount()" min="0" step="1" placeholder="Enter children count" />
+              </div>
+
+              <small class="customer-error" *ngIf="guestDetailsError.ChildrenCount" role="alert">
+                {{ guestDetailsError.ChildrenCount }}
+              </small>
+            </div>
+
+            <!-- Person Count -->
+            <div class="form-field">
+              <label for="personCount">Total Guests</label>
+
+              <div class="input-wrapper">
+                <i class="bi bi-people"></i>
+                <input id="personCount" name="PersonCount" type="number" [(ngModel)]="guestDetails.PersonCount"
+                  readonly />
+              </div>
+
+              <small class="field-hint">
+                Automatically calculated from adults and children.
+              </small>
+            </div>
+
+            <!-- Customer Notes -->
+            <div class="form-field">
+              <label for="customerNotes">Special Requests / Notes</label>
+
+              <div class="input-wrapper textarea-wrapper">
+                <i class="bi bi-chat-left-text"></i>
+                <textarea id="customerNotes" name="CustomerNotes" [(ngModel)]="guestDetails.CustomerNotes" rows="4"
+                  placeholder="Enter any special requests or additional information (optional)">
+        </textarea>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- Step 3: Date Selection -->
+        <div *ngIf="currentStep === 3" class="step-content">
+
+          <!-- Information Banner -->
+          <div class="customer-info-banner">
+            <i class="bi bi-calendar-check"></i>
+            <div>
+              <strong>Select Your Stay Dates</strong>
+              <p>
+                Choose your check-in and check-out dates from the calendar.
+                Only available dates can be selected.
+              </p>
+            </div>
+          </div>
+
+          <!-- Calendar Section -->
+          <div class="booking-calendar-section">
+
+            <!-- Calendar Header -->
+            <div class="calendar-header">
+
+              <button type="button" class="calendar-nav-button" (click)="previousMonth()"
+                [disabled]="!canGoToPreviousMonth || loadingCalendar || reservingDates" aria-label="Previous month">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+
+              <div class="calendar-month-title">
+                <h3>{{ monthLabel }}</h3>
+                <span>Select your preferred dates</span>
+              </div>
+
+              <button type="button" class="calendar-nav-button" (click)="nextMonth()"
+                [disabled]="loadingCalendar || reservingDates" aria-label="Next month">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+
+            </div>
+
+
+
+            <!-- Loading -->
+            <div class="calendar-loading" *ngIf="loadingCalendar">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p>Loading calendar availability...</p>
+            </div>
+
+            <!-- Calendar -->
+            <div class="calendar-grid" *ngIf="!loadingCalendar">
+
+              <!-- Week Days -->
+              <div class="calendar-weekday" *ngFor="let weekDay of weekDays">
+                {{ weekDay }}
+              </div>
+
+              <!-- Calendar Dates -->
+              <button type="button" class="calendar-day" *ngFor="let day of calendarDays" [disabled]="!day.isCurrentMonth ||
+                day.isPast ||
+                (
+                  (day.isBooked || (day.isReserved && !isOwnReservedDate(day.dateKey))) &&
+                  !(
+                    checkInDate &&
+                    !checkOutDate &&
+                    day.dateKey > checkInDate
+                  )
+                ) ||
+                reservingDates
+              " [class.empty-day]="!day.isCurrentMonth" [class.past-day]="day.isPast" [class.today]="day.isToday"
+                [class.booked]="day.isBooked" [class.reserved]="day.isReserved" [class.check-in]="day.isCheckIn"
+                [class.check-out]="day.isCheckOut" [class.in-range]="day.isInRange"
+                [attr.aria-label]="day.isCurrentMonth ? (day.date | date:'fullDate') : null" [attr.title]="day.status"
+                (click)="selectDate(day)">
+
+                <span *ngIf="day.isCurrentMonth">
+                  {{ day.dayNumber }}
+                </span>
+
+              </button>
+
+            </div>
+
+            <!-- Calendar Legend -->
+            <div class="calendar-legend" *ngIf="!loadingCalendar">
+
+              <div class="legend-item">
+                <span class="legend-color available"></span>
+                <span>Available</span>
+              </div>
+
+              <div class="legend-item">
+                <span class="legend-color selected"></span>
+                <span>Selected</span>
+              </div>
+
+              <div class="legend-item">
+                <span class="legend-color unavailable"></span>
+                <span>Booked</span>
+              </div>
+
+              <div class="legend-item">
+                <span class="legend-color reserved"></span>
+                <span>Reserved</span>
+              </div>
+
+              <!-- Calendar Actions -->
+              <div class="calendar-actions" *ngIf="checkInDate || checkOutDate">
+
+                <button type="button" class="reset-selection-button" [disabled]="reservingDates"
+                  (click)="resetSelection()">
+
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                  Reset Selected Dates
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Selected Dates Summary -->
+          <div class="selected-dates-section">
+
+            <h3>
+              <i class="bi bi-calendar2-check"></i>
+              Your Selected Dates
+            </h3>
+
+            <div class="selected-dates-grid">
+
+              <!-- Check-in -->
+              <div class="selected-date-card">
+                <span class="date-label">
+                  <i class="bi bi-box-arrow-in-right"></i>
+                  Check-in
+                </span>
+
+                <strong>
+                  {{ checkInDate ? (checkInDate | date:'dd MMM yyyy') : 'Not selected' }}
+                </strong>
+              </div>
+
+              <!-- Check-out -->
+              <div class="selected-date-card">
+                <span class="date-label">
+                  <i class="bi bi-box-arrow-right"></i>
+                  Check-out
+                </span>
+
+                <strong>
+                  {{ checkOutDate ? (checkOutDate | date:'dd MMM yyyy') : 'Not selected' }}
+                </strong>
+              </div>
+
+            </div>
+
+            <!-- Reservation Status -->
+            <div class="reservation-status" *ngIf="reservingDates">
+
+              <span class="spinner-border spinner-border-sm"></span>
+              <span>Temporarily reserving your selected dates...</span>
+
+            </div>
+
+            <div class="reservation-success" *ngIf="selectionId && checkInDate && checkOutDate">
+
+              <i class="bi bi-check-circle-fill"></i>
+
+              <div>
+                <strong>Dates Temporarily Reserved!</strong>
+                <p>Your selected dates have been reserved successfully.</p>
+              </div>
+
+            </div>
+
+            <!-- Error Message -->
+            <div class="calendar-error" *ngIf="errorMessage">
+
+              <i class="bi bi-exclamation-circle"></i>
+              <span>{{ errorMessage }}</span>
+
+            </div>
+
+            <!-- Success Message -->
+            <div class="calendar-success" *ngIf="successMessage && !selectionId">
+
+              <i class="bi bi-check-circle"></i>
+              <span>{{ successMessage }}</span>
+
+            </div>
+
+
+
+          </div>
+
+        </div>
+
+
+        <!-- Step 4: Event Details -->
+        <div *ngIf="currentStep === 4" class="step-content">
+          <div *ngIf="stayRate as rate">
+            <p>
+              Stay charge <strong>{{ stayCharge | currency:rate.currencyCode }}</strong>
+              <br />
+              {{ rate.price | currency:rate.currencyCode }} per day × {{ availableEventDates.length }}
+              {{ availableEventDates.length === 1 ? 'day' : 'days' }}
+            </p>
+          </div>
+
+          <fieldset class="event-options">
+            <legend>Add an event (optional)</legend>
+            <label *ngFor="let type of bookingTypes">
+              <input type="radio" name="bookingType" [checked]="bookingType === type.value"
+                (change)="selectBookingType(type.value)" />
+              {{ type.label }}
+            </label>
+            <div *ngIf="bookingType !== 'BookingOnly'">
+              <button type="button" class="back-button" (click)="selectBookingType('BookingOnly')">
+                Remove event
+              </button>
+            </div>
+          </fieldset>
+
+          <fieldset *ngIf="bookingType !== 'BookingOnly'" class="event-options">
+            <legend>Event dates</legend>
+            <label *ngFor="let date of availableEventDates">
+              <input type="checkbox" [checked]="eventDates.includes(date)"
+                (change)="toggleEventDate(date, $any($event.target).checked)" />
+              {{ date | date:'EEE, d MMM yyyy' }}
+            </label>
+          </fieldset>
+
+          <p *ngIf="selectedEventRate as rate" aria-live="polite">
+            Estimated event charge
+            <strong>{{ eventCharge | currency:rate.currencyCode }}</strong>
+            <br />
+            {{ rate.price | currency:rate.currencyCode }} per day × {{ eventDates.length }}
+            {{ eventDates.length === 1 ? 'day' : 'days' }}
+          </p>
+          <ng-container *ngIf="stayRate as rate">
+            <p *ngIf="bookingType === 'BookingOnly' || !eventStepError" aria-live="polite">
+              Estimated total <strong>{{ stayCharge + eventCharge | currency:rate.currencyCode }}</strong>
+            </p>
+          </ng-container>
+          <p *ngIf="eventStepError" aria-live="polite">{{ eventStepError }}</p>
+          <div *ngIf="!loadingRates && (!stayRate || (bookingType !== 'BookingOnly' && !selectedEventRate))">
+            <p *ngIf="pricingError" role="status">{{ pricingError }}</p>
+            <button type="button" class="back-button" (click)="loadBookingRates()">Retry pricing</button>
+          </div>
+        </div>
+
+        <!-- Steps 5 and 6 share the booking summary. -->
+        <div *ngIf="currentStep === 5 || currentStep === 6" class="step-content">
+          <div class="booking-review">
+            <section>
+              <h3>Customer and guests</h3>
+              <p>{{ customerDetails.fullName }}<br />{{ customerDetails.email }}<br />{{ customerDetails.mobileNumber }}</p>
+              <p>{{ guestDetails.AdultCount }} adults · {{ guestDetails.ChildrenCount ?? 0 }} children ·
+                {{ guestDetails.PersonCount }} guests</p>
+              <p *ngIf="guestDetails.CustomerNotes">{{ guestDetails.CustomerNotes }}</p>
+            </section>
+            <section>
+              <h3>Stay and event</h3>
+              <dl>
+                <dt>Check-in</dt><dd>{{ checkInDate | date:'d MMM yyyy' }}</dd>
+                <dt>Check-out</dt><dd>{{ checkOutDate | date:'d MMM yyyy' }}</dd>
+                <dt>Stay length</dt><dd>{{ quote?.stayDays ?? availableEventDates.length }} days</dd>
+                <dt>Booking type</dt><dd>{{ bookingTypeLabel }}</dd>
+                <ng-container *ngIf="eventDates.length">
+                  <dt>Event dates</dt>
+                  <dd><div *ngFor="let date of eventDates">{{ date | date:'d MMM yyyy' }}</div></dd>
+                </ng-container>
+              </dl>
+            </section>
+            <section class="review-pricing">
+              <h3>Estimated price</h3>
+              <div *ngIf="currentStep === 6 && previousQuote && quote" role="alert">
+                <p>Pricing changed. Review these amounts before submitting again.</p>
+                <p>Total {{ previousQuote.totalAmount | currency:previousQuote.currencyCode }} →
+                  <strong>{{ quote.totalAmount | currency:quote.currencyCode }}</strong></p>
+                <p>Advance {{ previousQuote.advanceAmount | currency:previousQuote.currencyCode }} →
+                  <strong>{{ quote.advanceAmount | currency:quote.currencyCode }}</strong></p>
+              </div>
+              <p *ngIf="loadingQuote" role="status">Loading your booking quote…</p>
+              <div *ngIf="quoteError" role="alert">
+                <p>{{ quoteError }}</p>
+                <button type="button" class="back-button" (click)="loadQuote()">Retry quote</button>
+              </div>
+              <dl *ngIf="quote as price">
+                <dt>Stay · {{ price.stayRate | currency:price.currencyCode }} × {{ price.stayDays }}</dt>
+                <dd>{{ price.stayAmount | currency:price.currencyCode }}</dd>
+                <dt>Event<span *ngIf="price.eventDays"> · {{ price.eventRate | currency:price.currencyCode }} × {{ price.eventDays }}</span></dt>
+                <dd>{{ price.eventAmount | currency:price.currencyCode }}</dd>
+                <dt>Total booking amount</dt><dd><strong>{{ price.totalAmount | currency:price.currencyCode }}</strong></dd>
+                <dt>Advance payment · {{ price.advanceRate | currency:price.currencyCode }} per day ×
+                  {{ price.stayDays }} {{ price.stayDays === 1 ? 'day' : 'days' }}</dt>
+                <dd>{{ price.advanceAmount | currency:price.currencyCode }}</dd>
+                <dt>Remaining after advance</dt><dd>{{ price.remainingAmount | currency:price.currencyCode }}</dd>
+              </dl>
+            </section>
+          </div>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div *ngIf="currentStep === 6 && errorMessage" class="calendar-error" role="alert">
+          <span>{{ errorMessage }}</span>
+          <a *ngIf="submissionUncertain" routerLink="/my-bookings">View My Bookings</a>
+        </div>
+        <p *ngIf="currentStep === 1"><a routerLink="/my-bookings">View My Bookings</a></p>
+        <footer class="booking-footer">
+          <button type="button" class="back-button" [disabled]="currentStep === 1" (click)="previousStep()">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+          </button>
+
+          <span class="step-counter">
+            {{ currentStep }} / {{ bookingSteps.length }}
+          </span>
+
+          <button *ngIf="currentStep < bookingSteps.length" type="button" class="next-button"
+            [disabled]="(currentStep >= 3 && reservationExpired) ||
+              (currentStep === 4 && !!eventStepError) || (currentStep === 5 && !quote)"
+            (click)="nextStep()">
+
+            Next
+            <i class="bi bi-arrow-right"></i>
+          </button>
+
+          <button *ngIf="currentStep === bookingSteps.length" type="button" class="next-button"
+            [disabled]="!canSubmitBooking" (click)="submitBooking()">
+
+            {{ submittingBooking ? 'Submitting…' : 'Submit Booking' }}
+            <i class="bi bi-check2"></i>
+          </button>
+        </footer>
+
+      </section>
+
+      <p class="page-note">
+        <i class="bi bi-info-circle"></i>
+        Your booking request will be subject to farmhouse availability
+        and owner approval.
+      </p>
+
+    </main>
+  </div>
+</section>

@@ -1,0 +1,194 @@
+
+/* =====================================
+   Booking Details Expanded Section
+===================================== */
+
+.booking-detail-section {
+  background: #f8faf8;
+  border: 1px solid #e3ebe3;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 22px;
+}
+
+.detail-heading {
+  color: #28543a;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dce7dc;
+}
+
+.booking-detail-section .fw-semibold {
+  color: #34443a;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.booking-detail-section small {
+  display: block;
+  color: #859087;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Pricing Section */
+
+.pricing-details {
+  background: #ffffff;
+  border: 1px solid #e5ece5;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.pricing-details .total-amount {
+  color: #198754;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pricing-details .advance-amount {
+  color: #28543a;
+  font-weight: 700;
+}
+
+/* Event Dates and Status History Tables */
+
+.booking-detail-section .table-responsive {
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.booking-detail-section .table {
+  background: #ffffff;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.booking-detail-section .table thead th {
+  background: #edf4ee;
+  color: #315c40;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 13px;
+}
+
+.booking-detail-section .table tbody td {
+  color: #49574d;
+  font-size: 13px;
+  padding: 12px;
+}
+
+/* Reason Messages */
+
+.booking-reason {
+  background: #fff8e8;
+  border-left: 4px solid #e0a52c;
+  border-radius: 7px;
+  padding: 14px 16px;
+  color: #73551b;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.cancellation-reason {
+  background: #fff0f0;
+  border-left: 4px solid #dc3545;
+  border-radius: 7px;
+  padding: 14px 16px;
+  color: #a52834;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+/* Booking Action Buttons */
+
+.booking-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.booking-actions .btn {
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Responsive Details */
+
+@media (max-width: 768px) {
+
+  .booking-detail-section {
+    padding: 18px;
+  }
+
+  .detail-heading {
+    font-size: 15px;
+  }
+
+  .pricing-details {
+    padding: 14px;
+  }
+
+  .booking-detail-section .table thead th,
+  .booking-detail-section .table tbody td {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .booking-detail-section {
+    padding: 14px;
+  }
+
+  .booking-actions {
+    flex-direction: column;
+  }
+
+  .booking-actions .btn {
+    width: 100%;
+  }
+
+}
+.booking-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  width: min(48rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid #dce5df;
+  border-radius: 16px;
+  color: #1e3228;
+  background: #fff;
+  box-shadow: 0 24px 70px #16281d40;
+}
+
+.booking-dialog::backdrop { background: #15251db3; }
+.booking-dialog-header, .booking-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: 1rem 1.25rem;
+  background: #f3f8f4;
+}
+.booking-dialog-header h2 { margin: 0; font-size: 1.35rem; }
+.booking-dialog-header p { margin: .25rem 0 0; }
+.booking-dialog-content { padding: .25rem 1.25rem 1rem; }
+.booking-dialog-footer { position: sticky; bottom: 0; flex-wrap: wrap; justify-content: flex-end; }
+.booking-dialog-footer small { margin-inline-end: auto; }
+.identity-step { margin-top: 1rem; padding: 1rem; border-radius: 10px; background: #f3f8f4; }
+.identity-step h3 { font-size: 1.1rem; }

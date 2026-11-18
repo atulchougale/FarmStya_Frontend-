@@ -1,3 +1,4 @@
+import { pricingManagementGuard } from './core/guards/pricing-management.guard';
 import { Routes } from '@angular/router';
 
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
@@ -7,6 +8,7 @@ import { ClientLayoutComponent } from './layouts/client-layout/client-layout.com
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
 import { authGuard } from './core/guards/auth.guard';
+import { bookingAdministrationGuard } from './core/guards/booking-administration.guard';
 
 export const routes: Routes = [
   // ==========================
@@ -88,16 +90,6 @@ export const routes: Routes = [
           ),
       },
 
-      // Dashboard - Protected
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard.component').then(
-            (c) => c.DashboardComponent,
-          ),
-        canActivate: [authGuard],
-      },
-
       // Public Gallery
       {
         path: 'gallery',
@@ -125,7 +117,40 @@ export const routes: Routes = [
           ),
       },
 
+      // Public Feedback - Protected
+      {
+        path: 'feedback',
+        loadComponent: () =>
+          import('./features/public/public-feedback/public-feedback.component').then(
+            (c) => c.PublicFeedbackComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      // Public Feedback - Protected
+      {
+        path: 'booking',
+        loadComponent: () =>
+          import('./features/public/booking/booking-page/booking-page.component').then(
+            (c) => c.BookingPageComponent,
+          ),
+        // canActivate: [authGuard],
+      },
+
       // Profile - Protected
+      {
+        path: 'my-bookings',
+        loadComponent: () =>
+          import('./features/public/booking/my-booking/my-booking.component').then((c) => c.MyBookingComponent),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'my-bookings/:bookingId',
+        loadComponent: () =>
+          import('./features/public/booking/customer-booking-details/customer-booking-details.component').then(c => c.CustomerBookingDetailsComponent),
+        canActivate: [authGuard],
+      },
+
       {
         path: 'profile',
         loadComponent: () =>
@@ -165,6 +190,31 @@ export const routes: Routes = [
       },
 
       // Gallery List
+      {
+        path: 'booking',
+        loadComponent: () =>
+          import('./features/admin/Booking/booking-view/booking-view.component').then((c) => c.BookingViewComponent),
+        canActivate: [authGuard, bookingAdministrationGuard],
+      },
+      { path: 'bookings', redirectTo: 'booking', pathMatch: 'full' },
+      {
+        path: 'booking/:bookingId/checkout',
+        loadComponent: () => import('./features/admin/Booking/checkout/checkout.component').then(c => c.CheckoutComponent),
+        canActivate: [authGuard, bookingAdministrationGuard],
+      },
+      {
+        path: 'booking/:bookingId',
+        loadComponent: () =>
+          import('./features/admin/Booking/booking-details/booking-details.component').then((c) => c.BookingDetailsComponent),
+        canActivate: [authGuard, bookingAdministrationGuard],
+      },
+
+      {
+        path: 'website-settings/pricing',
+        loadComponent: () => import('./features/admin/pricing/pricing-management.component').then(c => c.PricingManagementComponent),
+        canActivate: [authGuard, bookingAdministrationGuard, pricingManagementGuard],
+      },
+
       {
         path: 'website-settings/gallery',
         loadComponent: () =>
@@ -223,7 +273,7 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
-       // Contact Message List
+      // Contact Message List
       {
         path: 'website-settings/message',
         loadComponent: () =>
@@ -263,7 +313,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
 
-      // Feedback list 
+      // Feedback list
       {
         path: 'website-settings/feedback',
         loadComponent: () =>
@@ -272,7 +322,6 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
-      
     ],
   },
 

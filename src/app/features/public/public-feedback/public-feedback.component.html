@@ -1,0 +1,145 @@
+<main class="feedback-page">
+    <section class="feedback-section">
+
+        <!-- =========================================
+             AREA 1: FULL WIDTH THANK YOU / INTRO
+        ========================================== -->
+        <header class="feedback-intro">
+            <div class="feedback-intro-inner">
+
+                <div class="feedback-eyebrow">
+                    <span class="sparkle-icon" aria-hidden="true">✦</span>
+                    <span>THANK YOU FOR BEING WITH US</span>
+                    <span class="sparkle-icon" aria-hidden="true">✦</span>
+                </div>
+
+                <h1 class="feedback-intro-title">
+                    Thank you for choosing
+                    <span class="feedback-farmhouse-name">{{ farmHouseName }}</span>
+                </h1>
+
+                <div class="feedback-intro-divider" aria-hidden="true"></div>
+
+                <p class="feedback-intro-message">
+                    We hope you take home beautiful memories, peaceful moments, and a reason to visit us again.
+                </p>
+
+                <p class="feedback-intro-description">
+                    Whether it was a celebration, family gathering, friends' get-together, or simply a peaceful escape
+                    from everyday life, we truly hope your time with us was special.
+                </p>
+
+            </div>
+        </header>
+
+        <!-- =========================================
+             AREA 2: BOTTOM SECTION (INSIDE APP-CONTAINER)
+        ========================================== -->
+        <div class="app-container">
+            <div class="feedback-content">
+
+                <!-- =======================================
+                     LEFT: COME BACK AGAIN
+                ======================================== -->
+                <aside class="feedback-welcome">
+
+                    <div class="welcome-heart-icon" aria-hidden="true">♥</div>
+
+                    <h2 class="welcome-title">
+                        Come back again
+                    </h2>
+
+                    <p class="welcome-message">
+                        We'd love to welcome you again.
+                    </p>
+
+                    <p class="welcome-description">
+                        Your moments with us are what make every stay meaningful. We hope to see you again soon for
+                        another memorable experience in the lap of nature.
+                    </p>
+
+                    <div class="welcome-accent-line" aria-hidden="true"></div>
+
+                </aside>
+
+                <!-- =======================================
+                     RIGHT: FEEDBACK FORM
+                ======================================== -->
+                <div class="feedback-form-section">
+                    <div class="feedback-card">
+
+                        <div class="feedback-card-header">
+                            <h2 class="feedback-card-title">
+                                How was your experience?
+                            </h2>
+                            <p class="feedback-card-subtitle">
+                                We'd love to hear what made your visit special.
+                            </p>
+                        </div>
+
+                        <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" autocomplete="off" novalidate>
+
+                            <!-- Rating -->
+                            <div class="feedback-field mb-4">
+                                <label class="form-label" id="rating-label">
+                                    Your rating
+                                </label>
+
+                                <div class="rating-stars" role="radiogroup" aria-labelledby="rating-label">
+                                    @for (star of getStars(); track star) {
+                                    <button type="button" class="rating-star" [class.filled]="isStarFilled(star)"
+                                        [attr.aria-label]="star + ' star' + (star > 1 ? 's' : '')"
+                                        [attr.aria-checked]="f['rating'].value === star" role="radio"
+                                        (click)="setRating(star)">
+                                        <i class="bi" [class.bi-star-fill]="isStarFilled(star)"
+                                            [class.bi-star]="!isStarFilled(star)" aria-hidden="true"></i>
+                                    </button>
+                                    }
+                                </div>
+
+                                @if (f['rating'].touched && f['rating'].errors?.['min']) {
+                                <small class="text-danger" role="alert">
+                                    Please select a rating.
+                                </small>
+                                }
+                            </div>
+
+                            <!-- Review -->
+                            <div class="feedback-field mb-4">
+                                <label class="form-label" for="review">
+                                    Your review
+                                </label>
+
+                                <textarea id="review" rows="5" class="form-control feedback-input"
+                                    placeholder="Tell us about your experience..." formControlName="review"
+                                    [class.is-invalid]="f['review'].touched && f['review'].invalid">
+                                </textarea>
+
+                                @if (f['review'].touched && f['review'].errors?.['required']) {
+                                <small class="text-danger" role="alert">
+                                    Please enter your review.
+                                </small>
+                                }
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit" class="btn feedback-submit-btn w-100" [disabled]="submitting">
+                                @if (submitting) {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"
+                                    aria-hidden="true"></span>
+                                Submitting...
+                                } @else {
+                                Share my experience
+                                }
+                            </button>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+</main>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SessionService } from './core/services/session.service';
 import { TokenService } from './core/services/token.service';
 import { GlobalLoaderComponent } from './shared/components/global-loader/global-loader.component';
 
@@ -13,7 +14,7 @@ import { GlobalLoaderComponent } from './shared/components/global-loader/global-
 export class AppComponent {
   title = 'Frontend';
 
-  constructor(private tokenService: TokenService) {
+  constructor(private tokenService: TokenService, private readonly session: SessionService) {
     this.tokenService.restoreLogin();
   }
 }

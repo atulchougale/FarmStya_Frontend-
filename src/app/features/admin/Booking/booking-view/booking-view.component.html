@@ -1,0 +1,291 @@
+
+<div class="booking-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2>Bookings</h2>
+      <p>View and manage guest bookings</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="refreshBookings()"
+      [disabled]="loading">
+
+      <span>↻</span>
+      Refresh
+
+    </button>
+
+  </div>
+
+
+  <!-- SEARCH BOX -->
+  <div class="search-container">
+
+    <i class="bi bi-search search-icon" aria-hidden="true"></i>
+
+    <input
+      type="text"
+      aria-label="Search bookings on this page"
+      placeholder="Search this page by reference, name, email or mobile"
+      [(ngModel)]="searchText"
+      (input)="searchBookings()"
+    />
+
+    <button
+      type="button"
+      *ngIf="searchText"
+      aria-label="Clear search"
+      (click)="clearSearch()">
+
+      <i class="bi bi-x-lg" aria-hidden="true"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- LOADING -->
+  <div
+    class="loading-container"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>Loading bookings...</p>
+
+  </div>
+
+
+  <!-- EMPTY BOOKINGS -->
+  <div
+    class="empty-container"
+    *ngIf="!loading && bookingItems.length === 0">
+
+    <div class="empty-icon">📅</div>
+
+    <h3>No Bookings Found</h3>
+
+    <p>There are no bookings available.</p>
+
+  </div>
+
+
+  <!-- NO SEARCH RESULTS -->
+  <div
+    class="empty-container"
+    *ngIf="
+      !loading &&
+      bookingItems.length > 0 &&
+      filteredBookingItems.length === 0
+    ">
+
+    <div class="empty-icon">🔍</div>
+
+    <h3>No Matching Bookings</h3>
+
+    <p>Try searching with another booking ID, name or mobile number.</p>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      (click)="clearSearch()">
+
+      Clear Search
+
+    </button>
+
+  </div>
+
+
+  <!-- BOOKING TABLE -->
+  <div
+    class="table-wrapper"
+    *ngIf="!loading && filteredBookingItems.length > 0">
+
+    <table mat-table [dataSource]="filteredBookingItems">
+
+
+      <!-- NUMBER -->
+      <ng-container matColumnDef="number">
+
+        <th mat-header-cell *matHeaderCellDef>
+          #
+        </th>
+
+        <td mat-cell *matCellDef="let booking; let i = index">
+          {{ i + 1 }}
+        </td>
+
+      </ng-container>
+
+
+      <!-- BOOKING REFERENCE -->
+      <ng-container matColumnDef="bookingReference">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Booking ID
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+
+          <span class="booking-reference">
+            {{ booking.bookingReference }}
+          </span>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- GUEST -->
+      <ng-container matColumnDef="guest">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Guest
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+
+          <div class="guest-name">
+            {{ booking.fullName || 'Guest' }}
+          </div>
+
+          <div class="guest-email">
+            {{ booking.email || '-' }}
+          </div>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- MOBILE -->
+      <ng-container matColumnDef="mobile">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Mobile
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+          {{ booking.mobileNumber || '-' }}
+        </td>
+
+      </ng-container>
+
+
+      <!-- CHECK IN -->
+      <ng-container matColumnDef="checkIn">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Check In
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+          {{ booking.checkInDate | date:'dd/MM/yyyy' }}
+        </td>
+
+      </ng-container>
+
+
+      <!-- CHECK OUT -->
+      <ng-container matColumnDef="checkOut">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Check Out
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+          {{ booking.checkOutDate | date:'dd/MM/yyyy' }}
+        </td>
+
+      </ng-container>
+
+
+      <!-- PERSONS -->
+      <ng-container matColumnDef="persons">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Persons
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+          {{ booking.personCount || 0 }}
+        </td>
+
+      </ng-container>
+
+
+      <!-- STATUS -->
+      <ng-container matColumnDef="status">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Status
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+
+          <span
+            class="status-badge"
+            [ngClass]="getStatusClass(booking.status)">
+
+            {{ booking.status || 'Unknown' }}
+
+          </span>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- BOOKING DATE -->
+      <ng-container matColumnDef="date">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Booking Date
+        </th>
+
+        <td mat-cell *matCellDef="let booking">
+          {{ booking.createdDate | date:'dd/MM/yyyy' }}
+        </td>
+
+      </ng-container>
+
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let booking">
+          <a class="view-booking" [routerLink]="['/admin/booking', booking.bookingId]">
+            View details <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </td>
+      </ng-container>
+
+      <!-- HEADER ROW -->
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns">
+      </tr>
+
+
+      <!-- DATA ROW -->
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+
+    </table>
+
+  </div>
+
+  <nav class="d-flex align-items-center justify-content-center gap-3 mt-3" aria-label="Booking pages">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="loading || page === 1" (click)="changePage(-1)">Previous</button>
+    <span>Page {{ page }}</span>
+    <button type="button" class="btn btn-outline-secondary" [disabled]="loading || bookingItems.length < pageSize" (click)="changePage(1)">Next</button>
+  </nav>
+
+</div>

@@ -40,3 +40,15 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local archives, tooling and credentials
+*.zip
+/.postman/
+/postman/
+.env
+.env.*
+!.env.example
+*.log
+*.pfx
+*.p12
+*.pem

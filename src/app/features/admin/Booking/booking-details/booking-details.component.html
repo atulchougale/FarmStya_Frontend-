@@ -1,0 +1,108 @@
+<main class="booking-detail">
+  <header>
+    <div>
+      <h1>{{ booking?.bookingReference || 'Booking details' }}</h1>
+      <p *ngIf="booking" class="status">{{ booking.status }}</p>
+    </div>
+    <a class="btn btn-outline-secondary" routerLink="/admin/booking"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back</a>
+  </header>
+
+  <p *ngIf="loading" role="status">Loading booking details…</p>
+  <p *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</p>
+  <p *ngIf="notice" class="alert alert-success" role="status">{{ notice }}</p>
+
+  <ng-container *ngIf="booking as item">
+    <div class="detail-grid">
+      <section>
+        <h2>Customer and guests</h2>
+        <p><strong>{{ item.fullName }}</strong><br>{{ item.email }}<br>{{ item.mobileNumber }}</p>
+        <p>{{ item.adultCount }} adults · {{ item.childrenCount }} children · {{ item.personCount }} guests</p>
+        <p *ngIf="item.customerNotes">{{ item.customerNotes }}</p>
+      </section>
+      <section>
+        <h2>Stay and event</h2>
+        <dl>
+          <dt>Scheduled check-in</dt><dd>{{ item.checkInDate | date:'d MMM yyyy' }}</dd>
+          <dt *ngIf="item.actualCheckInAt">Actual check-in</dt><dd *ngIf="item.actualCheckInAt">{{ item.actualCheckInAt | date:'d MMM yyyy, h:mm a' }}</dd>
+          <dt>Scheduled check-out</dt><dd>{{ item.checkOutDate | date:'d MMM yyyy' }}</dd>
+          <dt *ngIf="item.actualCheckOutAt">Actual check-out</dt><dd *ngIf="item.actualCheckOutAt">{{ item.actualCheckOutAt | date:'d MMM yyyy, h:mm a' }}</dd>
+          <dt *ngIf="item.checkoutPaidAt">Checkout payment</dt><dd *ngIf="item.checkoutPaidAt">{{ item.checkoutPaidAt | date:'d MMM yyyy, h:mm a' }}</dd>
+          <dt>Stay length</dt><dd>{{ item.stayDays }} days</dd>
+          <dt>Booking type</dt><dd>{{ item.bookingType }}</dd>
+          <ng-container *ngIf="item.eventDates?.length">
+            <dt>Event dates</dt>
+            <dd><div *ngFor="let event of item.eventDates">{{ event.eventDate | date:'d MMM yyyy' }}</div></dd>
+          </ng-container>
+        </dl>
+      </section>
+      <section>
+        <h2>Pricing</h2>
+        <app-payment-receipts [bookingId]="item.bookingId" [bookingStatus]="item.status" />
+        <dl>
+          <dt>Stay</dt><dd>{{ item.baseAmount | currency:item.currencyCode }}</dd>
+          <dt>Event</dt><dd>{{ item.eventAmount | currency:item.currencyCode }}</dd>
+          <dt>Total</dt><dd><strong>{{ item.totalAmount | currency:item.currencyCode }}</strong></dd>
+          <dt>Advance paid</dt><dd>{{ item.advancePaid | currency:item.currencyCode }}</dd>
+          <dt *ngIf="item.discountAmount > 0">Discount</dt><dd *ngIf="item.discountAmount > 0">{{ item.discountAmount | currency:item.currencyCode }}</dd>
+          <dt>Total paid</dt><dd><strong>{{ item.totalPaid | currency:item.currencyCode }}</strong></dd>
+          <dt *ngIf="item.remainingAmount > 0">Remaining</dt><dd *ngIf="item.remainingAmount > 0">{{ item.remainingAmount | currency:item.currencyCode }}</dd>
+        </dl>
+      </section>
+      <section>
+        <h2>Decision timeline</h2>
+        <dl>
+          <dt>Submitted</dt><dd>{{ item.createdDate | date:'d MMM, h:mm a' }}</dd>
+          <dt>Owner decision due</dt><dd>{{ item.ownerDeadline | date:'d MMM, h:mm a' }}</dd>
+          <ng-container *ngIf="item.customerDeadline">
+            <dt>Customer confirmation due</dt><dd>{{ item.customerDeadline | date:'d MMM, h:mm a' }}</dd>
+          </ng-container>
+        </dl>
+        <ul>
+          <li *ngFor="let change of item.statusHistory">
+            {{ change.newStatus }} · {{ change.createdDate | date:'d MMM, h:mm a' }}
+            <div *ngIf="change.reason">{{ change.reason }}</div>
+          </li>
+        </ul>
+      </section>
+      <section *ngIf="item.hasIdentityDocument || canCheckIn || item.canCheckout">
+        <h2>Identity proof</h2>
+        <div class="d-flex flex-wrap gap-2">
+          <button *ngIf="item.hasIdentityDocument" type="button" class="btn btn-outline-success" (click)="openIdentity()">View Document</button>
+          <button *ngIf="canCheckIn" class="btn btn-success" type="button" [disabled]="deciding" (click)="checkIn()">Check In</button>
+          <a *ngIf="item.canCheckout" class="btn btn-success" routerLink="checkout">Check Out</a>
+        </div>
+      </section>
+    </div>
+    <div class="decision-actions" *ngIf="canDecide">
+      <button type="button" class="btn btn-outline-danger" [disabled]="deciding || loading" (click)="decide(false)">Reject</button>
+      <button type="button" class="btn btn-success" [disabled]="deciding || loading" (click)="decide(true)">Approve</button>
+    </div>
+  </ng-container>
+</main>
+
+<dialog #identityDialog class="identity-dialog" aria-labelledby="identity-dialog-heading" (close)="clearIdentity()">
+  <header>
+    <div><h2 id="identity-dialog-heading">Customer ID proof</h2><span *ngIf="identity">{{ identity.status }}</span></div>
+    <button type="button" class="btn-close" aria-label="Close document" (click)="closeIdentity()"></button>
+  </header>
+  <p *ngIf="identityLoading" role="status">Loading document…</p>
+  <p *ngIf="identityError" class="alert alert-danger" role="alert">{{ identityError }}</p>
+  <img *ngIf="identityImage" [src]="identityImage" alt="Uploaded customer ID proof">
+  <iframe *ngIf="identityPreview" [src]="identityPreview" title="Uploaded customer ID proof"></iframe>
+  <p *ngIf="identity?.reason" class="mt-2">{{ identity?.reason }}</p>
+  <div *ngIf="showReuploadReason">
+    <label for="identity-reupload-reason" class="form-label mt-3">Reason shared with the customer</label>
+    <textarea id="identity-reupload-reason" maxlength="1000" class="form-control"
+      #reason (input)="reuploadReason = reason.value"></textarea>
+  </div>
+  <div class="decision-actions">
+    <button type="button" class="btn btn-outline-secondary" (click)="closeIdentity()">Back</button>
+    <ng-container *ngIf="booking?.status === 'Confirmed' && identity?.status === 'Uploaded' && (identityImage || identityPreview)">
+      <button *ngIf="!showReuploadReason" type="button" class="btn btn-outline-danger"
+        [disabled]="reviewingIdentity" (click)="showReuploadReason = true">Request Re-upload</button>
+      <button *ngIf="showReuploadReason" type="button" class="btn btn-outline-danger"
+        [disabled]="reviewingIdentity || !reuploadReason.trim()" (click)="reviewIdentity(false)">Send Request</button>
+      <button type="button" class="btn btn-success" [disabled]="reviewingIdentity" (click)="reviewIdentity(true)">OK</button>
+    </ng-container>
+  </div>
+</dialog>

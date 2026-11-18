@@ -390,6 +390,7 @@ export class LoginComponent implements OnDestroy {
     }
 
     this.tokenService.saveLogin(response.data, rememberMe);
+    const defaultRoute = isAdministrationRole(response.data.roleName) ? '/admin/dashboard' : '/home';
 
     Swal.fire({
       icon: 'success',
@@ -400,7 +401,9 @@ export class LoginComponent implements OnDestroy {
     }).then(() => {
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
-      this.router.navigateByUrl(returnUrl ?? '/dashboard');
+      const legacyDashboard = returnUrl && this.router.parseUrl(returnUrl).root.children['primary']
+        ?.segments[0]?.path === 'dashboard';
+      void this.router.navigateByUrl(returnUrl && !legacyDashboard ? returnUrl : defaultRoute);
     });
   }
 
@@ -496,3 +499,4 @@ export class LoginComponent implements OnDestroy {
     });
   }
 }
+import { isAdministrationRole } from '../../../core/models/administration-role';

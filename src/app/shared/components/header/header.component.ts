@@ -5,8 +5,8 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TokenService } from '../../../core/services/token.service';
 import { PublicSiteService } from '../../../core/services/public-site.service';
 
-import { LoginResponse } from '../../../features/auth/models/login-response.model';
 import { PublicSite } from '../../../core/models/public-site.model';
+import { isAdministrationRole } from '../../../core/models/administration-role';
 
 import { environment } from '../../../../environments/environment';
 
@@ -18,13 +18,15 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
-  isLoggedIn = false;
-
-  currentUser: LoginResponse | null = null;
+  readonly isAdministrationRole = isAdministrationRole;
+  get currentUser$() {
+    return this.tokenService.currentUser$;
+  }
 
   site: PublicSite | null = null;
 
   isDropdownOpen = false;
+
 
   constructor(
     private tokenService: TokenService,
@@ -33,16 +35,6 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Authentication Status
-    this.tokenService.isLoggedIn$.subscribe((status) => {
-      this.isLoggedIn = status;
-    });
-
-    // Logged In User
-    this.tokenService.currentUser$.subscribe((user) => {
-      this.currentUser = user;
-    });
-
     // Public Site Information
     this.publicSiteService.publicSite$.subscribe((site) => {
       this.site = site;

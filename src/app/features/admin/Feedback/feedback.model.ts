@@ -1,4 +1,5 @@
 export interface FeedbackRequest {
+  bookingId?: number;
   feedBackId: number;
   farmHouseId: number;
   review: string;
