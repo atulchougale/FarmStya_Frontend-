@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -16,11 +18,12 @@ import { FeedbackRequest } from '../../admin/Feedback/feedback.model';
 @Component({
   selector: 'app-public-feedback',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [TranslationPipe, CommonModule, ReactiveFormsModule],
   templateUrl: './public-feedback.component.html',
   styleUrl: './public-feedback.component.css',
 })
 export class PublicFeedbackComponent {
+  readonly language = injectLanguage(LanguageService);
   feedbackForm: FormGroup;
   submitting: boolean = false;
   farmHouseName: string = '';
@@ -70,7 +73,7 @@ export class PublicFeedbackComponent {
     const bookingParam = this.route.snapshot.queryParamMap.get('bookingId');
     const bookingId = bookingParam === null ? undefined : Number(bookingParam);
     if (bookingId !== undefined && (!Number.isSafeInteger(bookingId) || bookingId < 1)) {
-      void Swal.fire({ icon: 'error', text: 'Invalid booking reference.' });
+      void Swal.fire({ icon: 'error', text: this.language.translate('Invalid booking reference.') });
       return;
     }
     if (this.feedbackForm.invalid) {
@@ -82,10 +85,10 @@ export class PublicFeedbackComponent {
 
     if (farmHouseId === null || farmHouseId === undefined) {
       Swal.fire({
-        title: 'Error',
-        text: 'Farm house information is missing. Please try again.',
+        title: this.language.translate('Error'),
+        text: this.language.translate('Farm house information is missing. Please try again.'),
         icon: 'error',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#dc3545',
       });
 
@@ -108,20 +111,20 @@ export class PublicFeedbackComponent {
 
         if (response?.success === false) {
           Swal.fire({
-            title: 'Failed',
-            text: response?.message || 'Unable to submit feedback.',
+            title: this.language.translate('Failed'),
+            text: this.language.translate(response?.message || 'Unable to submit feedback.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
           });
 
           return;
         }
 
         Swal.fire({
-          title: 'Thank You!',
-          text: 'Your feedback has been submitted successfully.',
+          title: this.language.translate('Thank You!'),
+          text: this.language.translate('Your feedback has been submitted successfully.'),
           icon: 'success',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
         });
 
         this.feedbackForm.reset({
@@ -136,12 +139,12 @@ export class PublicFeedbackComponent {
         console.error('Failed to submit feedback:', error);
 
         Swal.fire({
-          title: 'Error',
+          title: this.language.translate('Error'),
           text:
-            error?.error?.message ||
-            'Something went wrong while submitting your feedback. Please try again.',
+            this.language.translate(error?.error?.message ||
+            'Something went wrong while submitting your feedback. Please try again.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
         });
       },
     });

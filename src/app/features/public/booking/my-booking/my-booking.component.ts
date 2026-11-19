@@ -1,3 +1,4 @@
+import { TranslationPipe, LocalDatePipe } from '../../../../core/i18n/language';
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,7 @@ import { Booking } from '../../../admin/Booking/models/booking.model';
 @Component({
   selector: 'app-my-booking',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslationPipe, LocalDatePipe, CommonModule],
   templateUrl: './my-booking.component.html',
   styleUrl: './my-booking.component.css'
 })

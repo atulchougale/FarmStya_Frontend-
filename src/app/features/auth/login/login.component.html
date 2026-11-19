@@ -11,32 +11,28 @@
                     <div class="card-body p-4 p-md-5">
 
                         <h1 class="display-6 fw-bold mb-2">
-                            Welcome Back
-                        </h1>
+                            {{ 'Welcome Back' | t }}</h1>
 
                         <p class="text-muted mb-4">
-                            Sign in to continue to your FarmStay account.
-                        </p>
+                            {{ 'Sign in to continue to your FarmStay account.' | t }}</p>
 
                         <!-- Login Mode Toggle -->
 
-                        <div class="login-mode-toggle mb-4" role="radiogroup" aria-label="Login method">
+                        <div class="login-mode-toggle mb-4" role="radiogroup" [attr.aria-label]="'Login method' | t">
 
                             <input type="radio" class="btn-check" name="loginMode" id="modePassword" autocomplete="off"
                                 [checked]="loginMode === 'password'" (change)="setLoginMode('password')">
 
                             <label class="mode-option" for="modePassword">
                                 <i class="bi bi-envelope me-2"></i>
-                                Email &amp; Password
-                            </label>
+                                {{ 'Email or Mobile + Password' | t }}</label>
 
                             <input type="radio" class="btn-check" name="loginMode" id="modeOtp" autocomplete="off"
                                 [checked]="loginMode === 'otp'" (change)="setLoginMode('otp')">
 
                             <label class="mode-option" for="modeOtp">
                                 <i class="bi bi-phone me-2"></i>
-                                Mobile OTP
-                            </label>
+                                {{ 'Mobile OTP' | t }}</label>
 
                         </div>
 
@@ -54,10 +50,9 @@
                             <div class="mb-3">
 
                                 <label class="form-label fw-semibold">
-                                    Email Address
-                                </label>
+                                    {{ 'Email or mobile number' | t }}</label>
 
-                                <input type="email" class="form-control custom-input" placeholder="Enter your email"
+                                <input type="text" class="form-control custom-input" [placeholder]="'Enter email or 10-digit mobile number' | t"
                                     formControlName="email" autocomplete="off"
                                     [class.is-invalid]="f['email'].touched && f['email'].invalid"
                                     [class.is-valid]="f['email'].touched && f['email'].valid">
@@ -68,18 +63,16 @@
                                 )
                                 {
                                 <small class="text-danger">
-                                    Email is required
-                                </small>
+                                    {{ 'Email or mobile number is required' | t }}</small>
                                 }
 
                                 @if(
                                 f['email'].touched &&
-                                f['email'].errors?.['email']
+                                f['email'].errors?.['pattern']
                                 )
                                 {
                                 <small class="text-danger">
-                                    Enter a valid email address
-                                </small>
+                                    {{ 'Enter a valid email or 10-digit mobile number' | t }}</small>
                                 }
 
                             </div>
@@ -89,13 +82,12 @@
                             <div class="mb-3">
 
                                 <label class="form-label fw-semibold">
-                                    Password
-                                </label>
+                                    {{ 'Password' | t }}</label>
 
                                 <div class="input-group">
 
                                     <input [type]="showPassword ? 'text' : 'password'" class="form-control custom-input"
-                                        placeholder="Enter password" formControlName="password"
+                                        [placeholder]="'Enter password' | t" formControlName="password"
                                         autocomplete="new-password"
                                         [class.is-invalid]="f['password'].touched && f['password'].invalid"
                                         [class.is-valid]="f['password'].touched && f['password'].valid">
@@ -116,8 +108,7 @@
                                 )
                                 {
                                 <small class="text-danger">
-                                    Password is required
-                                </small>
+                                    {{ 'Password is required' | t }}</small>
                                 }
 
                             </div>
@@ -133,17 +124,13 @@
 
                                     <label class="form-check-label" for="rememberMe">
 
-                                        Remember Me
-
-                                    </label>
+                                        {{ 'Remember Me' | t }}</label>
 
                                 </div>
 
                                 <a routerLink="/forgot-password" class="text-decoration-none">
 
-                                    Forgot Password?
-
-                                </a>
+                                    {{ 'Forgot Password?' | t }}</a>
 
                             </div>
 
@@ -157,12 +144,10 @@
                                 <span class="spinner-border spinner-border-sm me-2">
                                 </span>
 
-                                Signing In...
-                                }
+                                {{ 'Signing In...' | t }}}
                                 @else
                                 {
-                                Login
-                                }
+                                {{ 'Login' | t }}}
 
                             </button>
 
@@ -183,15 +168,14 @@
                             <div class="mb-3">
 
                                 <label class="form-label fw-semibold">
-                                    Mobile Number
-                                </label>
+                                    {{ 'Mobile Number' | t }}</label>
 
                                 <div class="input-group">
 
                                     <span class="input-group-text mobile-prefix">+91</span>
 
                                     <input type="tel" inputmode="numeric" maxlength="10"
-                                        class="form-control custom-input" placeholder="Enter 10 digit mobile number"
+                                        class="form-control custom-input" [placeholder]="'Enter 10 digit mobile number' | t"
                                         formControlName="mobileNumber" autocomplete="tel-national" [readonly]="otpSent"
                                         (input)="onDigitsInput('mobileNumber', 10)"
                                         [class.is-invalid]="o['mobileNumber'].touched && o['mobileNumber'].invalid"
@@ -205,8 +189,7 @@
                                 )
                                 {
                                 <small class="text-danger">
-                                    Mobile number is required
-                                </small>
+                                    {{ 'Mobile number is required' | t }}</small>
                                 }
 
                                 @if(
@@ -215,8 +198,7 @@
                                 )
                                 {
                                 <small class="text-danger">
-                                    Enter a valid 10 digit mobile number
-                                </small>
+                                    {{ 'Enter a valid 10 digit mobile number' | t }}</small>
                                 }
 
                             </div>
@@ -225,8 +207,7 @@
                             {
 
                             <p class="text-muted small mb-4">
-                                We will send a one-time password (OTP) to this number on WhatsApp.
-                            </p>
+                                {{ 'We will send a one-time password (OTP) to this number on WhatsApp.' | t }}</p>
 
                             <!-- Send OTP Button -->
 
@@ -238,12 +219,10 @@
                                 <span class="spinner-border spinner-border-sm me-2">
                                 </span>
 
-                                Sending OTP...
-                                }
+                                {{ 'Sending OTP...' | t }}}
                                 @else
                                 {
-                                Send OTP
-                                }
+                                {{ 'Send OTP' | t }}}
 
                             </button>
 
@@ -256,8 +235,7 @@
                             <div class="mb-2">
 
                                 <label class="form-label fw-semibold">
-                                    Enter OTP
-                                </label>
+                                    {{ 'Enter OTP' | t }}</label>
 
                                 <input type="text" inputmode="numeric" maxlength="6"
                                     class="form-control custom-input otp-input" placeholder="------"
@@ -272,8 +250,7 @@
                                 )
                                 {
                                 <small class="text-danger">
-                                    OTP is required
-                                </small>
+                                    {{ 'OTP is required' | t }}</small>
                                 }
 
                                 @if(
@@ -282,36 +259,31 @@
                                 )
                                 {
                                 <small class="text-danger">
-                                    OTP must be 6 digits
-                                </small>
+                                    {{ 'OTP must be 6 digits' | t }}</small>
                                 }
 
                             </div>
 
                             <p class="text-muted small mb-3">
-                                OTP sent to +91 {{ maskedMobile }} on WhatsApp.
-                            </p>
+                                {{ 'OTP sent to +91 {p0} on WhatsApp.' | t:{p0: (maskedMobile)} }}</p>
 
                             <!-- Change Number / Resend -->
 
                             <div class="d-flex justify-content-between align-items-center mb-3">
 
                                 <button type="button" class="btn btn-link p-0 auth-link" (click)="changeNumber()">
-                                    Change number
-                                </button>
+                                    {{ 'Change number' | t }}</button>
 
                                 @if (resendSeconds > 0)
                                 {
                                 <small class="text-muted">
-                                    Resend OTP in {{ resendSeconds }}s
-                                </small>
+                                    {{ 'Resend OTP in {p0}s' | t:{p0: (resendSeconds)} }}</small>
                                 }
                                 @else
                                 {
                                 <button type="button" class="btn btn-link p-0 auth-link" [disabled]="isSendingOtp"
                                     (click)="resendOtp()">
-                                    Resend OTP
-                                </button>
+                                    {{ 'Resend OTP' | t }}</button>
                                 }
 
                             </div>
@@ -325,9 +297,7 @@
 
                                 <label class="form-check-label" for="rememberMeOtp">
 
-                                    Remember Me
-
-                                </label>
+                                    {{ 'Remember Me' | t }}</label>
 
                             </div>
 
@@ -341,12 +311,10 @@
                                 <span class="spinner-border spinner-border-sm me-2">
                                 </span>
 
-                                Verifying...
-                                }
+                                {{ 'Verifying...' | t }}}
                                 @else
                                 {
-                                Verify &amp; Login
-                                }
+                                {{ 'Verify & Login' | t }}}
 
                             </button>
 
@@ -362,13 +330,9 @@
 
                             <p class="mb-0">
 
-                                Don't have an account?
+                                {{ 'Don\'t have an account?' | t }}<a routerLink="/register" class="fw-semibold text-decoration-none">
 
-                                <a routerLink="/register" class="fw-semibold text-decoration-none">
-
-                                    Register
-
-                                </a>
+                                    {{ 'Register' | t }}</a>
 
                             </p>
 

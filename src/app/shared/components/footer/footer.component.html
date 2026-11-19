@@ -12,13 +12,13 @@
 
                     @if(site?.logoUrl)
                     {
-                    <img [src]="logoUrl" [alt]="site?.farmHouseName" class="footer-logo-image">
+                    <img [src]="logoUrl" [alt]="site?.farmHouseName | t" class="footer-logo-image">
                     }
                     @else
                     {
                     <div class="logo-box">
 
-                        {{ site?.farmHouseName?.charAt(0) || 'F' }}
+                        {{ (site?.farmHouseName?.charAt(0) || 'F') | t }}
 
                     </div>
                     }
@@ -37,7 +37,7 @@
 
                 <p class="footer-desc">
 
-                    {{ site?.description }}
+                    {{ (site?.description) | t }}
 
                 </p>
 
@@ -49,32 +49,30 @@
 
                 <h4 class="footer-title">
 
-                    Quick Links
-
-                </h4>
+                    {{ 'Quick Links' | t }}</h4>
 
                 <div class="title-line"></div>
 
                 <ul class="footer-links">
 
                     <li>
-                        <a routerLink="/home">Home</a>
+                        <a routerLink="/home">{{ 'Home' | t }}</a>
                     </li>
 
                     <li>
-                        <a routerLink="/about">About</a>
+                        <a routerLink="/about">{{ 'About' | t }}</a>
                     </li>
 
                     <li>
-                        <a routerLink="/gallery">Gallery</a>
+                        <a routerLink="/gallery">{{ 'Gallery' | t }}</a>
                     </li>
 
                     <li>
-                        <a routerLink="/farmhouses">Farm Houses</a>
+                        <a routerLink="/farmhouses">{{ 'Farm Houses' | t }}</a>
                     </li>
 
                     <li>
-                        <a routerLink="/contact">Contact</a>
+                        <a routerLink="/contact">{{ 'Contact' | t }}</a>
                     </li>
 
                 </ul>
@@ -87,24 +85,22 @@
 
                 <h4 class="footer-title">
 
-                    Information
-
-                </h4>
+                    {{ 'Information' | t }}</h4>
 
                 <div class="title-line"></div>
 
                 <ul class="footer-links">
 
                     <li>
-                        <a href="#">FAQ</a>
+                        <a href="#">{{ 'FAQ' | t }}</a>
                     </li>
 
                     <li>
-                        <a href="#">Terms &amp; Conditions</a>
+                        <a href="#">{{ 'Terms & Conditions' | t }}</a>
                     </li>
 
                     <li>
-                        <a href="#">Privacy Policy</a>
+                        <a href="#">{{ 'Privacy Policy' | t }}</a>
                     </li>
 
                 </ul>
@@ -117,9 +113,7 @@
 
                 <h4 class="footer-title">
 
-                    Contact
-
-                </h4>
+                    {{ 'Contact' | t }}</h4>
 
                 <div class="title-line"></div>
 
@@ -178,25 +172,25 @@
 
                 <div class="social-icons">
 
-                    <a href="#" class="facebook" title="Facebook">
+                    <a href="#" class="facebook" [title]="'Facebook' | t">
 
                         <i class="bi bi-facebook"></i>
 
                     </a>
 
-                    <a href="#" class="instagram" title="Instagram">
+                    <a href="#" class="instagram" [title]="'Instagram' | t">
 
                         <i class="bi bi-instagram"></i>
 
                     </a>
 
-                    <a [href]="'https://wa.me/' + site?.mobileNumber" target="_blank" class="whatsapp" title="WhatsApp">
+                    <a [href]="'https://wa.me/' + site?.mobileNumber" target="_blank" class="whatsapp" [title]="'WhatsApp' | t">
 
                         <i class="bi bi-whatsapp"></i>
 
                     </a>
 
-                    <a [href]="site?.googleMapUrl" target="_blank" class="youtube" title="View Location">
+                    <a [href]="site?.googleMapUrl" target="_blank" class="youtube" [title]="'View Location' | t">
 
                         <i class="bi bi-geo-alt-fill"></i>
 
@@ -214,10 +208,6 @@
 
     <div class="copyright">
 
-        © {{ currentYear }}
-        {{ site?.farmHouseName }}.
-        All Rights Reserved.
-
-    </div>
+        {{ '© {p0} {p1}. All Rights Reserved.' | t:{p0: (currentYear), p1: (site?.farmHouseName)} }}</div>
 
 </footer>

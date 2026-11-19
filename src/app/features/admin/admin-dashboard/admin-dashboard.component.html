@@ -8,17 +8,15 @@
 
       <div>
         <h1 class="h3 fw-bold mb-1 dashboard-title">
-          Dashboard
-        </h1>
+          {{ 'Dashboard' | t }}</h1>
 
         <p class="text-muted mb-0">
-          Overview of your farm stay business.
-        </p>
+          {{ 'Overview of your farm stay business.' | t }}</p>
       </div>
 
       <div class="dashboard-date">
         <i class="bi bi-calendar3 me-2"></i>
-        {{ today | date:'MMMM d, yyyy' }}
+        {{ (today | localDate:'MMMM d, yyyy') | t }}
       </div>
 
     </div>
@@ -38,20 +36,17 @@
 
               <div>
                 <h2 class="h5 fw-semibold mb-1">
-                  Latest Bookings
-                </h2>
+                  {{ 'Latest Bookings' | t }}</h2>
 
                 <p class="text-muted small mb-0">
-                  Your latest reservations
-                </p>
+                  {{ 'Your latest reservations' | t }}</p>
               </div>
 
               <!-- View All -->
               <a routerLink="/admin/booking"
    class="btn btn-sm btn-outline-secondary">
 
-  View All
-  <i class="bi bi-arrow-right ms-1"></i>
+  {{ 'View All' | t }}<i class="bi bi-arrow-right ms-1"></i>
 
 </a>
 
@@ -60,18 +55,17 @@
 
             <!-- Loading -->
             <p *ngIf="bookingLoadError" class="alert alert-warning" role="alert">
-              {{ bookingLoadError }}
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="loadLatestBookings()">Retry</button>
+              {{ (bookingLoadError) | t }}
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="loadLatestBookings()">{{ 'Retry' | t }}</button>
             </p>
             <div class="text-center py-5" *ngIf="loadingBookings">
 
               <div class="spinner-border text-success" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{{ 'Loading...' | t }}</span>
               </div>
 
               <p class="text-muted mt-2 mb-0">
-                Loading bookings...
-              </p>
+                {{ 'Loading bookings...' | t }}</p>
 
             </div>
 
@@ -85,12 +79,10 @@
               </div>
 
               <h5 class="fw-semibold mb-2">
-                No upcoming bookings
-              </h5>
+                {{ 'No upcoming bookings' | t }}</h5>
 
               <p class="text-muted mb-0">
-                New bookings will appear here.
-              </p>
+                {{ 'New bookings will appear here.' | t }}</p>
 
             </div>
 
@@ -103,11 +95,11 @@
 
                 <thead>
                   <tr>
-                    <th>Booking ID</th>
-                    <th>Guest</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Status</th>
+                    <th>{{ 'Booking ID' | t }}</th>
+                    <th>{{ 'Guest' | t }}</th>
+                    <th>{{ 'Check In' | t }}</th>
+                    <th>{{ 'Check Out' | t }}</th>
+                    <th>{{ 'Status' | t }}</th>
                   </tr>
                 </thead>
 
@@ -123,7 +115,7 @@
 
                     <td>
                       <div class="fw-semibold">
-                        {{ booking.fullName || 'Guest' }}
+                        {{ (booking.fullName || 'Guest') | t }}
                       </div>
 
                       <small class="text-muted">
@@ -132,11 +124,11 @@
                     </td>
 
                     <td>
-                      {{ booking.checkInDate | date:'dd/MM/yyyy' }}
+                      {{ (booking.checkInDate | localDate:'dd/MM/yyyy') | t }}
                     </td>
 
                     <td>
-                      {{ booking.checkOutDate | date:'dd/MM/yyyy' }}
+                      {{ (booking.checkOutDate | localDate:'dd/MM/yyyy') | t }}
                     </td>
 
                     <td>
@@ -149,7 +141,7 @@
                           'bg-primary': booking.status?.toLowerCase() === 'completed'
                         }">
 
-                        {{ booking.status || 'Unknown' }}
+                        {{ (booking.status || 'Unknown') | t }}
 
                       </span>
                     </td>
@@ -174,10 +166,10 @@
           <div class="card-body p-4">
 
             <div class="mb-4">
-              <h2 class="h5 fw-semibold mb-1">Calendar</h2>
+              <h2 class="h5 fw-semibold mb-1">{{ 'Calendar' | t }}</h2>
 
               <p class="text-muted small mb-0">
-                {{ calendarDate | date:'MMMM yyyy' }}
+                {{ (calendarDate | localDate:'MMMM yyyy') | t }}
               </p>
             </div>
 
@@ -194,7 +186,7 @@
               </button>
 
               <strong>
-                {{ calendarDate | date:'MMMM yyyy' }}
+                {{ (calendarDate | localDate:'MMMM yyyy') | t }}
               </strong>
 
               <button type="button"
@@ -212,7 +204,7 @@
             <div class="calendar-grid calendar-week mb-2">
 
               <span *ngFor="let day of weekDays">
-                {{ day }}
+                {{ (day) | t }}
               </span>
 
             </div>
@@ -227,7 +219,7 @@
                     [class.selected]="isSelectedDate(day.date)"
                     (click)="selectDate(day.date)">
 
-                {{ day.date | date:'d' }}
+                {{ (day.date | localDate:'d') | t }}
 
               </span>
 
@@ -238,11 +230,10 @@
             <div class="selected-date mt-4 p-3 rounded">
 
               <div class="small text-muted mb-1">
-                Selected Date
-              </div>
+                {{ 'Selected Date' | t }}</div>
 
               <div class="fw-semibold">
-                {{ selectedDate | date:'MMMM d, yyyy' }}
+                {{ (selectedDate | localDate:'MMMM d, yyyy') | t }}
               </div>
 
             </div>
@@ -262,12 +253,10 @@
 
         <div class="mb-3">
           <h2 class="h5 fw-semibold mb-1">
-            Quick Actions
-          </h2>
+            {{ 'Quick Actions' | t }}</h2>
 
           <p class="text-muted small mb-0">
-            Frequently used admin actions
-          </p>
+            {{ 'Frequently used admin actions' | t }}</p>
         </div>
 
 
@@ -280,7 +269,7 @@
    class="quick-action">
 
   <i class="bi bi-calendar-plus"></i>
-  <span>Manage Bookings</span>
+  <span>{{ 'Manage Bookings' | t }}</span>
   <i class="bi bi-chevron-right ms-auto"></i>
 
 </a>
@@ -295,7 +284,7 @@
 
               <i class="bi bi-images"></i>
 
-              <span>Manage Content</span>
+              <span>{{ 'Manage Content' | t }}</span>
 
               <i class="bi bi-chevron-right ms-auto"></i>
 
@@ -312,7 +301,7 @@
 
               <i class="bi bi-wallet2"></i>
 
-              <span>Finance</span>
+              <span>{{ 'Finance' | t }}</span>
 
               <i class="bi bi-chevron-right ms-auto"></i>
 
@@ -329,7 +318,7 @@
 
               <i class="bi bi-file-earmark-bar-graph"></i>
 
-              <span>Reports</span>
+              <span>{{ 'Reports' | t }}</span>
 
               <i class="bi bi-chevron-right ms-auto"></i>
 

@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, inject, OnInit } from '@angular/core';
 
 import {
@@ -23,11 +25,12 @@ import { ResetPasswordOtpRequest } from '../models/reset-password-otp-request.mo
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [TranslationPipe, ReactiveFormsModule],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css',
 })
 export class ResetPasswordComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -153,8 +156,8 @@ export class ResetPasswordComponent implements OnInit {
       if (!this.mobileNumber) {
         Swal.fire({
           icon: 'error',
-          title: 'Invalid Request',
-          text: 'Mobile number is missing.',
+          title: this.language.translate('Invalid Request'),
+          text: this.language.translate('Mobile number is missing.'),
           confirmButtonColor: '#c4512d',
         });
 
@@ -184,8 +187,8 @@ export class ResetPasswordComponent implements OnInit {
     if (!this.farmHouseId || !this.userId || !this.token) {
       Swal.fire({
         icon: 'error',
-        title: 'Invalid Link',
-        text: 'Password reset link is missing or invalid.',
+        title: this.language.translate('Invalid Link'),
+        text: this.language.translate('Password reset link is missing or invalid.'),
         confirmButtonColor: '#c4512d',
       });
     }
@@ -221,8 +224,8 @@ export class ResetPasswordComponent implements OnInit {
       if (!this.farmHouseId || !this.userId || !this.token) {
         Swal.fire({
           icon: 'error',
-          title: 'Invalid Link',
-          text: 'Password reset link is missing or invalid.',
+          title: this.language.translate('Invalid Link'),
+          text: this.language.translate('Password reset link is missing or invalid.'),
           confirmButtonColor: '#c4512d',
         });
 
@@ -234,8 +237,8 @@ export class ResetPasswordComponent implements OnInit {
       if (!this.mobileNumber) {
         Swal.fire({
           icon: 'error',
-          title: 'Invalid Request',
-          text: 'Mobile number is missing.',
+          title: this.language.translate('Invalid Request'),
+          text: this.language.translate('Mobile number is missing.'),
           confirmButtonColor: '#c4512d',
         });
 
@@ -268,8 +271,8 @@ export class ResetPasswordComponent implements OnInit {
           if (!response?.success) {
             Swal.fire({
               icon: 'error',
-              title: 'Reset Failed',
-              text: response?.message ?? 'Unable to reset your password.',
+              title: this.language.translate('Reset Failed'),
+              text: this.language.translate(response?.message ?? 'Unable to reset your password.'),
               confirmButtonColor: '#c4512d',
             });
 
@@ -282,9 +285,9 @@ export class ResetPasswordComponent implements OnInit {
 
           Swal.fire({
             icon: 'success',
-            title: 'Password Reset Successful',
+            title: this.language.translate('Password Reset Successful'),
             text:
-              response?.message ?? 'Your password has been reset successfully.',
+              this.language.translate(response?.message ?? 'Your password has been reset successfully.'),
             confirmButtonColor: '#c4512d',
           }).then(() => {
             this.resetPasswordForm.reset();
@@ -297,10 +300,10 @@ export class ResetPasswordComponent implements OnInit {
 
           Swal.fire({
             icon: 'error',
-            title: 'Reset Failed',
+            title: this.language.translate('Reset Failed'),
             text:
-              error?.error?.message ??
-              'Something went wrong while resetting your password.',
+              this.language.translate(error?.error?.message ??
+              'Something went wrong while resetting your password.'),
             confirmButtonColor: '#c4512d',
           });
 
@@ -333,10 +336,10 @@ export class ResetPasswordComponent implements OnInit {
         if (!response?.success) {
           Swal.fire({
             icon: 'error',
-            title: 'Reset Failed',
+            title: this.language.translate('Reset Failed'),
             text:
-              response?.message ??
-              'Invalid OTP or unable to reset your password.',
+              this.language.translate(response?.message ??
+              'Invalid OTP or unable to reset your password.'),
             confirmButtonColor: '#c4512d',
           });
 
@@ -349,9 +352,9 @@ export class ResetPasswordComponent implements OnInit {
 
         Swal.fire({
           icon: 'success',
-          title: 'Password Reset Successful',
+          title: this.language.translate('Password Reset Successful'),
           text:
-            response?.message ?? 'Your password has been reset successfully.',
+            this.language.translate(response?.message ?? 'Your password has been reset successfully.'),
           confirmButtonColor: '#c4512d',
         }).then(() => {
           this.resetPasswordForm.reset();
@@ -364,10 +367,10 @@ export class ResetPasswordComponent implements OnInit {
 
         Swal.fire({
           icon: 'error',
-          title: 'Reset Failed',
+          title: this.language.translate('Reset Failed'),
           text:
-            error?.error?.message ??
-            'Something went wrong while resetting your password.',
+            this.language.translate(error?.error?.message ??
+            'Something went wrong while resetting your password.'),
           confirmButtonColor: '#c4512d',
         });
 

@@ -7,11 +7,10 @@
             class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
 
             <div>
-                <h2 class="page-title mb-1">About Us</h2>
+                <h2 class="page-title mb-1">{{ 'About Us' | t }}</h2>
 
                 <p class="page-subtitle mb-0">
-                    View and manage your website About Us content.
-                </p>
+                    {{ 'View and manage your website About Us content.' | t }}</p>
             </div>
 
             <!-- Update Button -->
@@ -20,21 +19,18 @@
                 <i class="bi bi-pencil-square me-2" aria-hidden="true">
                 </i>
 
-                Update
-
-            </button>
+                {{ 'Update' | t }}</button>
 
         </div>
 
         <!-- Loading -->
         <div *ngIf="isLoading" class="loading-container">
 
-            <div class="spinner-border" role="status" aria-label="Loading">
+            <div class="spinner-border" role="status" [attr.aria-label]="'Loading' | t">
             </div>
 
             <p class="mb-0 mt-2">
-                Loading About Us content...
-            </p>
+                {{ 'Loading About Us content...' | t }}</p>
 
         </div>
 
@@ -48,20 +44,17 @@
 
             </div>
 
-            <h4>No About Us Content</h4>
+            <h4>{{ 'No About Us Content' | t }}</h4>
 
             <p>
-                About Us content has not been created yet.
-            </p>
+                {{ 'About Us content has not been created yet.' | t }}</p>
 
             <button type="button" class="btn btn-primary" (click)="createAboutUs()">
 
                 <i class="bi bi-plus-lg me-2" aria-hidden="true">
                 </i>
 
-                Create New
-
-            </button>
+                {{ 'Create New' | t }}</button>
 
         </div>
 
@@ -74,8 +67,7 @@
                 <div class="section-heading">
 
                     <span class="section-label">
-                        Hero Section
-                    </span>
+                        {{ 'Hero Section' | t }}</span>
 
                 </div>
 
@@ -84,11 +76,11 @@
                     <div class="col-lg-8">
 
                         <h3 class="hero-title">
-                            {{ aboutUs.heroTitle }}
+                            {{ (aboutUs.heroTitle) | t }}
                         </h3>
 
                         <p class="hero-subtitle">
-                            {{ aboutUs.heroSubtitle }}
+                            {{ (aboutUs.heroSubtitle) | t }}
                         </p>
 
                     </div>
@@ -97,7 +89,7 @@
 
                         <div class="hero-image-wrapper">
 
-                            <img [src]="aboutUs.heroImageUrl" [alt]="aboutUs.heroTitle" class="hero-image" />
+                            <img [src]="aboutUs.heroImageUrl" [alt]="aboutUs.heroTitle | t" class="hero-image" />
 
                         </div>
 
@@ -113,17 +105,16 @@
                 <div class="section-heading">
 
                     <span class="section-label">
-                        Our Story
-                    </span>
+                        {{ 'Our Story' | t }}</span>
 
                 </div>
 
                 <h3 class="story-title">
-                    {{ aboutUs.storyTitle }}
+                    {{ (aboutUs.storyTitle) | t }}
                 </h3>
 
                 <div class="story-description">
-                    {{ aboutUs.storyDescription }}
+                    {{ (aboutUs.storyDescription) | t }}
                 </div>
 
             </div>
@@ -136,12 +127,10 @@
                     <div>
 
                         <span class="section-label">
-                            Features
-                        </span>
+                            {{ 'Features' | t }}</span>
 
                         <p class="section-description mb-0">
-                            Features available on your About Us page.
-                        </p>
+                            {{ 'Features available on your About Us page.' | t }}</p>
 
                     </div>
 
@@ -169,11 +158,11 @@
                         <div class="feature-content">
 
                             <h5>
-                                {{ feature.title }}
+                                {{ (feature.title) | t }}
                             </h5>
 
                             <p class="mb-0">
-                                {{ feature.description }}
+                                {{ (feature.description) | t }}
                             </p>
 
                         </div>
@@ -189,8 +178,7 @@
                     </i>
 
                     <p class="mb-0">
-                        No features have been added.
-                    </p>
+                        {{ 'No features have been added.' | t }}</p>
 
                 </div>
 

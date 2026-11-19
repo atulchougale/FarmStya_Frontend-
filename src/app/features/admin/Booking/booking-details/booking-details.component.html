@@ -1,108 +1,166 @@
 <main class="booking-detail">
   <header>
     <div>
-      <h1>{{ booking?.bookingReference || 'Booking details' }}</h1>
-      <p *ngIf="booking" class="status">{{ booking.status }}</p>
+      <h1>{{ (booking?.bookingReference || 'Booking details') | t }}</h1>
+      <p *ngIf="booking" class="status">{{ (booking.status) | t }}</p>
+      <span *ngIf="booking" class="badge text-bg-light border">{{ (booking.bookingSource === 'WalkIn' ? 'Walk-in' : booking.bookingSource === 'Phone' ? 'Phone enquiry' : 'Online') | t }}</span>
     </div>
-    <a class="btn btn-outline-secondary" routerLink="/admin/booking"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back</a>
+    <a class="btn btn-outline-secondary" routerLink="/admin/booking"><i class="bi bi-arrow-left" aria-hidden="true"></i> {{ 'Back' | t }}</a>
   </header>
 
-  <p *ngIf="loading" role="status">Loading booking details…</p>
-  <p *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</p>
-  <p *ngIf="notice" class="alert alert-success" role="status">{{ notice }}</p>
+  <p *ngIf="loading" role="status">{{ 'Loading booking details…' | t }}</p>
+  <p *ngIf="error" class="alert alert-danger" role="alert">{{ (error) | t }}</p>
+  <p *ngIf="notice" class="alert alert-success" role="status">{{ (notice) | t }}</p>
 
   <ng-container *ngIf="booking as item">
     <div class="detail-grid">
       <section>
-        <h2>Customer and guests</h2>
+        <h2>{{ 'Customer and guests' | t }}</h2>
         <p><strong>{{ item.fullName }}</strong><br>{{ item.email }}<br>{{ item.mobileNumber }}</p>
-        <p>{{ item.adultCount }} adults · {{ item.childrenCount }} children · {{ item.personCount }} guests</p>
+        <p>{{ '{p0} adults · {p1} children · {p2} guests' | t:{p0: (item.adultCount), p1: (item.childrenCount), p2: (item.personCount)} }}</p>
         <p *ngIf="item.customerNotes">{{ item.customerNotes }}</p>
+        <p class="text-muted small">{{ 'Booking created by user' | t }} #{{ item.createdBy }}</p>
       </section>
       <section>
-        <h2>Stay and event</h2>
+        <h2>{{ 'Stay and event' | t }}</h2>
         <dl>
-          <dt>Scheduled check-in</dt><dd>{{ item.checkInDate | date:'d MMM yyyy' }}</dd>
-          <dt *ngIf="item.actualCheckInAt">Actual check-in</dt><dd *ngIf="item.actualCheckInAt">{{ item.actualCheckInAt | date:'d MMM yyyy, h:mm a' }}</dd>
-          <dt>Scheduled check-out</dt><dd>{{ item.checkOutDate | date:'d MMM yyyy' }}</dd>
-          <dt *ngIf="item.actualCheckOutAt">Actual check-out</dt><dd *ngIf="item.actualCheckOutAt">{{ item.actualCheckOutAt | date:'d MMM yyyy, h:mm a' }}</dd>
-          <dt *ngIf="item.checkoutPaidAt">Checkout payment</dt><dd *ngIf="item.checkoutPaidAt">{{ item.checkoutPaidAt | date:'d MMM yyyy, h:mm a' }}</dd>
-          <dt>Stay length</dt><dd>{{ item.stayDays }} days</dd>
-          <dt>Booking type</dt><dd>{{ item.bookingType }}</dd>
+          <dt>{{ 'Scheduled check-in' | t }}</dt><dd>{{ (item.checkInDate | localDate:'d MMM yyyy') | t }}</dd>
+          <dt *ngIf="item.actualCheckInAt">{{ 'Actual check-in' | t }}</dt><dd *ngIf="item.actualCheckInAt">{{ (item.actualCheckInAt | localDate:'d MMM yyyy, h:mm a') | t }}</dd>
+          <dt>{{ 'Scheduled check-out' | t }}</dt><dd>{{ (item.checkOutDate | localDate:'d MMM yyyy') | t }}</dd>
+          <dt *ngIf="item.actualCheckOutAt">{{ 'Actual check-out' | t }}</dt><dd *ngIf="item.actualCheckOutAt">{{ (item.actualCheckOutAt | localDate:'d MMM yyyy, h:mm a') | t }}</dd>
+          <dt *ngIf="item.checkoutPaidAt">{{ 'Checkout payment' | t }}</dt><dd *ngIf="item.checkoutPaidAt">{{ (item.checkoutPaidAt | localDate:'d MMM yyyy, h:mm a') | t }}</dd>
+          <dt>{{ 'Stay length' | t }}</dt><dd>{{ '{p0} days' | t:{p0: (item.stayDays)} }}</dd>
+          <dt>{{ 'Booking type' | t }}</dt><dd>{{ (item.bookingType) | t }}</dd>
           <ng-container *ngIf="item.eventDates?.length">
-            <dt>Event dates</dt>
-            <dd><div *ngFor="let event of item.eventDates">{{ event.eventDate | date:'d MMM yyyy' }}</div></dd>
+            <dt>{{ 'Event dates' | t }}</dt>
+            <dd><div *ngFor="let event of item.eventDates">{{ (event.eventDate | localDate:'d MMM yyyy') | t }}</div></dd>
           </ng-container>
         </dl>
       </section>
       <section>
-        <h2>Pricing</h2>
+        <h2>{{ 'Pricing' | t }}</h2>
         <app-payment-receipts [bookingId]="item.bookingId" [bookingStatus]="item.status" />
         <dl>
-          <dt>Stay</dt><dd>{{ item.baseAmount | currency:item.currencyCode }}</dd>
-          <dt>Event</dt><dd>{{ item.eventAmount | currency:item.currencyCode }}</dd>
-          <dt>Total</dt><dd><strong>{{ item.totalAmount | currency:item.currencyCode }}</strong></dd>
-          <dt>Advance paid</dt><dd>{{ item.advancePaid | currency:item.currencyCode }}</dd>
-          <dt *ngIf="item.discountAmount > 0">Discount</dt><dd *ngIf="item.discountAmount > 0">{{ item.discountAmount | currency:item.currencyCode }}</dd>
-          <dt>Total paid</dt><dd><strong>{{ item.totalPaid | currency:item.currencyCode }}</strong></dd>
-          <dt *ngIf="item.remainingAmount > 0">Remaining</dt><dd *ngIf="item.remainingAmount > 0">{{ item.remainingAmount | currency:item.currencyCode }}</dd>
+          <dt>{{ 'Stay' | t }}</dt><dd>{{ item.baseAmount | currency:item.currencyCode }}</dd>
+          <dt>{{ 'Event' | t }}</dt><dd>{{ item.eventAmount | currency:item.currencyCode }}</dd>
+          <dt>{{ 'Total' | t }}</dt><dd><strong>{{ item.totalAmount | currency:item.currencyCode }}</strong></dd>
+          <dt>{{ 'Advance paid' | t }}</dt><dd>{{ item.advancePaid | currency:item.currencyCode }}</dd>
+          <dt *ngIf="item.discountAmount > 0">{{ 'Discount' | t }}</dt><dd *ngIf="item.discountAmount > 0">{{ item.discountAmount | currency:item.currencyCode }}</dd>
+          <dt>{{ 'Total paid' | t }}</dt><dd><strong>{{ item.totalPaid | currency:item.currencyCode }}</strong></dd>
+          <dt *ngIf="item.remainingAmount > 0">{{ 'Remaining' | t }}</dt><dd *ngIf="item.remainingAmount > 0">{{ item.remainingAmount | currency:item.currencyCode }}</dd>
         </dl>
       </section>
       <section>
-        <h2>Decision timeline</h2>
+        <h2>{{ 'Decision timeline' | t }}</h2>
         <dl>
-          <dt>Submitted</dt><dd>{{ item.createdDate | date:'d MMM, h:mm a' }}</dd>
-          <dt>Owner decision due</dt><dd>{{ item.ownerDeadline | date:'d MMM, h:mm a' }}</dd>
+          <dt>{{ 'Submitted' | t }}</dt><dd>{{ (item.createdDate | localDate:'d MMM, h:mm a') | t }}</dd>
+          <dt>{{ 'Owner decision due' | t }}</dt><dd>{{ (item.ownerDeadline | localDate:'d MMM, h:mm a') | t }}</dd>
           <ng-container *ngIf="item.customerDeadline">
-            <dt>Customer confirmation due</dt><dd>{{ item.customerDeadline | date:'d MMM, h:mm a' }}</dd>
+            <dt>{{ 'Customer confirmation due' | t }}</dt><dd>{{ (item.customerDeadline | localDate:'d MMM, h:mm a') | t }}</dd>
           </ng-container>
         </dl>
         <ul>
           <li *ngFor="let change of item.statusHistory">
-            {{ change.newStatus }} · {{ change.createdDate | date:'d MMM, h:mm a' }}
+            {{ (change.newStatus) | t }} · {{ (change.createdDate | localDate:'d MMM, h:mm a') | t }}
             <div *ngIf="change.reason">{{ change.reason }}</div>
           </li>
         </ul>
       </section>
       <section *ngIf="item.hasIdentityDocument || canCheckIn || item.canCheckout">
-        <h2>Identity proof</h2>
+        <h2>{{ 'Identity proof' | t }}</h2>
+        <p *ngIf="item.identityDocumentType">{{ item.identityDocumentType | t }}<span *ngIf="item.otherIdentityDocumentType"> · {{ item.otherIdentityDocumentType }}</span> · {{ item.identityFileCount }} {{ 'file(s)' | t }}</p>
         <div class="d-flex flex-wrap gap-2">
-          <button *ngIf="item.hasIdentityDocument" type="button" class="btn btn-outline-success" (click)="openIdentity()">View Document</button>
-          <button *ngIf="canCheckIn" class="btn btn-success" type="button" [disabled]="deciding" (click)="checkIn()">Check In</button>
-          <a *ngIf="item.canCheckout" class="btn btn-success" routerLink="checkout">Check Out</a>
+          <button *ngIf="item.hasIdentityDocument" type="button" class="btn btn-outline-success" (click)="openIdentity()">{{ 'View Document' | t }}</button>
+          <button *ngIf="canCheckIn" class="btn btn-success" type="button" [disabled]="deciding" (click)="checkIn()">{{ 'Check In' | t }}</button>
+          <a *ngIf="item.canCheckout" class="btn btn-success" routerLink="checkout">{{ 'Check Out' | t }}</a>
         </div>
       </section>
     </div>
+    <section *ngIf="item.canManageConfirmation" class="card p-4 mt-4">
+      <h2 class="h5">{{ 'Booking confirmation' | t }}</h2>
+      <button type="button" class="btn btn-sm btn-outline-secondary align-self-start mb-3" [disabled]="loading || confirmationLoading || savingConfirmation" (click)="load()">{{ 'Refresh' | t }}</button>
+      <p class="text-muted">{{ 'Upload the customer ID, then collect the advance or send an online payment reminder.' | t }}</p>
+      <p *ngIf="confirmationLoading" role="status">{{ 'Loading document…' | t }}</p>
+      <ng-container *ngIf="!confirmationLoading">
+        <p *ngIf="confirmationIdentity as doc">
+          {{ doc.documentType | t }} · {{ doc.status | t }}<br>
+          <small>{{ (doc.uploadedByAdministration ? 'Uploaded by administration' : 'Uploaded by customer') | t }} ·
+            #{{ doc.uploadedBy }} · {{ doc.uploadedAt | localDate:'d MMM yyyy, h:mm a' }}</small>
+        </p>
+        <form *ngIf="canUploadIdentity" #uploadForm="ngForm" (ngSubmit)="uploadCustomerIdentity()">
+          <label for="admin-id-type" class="form-label">{{ 'Document type' | t }}</label>
+          <select id="admin-id-type" name="documentType" class="form-select mb-3" required [(ngModel)]="documentType" [disabled]="savingConfirmation">
+            <option value="">{{ 'Select document type' | t }}</option>
+            <option *ngFor="let type of documentTypes" [value]="type">{{ type | t }}</option>
+          </select>
+          <ng-container *ngIf="documentType === 'Other'">
+            <label for="admin-other-type">{{ 'Other document type' | t }}</label>
+            <input id="admin-other-type" name="otherType" class="form-control mb-3" required maxlength="100" [(ngModel)]="otherDocumentType" [disabled]="savingConfirmation">
+          </ng-container>
+          <label for="admin-id-files" class="form-label">{{ 'Customer ID proof' | t }}</label>
+          <input id="admin-id-files" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple class="form-control" (change)="chooseFiles($event)" [disabled]="savingConfirmation">
+          <p class="text-muted small mt-1">{{ 'Upload one or two files for the same document type. Each file can be up to 5 MB.' | t }}</p>
+          <button type="submit" class="btn btn-outline-success" [disabled]="uploadForm.invalid || selectedFiles.length < 1 || selectedFiles.length > 2 || savingConfirmation">{{ 'Upload ID Proof' | t }}</button>
+        </form>
+        <div *ngIf="item.status === 'Approved' && confirmationIdentity && confirmationIdentity.status !== 'ReuploadRequested'" class="border-top pt-3 mt-3">
+          <h3 class="h6">{{ 'Collect Advance' | t }} · {{ item.advanceAmount | currency:item.currencyCode }}</h3>
+          <label for="advance-method" class="form-label">{{ 'Payment method' | t }}</label>
+          <select id="advance-method" class="form-select mb-3" [(ngModel)]="advanceMethod" [disabled]="savingConfirmation">
+            <option value="Cash" [disabled]="item.hasPendingAdvanceOrder">{{ 'Cash' | t }}</option><option value="Online">{{ 'Online' | t }}</option>
+          </select>
+          <p *ngIf="item.hasPendingAdvanceOrder" class="alert alert-warning">{{ 'An online advance order is pending. Verify that payment before collecting cash.' | t }}</p>
+          <label *ngIf="advanceMethod === 'Cash'" class="d-flex align-items-center gap-2 mb-3">
+            <input type="checkbox" [(ngModel)]="cashReceived" [disabled]="savingConfirmation || item.hasPendingAdvanceOrder === true">
+            {{ 'I have physically received the full advance amount.' | t }}
+          </label>
+          <p *ngIf="advanceMethod === 'Online'" class="text-muted">{{ 'The customer pays through My Bookings. Confirmation follows successful backend payment verification.' | t }}</p>
+          <button type="button" class="btn btn-success" (click)="collectAdvance()" [disabled]="savingConfirmation || (advanceMethod === 'Cash' && (!cashReceived || item.hasPendingAdvanceOrder))">
+            {{ (savingConfirmation ? 'Processing…' : advanceMethod === 'Cash' ? 'Cash received — confirm booking' : 'Send payment reminder') | t }}
+          </button>
+        </div>
+      </ng-container>
+      <p class="text-muted small mt-3 mb-0">{{ 'Bring the original ID documents you uploaded when checking in.' | t }}</p>
+    </section>
     <div class="decision-actions" *ngIf="canDecide">
-      <button type="button" class="btn btn-outline-danger" [disabled]="deciding || loading" (click)="decide(false)">Reject</button>
-      <button type="button" class="btn btn-success" [disabled]="deciding || loading" (click)="decide(true)">Approve</button>
+      <button type="button" class="btn btn-outline-danger" [disabled]="deciding || loading" (click)="decide(false)">{{ 'Reject' | t }}</button>
+      <button type="button" class="btn btn-success" [disabled]="deciding || loading" (click)="decide(true)">{{ 'Approve' | t }}</button>
     </div>
   </ng-container>
 </main>
 
 <dialog #identityDialog class="identity-dialog" aria-labelledby="identity-dialog-heading" (close)="clearIdentity()">
   <header>
-    <div><h2 id="identity-dialog-heading">Customer ID proof</h2><span *ngIf="identity">{{ identity.status }}</span></div>
-    <button type="button" class="btn-close" aria-label="Close document" (click)="closeIdentity()"></button>
+    <div><h2 id="identity-dialog-heading">{{ 'Customer ID proof' | t }}</h2><span *ngIf="identity">{{ (identity.status) | t }}</span></div>
+    <button type="button" class="btn-close" [attr.aria-label]="'Close document' | t" (click)="closeIdentity()"></button>
   </header>
-  <p *ngIf="identityLoading" role="status">Loading document…</p>
-  <p *ngIf="identityError" class="alert alert-danger" role="alert">{{ identityError }}</p>
-  <img *ngIf="identityImage" [src]="identityImage" alt="Uploaded customer ID proof">
-  <iframe *ngIf="identityPreview" [src]="identityPreview" title="Uploaded customer ID proof"></iframe>
+  <p *ngIf="identityLoading" role="status">{{ 'Loading document…' | t }}</p>
+  <p *ngIf="identityError" class="alert alert-danger" role="alert">{{ (identityError) | t }}</p>
+  <p *ngIf="identity" class="fw-semibold">{{ identity.documentType | t }}<span *ngIf="identity.otherDocumentType"> · {{ identity.otherDocumentType }}</span></p>
+  <p *ngIf="identity">{{ identity.files[identityIndex]?.fileName }}</p>
+  <p *ngIf="identity" class="small text-muted">{{ (identity.uploadedByAdministration ? 'Uploaded by administration' : 'Uploaded by customer') | t }} · #{{ identity.uploadedBy }} · {{ identity.uploadedAt | localDate:'d MMM yyyy, h:mm a' }}</p>
+  <nav *ngIf="identity && identity.files.length > 1" class="d-flex align-items-center gap-3 mb-3" [attr.aria-label]="'Document pages' | t">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="identityLoading || reviewingIdentity || identityIndex === 0"
+      (click)="openIdentity(identityIndex - 1)">{{ 'Previous' | t }}</button>
+    <span>{{ identityIndex + 1 }} / {{ identity.files.length }}</span>
+    <button type="button" class="btn btn-outline-secondary" [disabled]="identityLoading || reviewingIdentity || identityIndex >= identity.files.length - 1"
+      (click)="openIdentity(identityIndex + 1)">{{ 'Next' | t }}</button>
+  </nav>
+  <img *ngIf="identityImage"  [src]="identityImage" [alt]="'Uploaded customer ID proof' | t">
+  <iframe *ngIf="identityPreview" [src]="identityPreview" [title]="'Uploaded customer ID proof' | t"></iframe>
   <p *ngIf="identity?.reason" class="mt-2">{{ identity?.reason }}</p>
   <div *ngIf="showReuploadReason">
-    <label for="identity-reupload-reason" class="form-label mt-3">Reason shared with the customer</label>
+    <label for="identity-reupload-reason" class="form-label mt-3">{{ 'Reason shared with the customer' | t }}</label>
     <textarea id="identity-reupload-reason" maxlength="1000" class="form-control"
       #reason (input)="reuploadReason = reason.value"></textarea>
   </div>
   <div class="decision-actions">
-    <button type="button" class="btn btn-outline-secondary" (click)="closeIdentity()">Back</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="closeIdentity()">{{ 'Back' | t }}</button>
     <ng-container *ngIf="booking?.status === 'Confirmed' && identity?.status === 'Uploaded' && (identityImage || identityPreview)">
       <button *ngIf="!showReuploadReason" type="button" class="btn btn-outline-danger"
-        [disabled]="reviewingIdentity" (click)="showReuploadReason = true">Request Re-upload</button>
+        [disabled]="reviewingIdentity" (click)="showReuploadReason = true">{{ 'Request Re-upload' | t }}</button>
       <button *ngIf="showReuploadReason" type="button" class="btn btn-outline-danger"
-        [disabled]="reviewingIdentity || !reuploadReason.trim()" (click)="reviewIdentity(false)">Send Request</button>
-      <button type="button" class="btn btn-success" [disabled]="reviewingIdentity" (click)="reviewIdentity(true)">OK</button>
+        [disabled]="reviewingIdentity || !reuploadReason.trim()" (click)="reviewIdentity(false)">{{ 'Send Request' | t }}</button>
+      <button type="button" class="btn btn-success" [disabled]="reviewingIdentity" (click)="reviewIdentity(true)">{{ 'OK' | t }}</button>
     </ng-container>
   </div>
 </dialog>

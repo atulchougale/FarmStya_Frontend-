@@ -1,3 +1,4 @@
+import { ADMIN_BOOKING_CONTEXT } from './admin-booking-context';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
@@ -27,6 +28,7 @@ export interface BookingQuote {
 @Injectable({ providedIn: 'root' })
 export class BookingPricingService {
   private readonly http = inject(HttpClient);
+  private readonly admin = inject(ADMIN_BOOKING_CONTEXT, { optional: true });
 
   getRates() {
     return this.http.get<ApiResponse<BookingRate[]>>(
@@ -41,7 +43,7 @@ export class BookingPricingService {
     eventDates: string[];
   }) {
     return this.http.post<ApiResponse<BookingQuote>>(
-      `${environment.apiUrl}/booking-pricing/quote`, request,
+      `${environment.apiUrl}/${this.admin ? 'administration/bookings' : 'booking-pricing'}/quote`, request,
     );
   }
 }

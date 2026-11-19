@@ -1,25 +1,32 @@
+import { TranslationPipe, LocalDatePipe } from '../../../../core/i18n/language';
 import { PaymentReceiptsComponent } from '../../../../shared/components/payment-receipts/payment-receipts.component';
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-import { BookingIdentityDocument, BookingService, CheckoutBalance } from '../../../../core/services/booking.service';
+import { BookingIdentityDocument, BookingService, CheckoutBalance, IDENTITY_DOCUMENT_TYPES } from '../../../../core/services/booking.service';
 import { Booking } from '../../../admin/Booking/models/booking.model';
 import { RazorpayCheckoutService } from '../../../../core/services/razorpay-checkout.service';
 
 @Component({
   selector: 'app-customer-booking-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, PaymentReceiptsComponent],
+  imports: [FormsModule, TranslationPipe, LocalDatePipe, CommonModule, RouterLink, PaymentReceiptsComponent],
   templateUrl: './customer-booking-details.component.html',
   styleUrl: './customer-booking-details.component.css'
 })
 export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('documentDialog', { static: true }) private documentDialog!: ElementRef<HTMLDialogElement>;
+  readonly documentTypes = IDENTITY_DOCUMENT_TYPES;
+  documentType = '';
+  otherDocumentType = '';
+  selectedFiles: File[] = [];
+  previewIndex = 0;
   previewImage: string | null = null;
   previewPdf: SafeResourceUrl | null = null;
   previewLoading = false;
@@ -27,16 +34,18 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
   private previewUrl: string | null = null;
   private previewSession = 0;
 
-  async viewDocument(): Promise<void> {
+  async viewDocument(index = 0): Promise<void> {
     const bookingId = this.selectedBookingId;
     const document = this.identity;
     if (!bookingId || !document) return;
     this.clearPreview();
+    this.previewIndex = index;
+    const selected = document.files?.[index] ?? document;
     const session = this.previewSession;
-    this.documentDialog.nativeElement.showModal();
+    if (!this.documentDialog.nativeElement.open) this.documentDialog.nativeElement.showModal();
     this.previewLoading = true;
     try {
-      const file = await firstValueFrom(this.bookingService.getIdentityContent(bookingId, document.id, true));
+      const file = await firstValueFrom(this.bookingService.getIdentityContent(bookingId, selected.id, true));
       if (session !== this.previewSession) return;
       this.previewUrl = URL.createObjectURL(file);
       if (file.type.startsWith('image/')) this.previewImage = this.previewUrl;
@@ -232,7 +241,7 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
   async payAdvance(): Promise<void> {
     const booking = this.selectedBooking;
     if (!booking || booking.status !== 'Approved' || !this.canUploadIdentity ||
-        this.identity?.status !== 'Uploaded' || this.uploadingIdentity || this.openingCheckout || this.paymentReceived) return;
+        this.identity?.status !== 'Uploaded' || this.selectedFiles.length > 0 || this.uploadingIdentity || this.openingCheckout || this.paymentReceived) return;
 
     const session = this.detailSession;
     this.openingCheckout = true;
@@ -297,6 +306,8 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (this.detailSession !== session) return;
         this.identity = response.data;
+        this.documentType = response.data?.documentType === 'ID proof' ? '' : response.data?.documentType ?? '';
+        this.otherDocumentType = response.data?.otherDocumentType ?? '';
         this.identityLoading = false;
       },
       error: () => {
@@ -307,25 +318,45 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  uploadIdentity(event: Event): void {
+  selectIdentityFiles(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+    const files = Array.from(input.files ?? []);
     input.value = '';
-    if (!file || !this.selectedBookingId || !this.canUploadIdentity || this.uploadingIdentity) return;
+    this.identityError = '';
+    if (this.selectedFiles.length + files.length > 2) {
+      this.identityError = 'Upload a maximum of two files for the same document type.';
+      return;
+    }
+    if (files.some(file => file.size <= 0 || file.size > 5 * 1024 * 1024 ||
+        !['application/pdf', 'image/jpeg', 'image/png'].includes(file.type))) {
+      this.identityError = 'Each file must be a PDF, JPG or PNG up to 5 MB.';
+      return;
+    }
+    this.selectedFiles = [...this.selectedFiles, ...files];
+  }
+
+  uploadIdentity(): void {
+    if (!this.selectedBookingId || !this.canUploadIdentity || this.uploadingIdentity ||
+        !this.selectedFiles.length || !this.documentType) return;
+    if (this.documentType === 'Other' && !this.otherDocumentType.trim()) {
+      this.identityError = 'Enter the document type.';
+      return;
+    }
     const session = this.detailSession;
     this.identityError = '';
     this.uploadingIdentity = true;
-    this.bookingService.uploadIdentity(this.selectedBookingId, file).subscribe({
-      next: (response) => {
-        if (this.detailSession !== session) return;
+    this.bookingService.uploadIdentity(this.selectedBookingId, this.selectedFiles, this.documentType, this.otherDocumentType).subscribe({
+      next: response => {
+        if (session !== this.detailSession) return;
         this.identity = response.data;
+        this.selectedFiles = [];
         this.uploadingIdentity = false;
       },
-      error: (error) => {
-        if (this.detailSession !== session) return;
+      error: error => {
+        if (session !== this.detailSession) return;
         this.identityError = error.error?.message ?? 'Could not upload the ID proof.';
         this.uploadingIdentity = false;
-      },
+      }
     });
   }
 

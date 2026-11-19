@@ -1,3 +1,4 @@
+import { TranslationPipe } from '../../../../core/i18n/language';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,7 +9,7 @@ import { AboutUsResponseDto } from '../about-us.model';
 @Component({
   selector: 'app-about-us',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslationPipe, CommonModule],
   templateUrl: './about-us-public.component.html',
   styleUrl: './about-us-public.component.css',
 })

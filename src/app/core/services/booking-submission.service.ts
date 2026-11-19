@@ -1,3 +1,4 @@
+import { ADMIN_BOOKING_CONTEXT } from './admin-booking-context';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
@@ -18,9 +19,12 @@ export interface SubmittedBooking {
 @Injectable({ providedIn: 'root' })
 export class BookingSubmissionService {
   private readonly http = inject(HttpClient);
+  private readonly admin = inject(ADMIN_BOOKING_CONTEXT, { optional: true });
 
   submit(payload: object) {
-    return this.http.post<ApiResponse<SubmittedBooking>>(`${environment.apiUrl}/bookings`, payload);
+    const url = this.admin ? '/administration/bookings' : '/bookings';
+    const body = this.admin ? { customerUserId: this.admin.customer?.userId, bookingSource: this.admin.source, booking: payload } : payload;
+    return this.http.post<ApiResponse<SubmittedBooking>>(`${environment.apiUrl}${url}`, body);
   }
 
   getMine() {

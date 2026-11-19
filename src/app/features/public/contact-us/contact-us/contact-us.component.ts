@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -16,11 +18,12 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-contact-us',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [TranslationPipe, CommonModule, ReactiveFormsModule],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css',
 })
 export class ContactUsComponent implements OnInit, OnDestroy {
+  readonly language = injectLanguage(LanguageService);
   contactForm: FormGroup;
 
   submitting = false;
@@ -70,10 +73,10 @@ export class ContactUsComponent implements OnInit, OnDestroy {
 
     if (farmHouseId === null || farmHouseId === undefined) {
       Swal.fire({
-        title: 'Error',
-        text: 'Farm house information is missing. Please try again.',
+        title: this.language.translate('Error'),
+        text: this.language.translate('Farm house information is missing. Please try again.'),
         icon: 'error',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#dc3545',
       });
       return;
@@ -96,20 +99,20 @@ export class ContactUsComponent implements OnInit, OnDestroy {
 
           if (response?.success === false) {
             Swal.fire({
-              title: 'Failed',
-              text: response?.message || 'Unable to send the message.',
+              title: this.language.translate('Failed'),
+              text: this.language.translate(response?.message || 'Unable to send the message.'),
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.language.translate('OK'),
               confirmButtonColor: '#dc3545',
             });
             return;
           }
 
           Swal.fire({
-            title: 'Message Sent',
-            text: 'Your message has been sent successfully.',
+            title: this.language.translate('Message Sent'),
+            text: this.language.translate('Your message has been sent successfully.'),
             icon: 'success',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#198754',
           });
 
@@ -121,12 +124,12 @@ export class ContactUsComponent implements OnInit, OnDestroy {
           console.error('Failed to send message:', error);
 
           Swal.fire({
-            title: 'Error',
+            title: this.language.translate('Error'),
             text:
-              error?.error?.message ||
-              'Something went wrong. Please try again.',
+              this.language.translate(error?.error?.message ||
+              'Something went wrong. Please try again.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           });
         },

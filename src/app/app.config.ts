@@ -1,3 +1,5 @@
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { LocalizedPaginator } from './core/i18n/paginator';
 import {
   ApplicationConfig,
   provideZoneChangeDetection,
@@ -13,18 +15,18 @@ import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { loaderInterceptor } from './core/interceptors/loader.interceptor';
 import { PublicSiteService } from './core/services/public-site.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: MatPaginatorIntl, useClass: LocalizedPaginator },
     provideZoneChangeDetection({
       eventCoalescing: true,
     }),
 
     provideRouter(routes),
 
-    provideHttpClient(withInterceptors([authInterceptor, loaderInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor])),
 
     provideAnimations(),
     provideToastr(),

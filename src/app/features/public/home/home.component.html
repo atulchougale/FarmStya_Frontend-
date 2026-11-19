@@ -31,30 +31,29 @@
                             <!-- Location Badge -->
                             <div class="hero-location">
                                 <i class="bi bi-geo-alt" aria-hidden="true"></i>
-                                <span>Experience Nature &amp; Comfort</span>
+                                <span>{{ 'Experience Nature & Comfort' | t }}</span>
                             </div>
 
                             <!-- Dynamic Title -->
                             <h1 class="hero-title">
-                                {{ slide.title }}
+                                {{ (slide.title) | t }}
                             </h1>
 
                             <!-- Dynamic Description -->
                             <p class="hero-description">
-                                {{ slide.description }}
+                                {{ (slide.description) | t }}
                             </p>
 
                             <!-- Action Buttons -->
                             <div class="hero-actions">
 
                                 <a routerLink="/book-now" class="btn hero-btn-primary">
-                                    <span>Book Now</span>
+                                    <span>{{ 'Book Now' | t }}</span>
                                     <i class="bi bi-arrow-right" aria-hidden="true"></i>
                                 </a>
 
                                 <a routerLink="/gallery" class="btn hero-btn-outline">
-                                    View Gallery
-                                </a>
+                                    {{ 'View Gallery' | t }}</a>
 
                             </div>
                         </div>
@@ -66,14 +65,14 @@
 
         <!-- Previous Button -->
         <button class="carousel-control-prev hero-control" type="button" data-bs-target="#homeHeroCarousel"
-            data-bs-slide="prev" aria-label="Previous slide">
+            data-bs-slide="prev" [attr.aria-label]="'Previous slide' | t">
 
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
 
         <!-- Next Button -->
         <button class="carousel-control-next hero-control" type="button" data-bs-target="#homeHeroCarousel"
-            data-bs-slide="next" aria-label="Next slide">
+            data-bs-slide="next" [attr.aria-label]="'Next slide' | t">
 
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
@@ -85,18 +84,18 @@
 <section class="hero-loading" *ngIf="isLoading && carouselImages.length === 0">
 
     <div class="spinner-border text-warning" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">{{ 'Loading...' | t }}</span>
     </div>
 
-    <p>Loading farmhouse experience...</p>
+    <p>{{ 'Loading farmhouse experience...' | t }}</p>
 </section>
 
 <!-- Empty State -->
 <section class="hero-empty" *ngIf="!isLoading && carouselImages.length === 0">
 
     <div class="app-container text-center">
-        <h2>Welcome to Our Farmhouse</h2>
-        <p>Relax, reconnect with nature, and enjoy your stay.</p>
+        <h2>{{ 'Welcome to Our Farmhouse' | t }}</h2>
+        <p>{{ 'Relax, reconnect with nature, and enjoy your stay.' | t }}</p>
     </div>
 </section>
 
@@ -111,12 +110,10 @@
         <!-- CTA Text -->
         <div class="booking-cta-content">
             <h2 class="booking-cta-title">
-                Ready for your getaway?
-            </h2>
+                {{ 'Ready for your getaway?' | t }}</h2>
 
             <p class="booking-cta-description">
-                Real-time slot availability — book in just a few minutes.
-            </p>
+                {{ 'Real-time slot availability — book in just a few minutes.' | t }}</p>
         </div>
 
         <!-- Custom Booking Calendar -->
@@ -128,16 +125,15 @@
                 <!-- Check-in -->
                 <div class="booking-date-field">
                     <button type="button" id="checkInDate" class="booking-date-trigger"
-                        aria-label="Select check-in date"
+                        [attr.aria-label]="'Select check-in date' | t"
                         [attr.aria-expanded]="isCalendarOpen && activeCalendarField === 'checkIn'"
                         aria-haspopup="dialog" (click)="toggleCalendar('checkIn')">
 
                         <span class="booking-date-label">
-                            CHECK-IN
-                        </span>
+                            {{ 'CHECK-IN' | t }}</span>
 
                         <span class="booking-date-value">
-                            {{ checkInDate ? (checkInDate | date:'EEE, dd MMM yyyy') : 'Select date' }}
+                            {{ (checkInDate ? (checkInDate | localDate:'EEE, dd MMM yyyy') : 'Select date') | t }}
                         </span>
 
                     </button>
@@ -146,16 +142,15 @@
                 <!-- Check-out -->
                 <div class="booking-date-field">
                     <button type="button" id="checkOutDate" class="booking-date-trigger"
-                        aria-label="Select check-out date"
+                        [attr.aria-label]="'Select check-out date' | t"
                         [attr.aria-expanded]="isCalendarOpen && activeCalendarField === 'checkOut'"
                         aria-haspopup="dialog" (click)="toggleCalendar('checkOut')">
 
                         <span class="booking-date-label">
-                            CHECK-OUT
-                        </span>
+                            {{ 'CHECK-OUT' | t }}</span>
 
                         <span class="booking-date-value">
-                            {{ checkOutDate ? (checkOutDate | date:'EEE, dd MMM yyyy') : 'Select date' }}
+                            {{ (checkOutDate ? (checkOutDate | localDate:'EEE, dd MMM yyyy') : 'Select date') | t }}
                         </span>
 
                     </button>
@@ -168,19 +163,19 @@
             </div>
 
             <!-- Calendar Popup -->
-            <div *ngIf="isCalendarOpen" class="booking-calendar-popup" role="dialog" aria-label="Choose booking dates"
+            <div *ngIf="isCalendarOpen" class="booking-calendar-popup" role="dialog" [attr.aria-label]="'Choose booking dates' | t"
                 (click)="$event.stopPropagation()">
 
                 <!-- Month Navigation -->
                 <div class="booking-calendar-navigation">
 
-                    <button type="button" class="calendar-nav-btn" aria-label="Previous month" (click)="previousMonth()"
+                    <button type="button" class="calendar-nav-btn" [attr.aria-label]="'Previous month' | t" (click)="previousMonth()"
                         [disabled]="isPreviousMonthDisabled">
 
                         <i class="bi bi-chevron-left" aria-hidden="true"></i>
                     </button>
 
-                    <button type="button" class="calendar-nav-btn" aria-label="Next month" (click)="nextMonth()">
+                    <button type="button" class="calendar-nav-btn" [attr.aria-label]="'Next month' | t" (click)="nextMonth()">
 
                         <i class="bi bi-chevron-right" aria-hidden="true"></i>
                     </button>
@@ -193,7 +188,7 @@
                     <div class="booking-calendar-month" *ngFor="let month of getCalendarMonths()">
 
                         <h3 class="booking-calendar-month-title">
-                            {{ month.label }}
+                            {{ (month.label) | t }}
                         </h3>
 
                         <div class="booking-calendar-grid">
@@ -201,7 +196,7 @@
                             <!-- Weekday Names -->
                             <span class="booking-calendar-weekday" *ngFor="let day of weekDays">
 
-                                {{ day }}
+                                {{ day | t }}
 
                             </span>
 
@@ -219,7 +214,7 @@
                                     (click)="selectCalendarDate(day.dateKey)">
 
                                     <span class="calendar-day-number">
-                                        {{ day.dayNumber }}
+                                        {{ (day.dayNumber) | t }}
                                     </span>
 
                                     <span class="calendar-day-festival" *ngFor="let festival of day.festivals">
@@ -247,26 +242,24 @@
 
                     <span>
                         <i class="calendar-legend-dot calendar-legend-available"></i>
-                        Available
-                    </span>
+                        {{ 'Available' | t }}</span>
 
                     <span>
                         <i class="calendar-legend-dot calendar-legend-unavailable"></i>
-                        Unavailable
-                    </span>
+                        {{ 'Unavailable' | t }}</span>
 
                 </div>
 
                 <!-- Festival List -->
                 <div class="booking-calendar-festivals" *ngIf="getFestivalListForVisibleMonths().length > 0">
 
-                    <h4>Festivals &amp; Holidays</h4>
+                    <h4>{{ 'Festivals & Holidays' | t }}</h4>
 
                     <ul>
                         <li *ngFor="let festival of getFestivalListForVisibleMonths()">
 
                             <span>
-                                {{ festival.date | date:'d MMM' }}
+                                {{ (festival.date | localDate:'d MMM') | t }}
                             </span>
 
                             <strong>
@@ -281,9 +274,7 @@
                 <!-- Close Calendar -->
                 <button type="button" class="booking-calendar-close" (click)="closeCalendar()">
 
-                    Close calendar
-
-                </button>
+                    {{ 'Close calendar' | t }}</button>
 
             </div>
 
@@ -294,7 +285,7 @@
                     [disabled]="availabilityLoading">
 
                     <span>
-                        {{ availabilityLoading ? 'Checking...' : 'Check Availability' }}
+                        {{ (availabilityLoading ? 'Checking...' : 'Check Availability') | t }}
                     </span>
 
                     <i class="bi" [ngClass]="availabilityLoading ? 'bi-arrow-repeat' : 'bi-arrow-right'"
@@ -311,7 +302,7 @@
 
                 <i class="bi bi-check-circle" aria-hidden="true"></i>
 
-                {{ availabilityMessage }}
+                {{ (availabilityMessage) | t }}
 
             </div>
 
@@ -321,7 +312,7 @@
 
                 <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
 
-                {{ availabilityError }}
+                {{ (availabilityError) | t }}
 
             </div>
 
@@ -341,21 +332,20 @@
 
         <!-- Section Heading -->
         <div class="amenities-header">
-            <h2 class="amenities-heading">Everything you need</h2>
+            <h2 class="amenities-heading">{{ 'Everything you need' | t }}</h2>
 
             <p class="amenities-subtitle">
-                Our farmhouse comes equipped with everything that makes your stay unforgettable.
-            </p>
+                {{ 'Our farmhouse comes equipped with everything that makes your stay unforgettable.' | t }}</p>
         </div>
 
         <!-- Loading State -->
         <div class="amenities-loading" *ngIf="amenitiesLoading && amenities.length === 0">
 
             <div class="spinner-border text-warning" role="status">
-                <span class="visually-hidden">Loading amenities...</span>
+                <span class="visually-hidden">{{ 'Loading amenities...' | t }}</span>
             </div>
 
-            <p>Loading farmhouse amenities...</p>
+            <p>{{ 'Loading farmhouse amenities...' | t }}</p>
         </div>
 
         <!-- Amenities Cards -->
@@ -365,7 +355,7 @@
 
                 <!-- Amenity Image -->
                 <div class="amenity-image-wrapper">
-                    <img class="amenity-image" [src]="amenity.imageUrl" [alt]="amenity.title" loading="lazy" />
+                    <img class="amenity-image" [src]="amenity.imageUrl" [alt]="amenity.title | t" loading="lazy" />
                 </div>
 
                 <!-- Amenity Details -->
@@ -375,11 +365,11 @@
                         <i class="bi" [ngClass]="getAmenityIcon(amenity.title)" aria-hidden="true">
                         </i>
 
-                        <span>{{ amenity.title }}</span>
+                        <span>{{ (amenity.title) | t }}</span>
                     </h3>
 
                     <p class="amenity-description">
-                        {{ amenity.description }}
+                        {{ (amenity.description) | t }}
                     </p>
 
                 </div>
@@ -390,8 +380,8 @@
         <!-- Empty State -->
         <div class="amenities-empty" *ngIf="!amenitiesLoading && amenities.length === 0">
 
-            <h3>Amenities coming soon</h3>
-            <p>We're preparing everything for your comfortable stay.</p>
+            <h3>{{ 'Amenities coming soon' | t }}</h3>
+            <p>{{ 'We\'re preparing everything for your comfortable stay.' | t }}</p>
 
         </div>
 
@@ -419,17 +409,17 @@
 
         <!-- Section Heading -->
         <div class="testimonials-header">
-            <h2 class="testimonials-heading">What our guests say</h2>
+            <h2 class="testimonials-heading">{{ 'What our guests say' | t }}</h2>
         </div>
 
         <!-- Loading State -->
         <div class="testimonials-loading" *ngIf="feedbackLoading && feedbacks.length === 0">
 
             <div class="spinner-border text-warning" role="status">
-                <span class="visually-hidden">Loading feedback...</span>
+                <span class="visually-hidden">{{ 'Loading feedback...' | t }}</span>
             </div>
 
-            <p>Loading guest reviews...</p>
+            <p>{{ 'Loading guest reviews...' | t }}</p>
         </div>
 
         <!-- Testimonials Grid -->
@@ -454,11 +444,11 @@
                 <!-- Guest Details -->
                 <div class="testimonial-guest">
                     <p class="testimonial-guest-name">
-                        {{ feedback.createdByName || 'Guest' }}
+                        {{ feedback.createdByName || ('Guest' | t) }}
                     </p>
 
                     <p class="testimonial-date">
-                        {{ feedback.createdDate | date:'MMM d, y' }}
+                        {{ (feedback.createdDate | localDate:'MMM d, y') | t }}
                     </p>
                 </div>
 
@@ -467,7 +457,7 @@
         </div>
 
         <!-- Testimonials Pagination Dots -->
-        <div class="testimonials-pagination" *ngIf="feedbackSlideCount > 1" aria-label="Guest feedback slides">
+        <div class="testimonials-pagination" *ngIf="feedbackSlideCount > 1" [attr.aria-label]="'Guest feedback slides' | t">
 
             <button *ngFor="let slide of [].constructor(feedbackSlideCount); let i = index" type="button"
                 class="testimonial-pagination-dot" [class.active]="i === currentFeedbackSlide"
@@ -480,8 +470,8 @@
         <!-- Empty State -->
         <div class="testimonials-empty" *ngIf="!feedbackLoading && feedbacks.length === 0">
 
-            <h3>Guest reviews coming soon</h3>
-            <p>We look forward to hearing about your farmhouse experience.</p>
+            <h3>{{ 'Guest reviews coming soon' | t }}</h3>
+            <p>{{ 'We look forward to hearing about your farmhouse experience.' | t }}</p>
 
         </div>
 

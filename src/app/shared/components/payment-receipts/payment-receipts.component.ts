@@ -1,7 +1,8 @@
+import { TranslationPipe } from '../../../core/i18n/language';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 
@@ -16,16 +17,16 @@ interface Receipt {
 @Component({
   selector: 'app-payment-receipts',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslationPipe, CommonModule],
   template: `
-    <section *ngIf="receipts.length || error" class="mt-3">
-      <h3 class="h6">Payment receipts</h3>
-      <p *ngIf="error" class="text-danger" role="alert">{{ error }}</p>
+    <section *ngIf="loading || receipts.length || error" class="mt-3">
+      <h3 class="h6">{{ 'Payment receipts' | t }}</h3>
+      <p *ngIf="loading" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading receipts…' | t }}</p>
+      <p *ngIf="error" class="text-danger" role="alert">{{ (error) | t }}</p>
       <div class="d-flex flex-wrap gap-2">
         <button *ngFor="let receipt of receipts" type="button" class="btn btn-outline-success"
           [disabled]="downloading !== null" (click)="download(receipt)">
-          {{ downloading === receipt.receiptId ? 'Preparing PDF…' : receipt.paymentType === 'Advance' ? 'Advance receipt' : 'Final payment receipt' }} · PDF
-        </button>
+          {{ '{p0} · PDF' | t:{p0: (downloading === receipt.receiptId ? 'Preparing PDF…' : receipt.paymentType === 'Advance' ? 'Advance receipt' : 'Final payment receipt')} }}</button>
       </div>
     </section>
   `
@@ -37,6 +38,7 @@ export class PaymentReceiptsComponent implements OnChanges, OnDestroy {
   receipts: Receipt[] = [];
   downloading: number | null = null;
   error = '';
+  loading = false;
   private requests = new Subscription();
   constructor(private readonly http: HttpClient) {}
 
@@ -49,9 +51,10 @@ export class PaymentReceiptsComponent implements OnChanges, OnDestroy {
     this.requests.unsubscribe();
     this.requests = new Subscription();
     this.receipts = [];
+    this.loading = true;
     this.error = '';
     this.downloading = null;
-    this.requests.add(this.http.get<ApiResponse<Receipt[]>>(this.url).subscribe({
+    this.requests.add(this.http.get<ApiResponse<Receipt[]>>(this.url).pipe(finalize(() => this.loading = false)).subscribe({
       next: response => { this.receipts = response.data ?? []; },
       error: () => { this.error = 'Could not load payment receipts. Reopen booking details to retry.'; }
     }));

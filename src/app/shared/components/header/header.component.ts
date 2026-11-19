@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -13,11 +15,12 @@ import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [TranslationPipe, CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   readonly isAdministrationRole = isAdministrationRole;
   get currentUser$() {
     return this.tokenService.currentUser$;

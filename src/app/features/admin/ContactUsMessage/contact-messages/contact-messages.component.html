@@ -7,18 +7,20 @@
                 class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
 
                 <div>
-                    <h2 class="page-title mb-1">Contact Messages</h2>
+                    <h2 class="page-title mb-1">{{ 'Contact Messages' | t }}</h2>
                     <p class="page-subtitle mb-0">
-                        View and manage messages received from your website.
-                    </p>
+                        {{ 'View and manage messages received from your website.' | t }}</p>
                 </div>
 
                 <div class="message-count">
-                    <span class="count-label">Total Messages</span>
+                    <span class="count-label">{{ 'Total Messages' | t }}</span>
                     <span class="count-value">{{ dataSource.data.length }}</span>
                 </div>
 
             </div>
+
+            <p *ngIf="loading" class="py-3 text-center" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading messages…' | t }}</p>
+            <p *ngIf="deletingId !== null" role="status">{{ 'Deleting message…' | t }}</p>
 
             <!-- Messages Table -->
             <div class="message-card">
@@ -27,18 +29,18 @@
                 <div class="table-heading">
 
                     <div class="table-title-section">
-                        <h5 class="mb-1">All Messages</h5>
-                        <p class="mb-0">Messages submitted through Contact Us</p>
+                        <h5 class="mb-1">{{ 'All Messages' | t }}</h5>
+                        <p class="mb-0">{{ 'Messages submitted through Contact Us' | t }}</p>
                     </div>
 
                     <div class="search-box">
                         <i class="bi bi-search search-icon" aria-hidden="true"></i>
 
-                        <input type="text" class="search-input" placeholder="Search name, mobile or message..."
-                            aria-label="Search contact messages" [value]="searchText" (input)="applyFilter($event)" />
+                        <input type="text" class="search-input" [placeholder]="'Search name, mobile or message...' | t"
+                            [attr.aria-label]="'Search contact messages' | t" [value]="searchText" (input)="applyFilter($event)" />
 
-                        <button *ngIf="searchText" type="button" class="clear-search-button" aria-label="Clear search"
-                            title="Clear Search" (click)="clearFilter()">
+                        <button *ngIf="searchText" type="button" class="clear-search-button" [attr.aria-label]="'Clear search' | t"
+                            [title]="'Clear Search' | t" (click)="clearFilter()">
                             <i class="bi bi-x-lg" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -52,8 +54,7 @@
                         <!-- Sr No -->
                         <ng-container matColumnDef="srNo">
                             <th mat-header-cell *matHeaderCellDef class="sr-column">
-                                Sr. No.
-                            </th>
+                                {{ 'Sr. No.' | t }}</th>
 
                             <td mat-cell *matCellDef="let message; let i = index" class="sr-column">
                                 {{ ((paginator?.pageIndex || 0) * (paginator?.pageSize || 10)) + i + 1 }}
@@ -62,30 +63,30 @@
 
                         <!-- Full Name -->
                         <ng-container matColumnDef="fullName">
-                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <th mat-header-cell *matHeaderCellDef>{{ 'Name' | t }}</th>
 
                             <td mat-cell *matCellDef="let message">
-                                <span class="customer-name">{{ message.fullName }}</span>
+                                <span class="customer-name">{{ (message.fullName) | t }}</span>
                             </td>
                         </ng-container>
 
                         <!-- Mobile Number -->
                         <ng-container matColumnDef="mobileNo">
-                            <th mat-header-cell *matHeaderCellDef>Mobile Number</th>
+                            <th mat-header-cell *matHeaderCellDef>{{ 'Mobile Number' | t }}</th>
 
                             <td mat-cell *matCellDef="let message">
                                 <a class="mobile-link" [href]="'tel:' + message.mobileNo">
-                                    {{ message.mobileNo }}
+                                    {{ (message.mobileNo) | t }}
                                 </a>
                             </td>
                         </ng-container>
 
                         <!-- Message -->
                         <ng-container matColumnDef="message">
-                            <th mat-header-cell *matHeaderCellDef>Message</th>
+                            <th mat-header-cell *matHeaderCellDef>{{ 'Message' | t }}</th>
 
                             <td mat-cell *matCellDef="let message">
-                                <span class="message-preview" [title]="message.message">
+                                <span class="message-preview" [title]="message.message | t">
                                     {{ message.message }}
                                 </span>
                             </td>
@@ -94,22 +95,21 @@
                         <!-- Actions -->
                         <ng-container matColumnDef="actions">
                             <th mat-header-cell *matHeaderCellDef class="actions-column">
-                                Actions
-                            </th>
+                                {{ 'Actions' | t }}</th>
 
                             <td mat-cell *matCellDef="let message" class="actions-column">
                                 <div class="action-buttons">
 
                                     <!-- View Button -->
-                                    <button mat-icon-button type="button" class="view-button" aria-label="View message"
-                                        title="View Message" (click)="viewMessage(message)">
+                                    <button mat-icon-button type="button" class="view-button" [attr.aria-label]="'View message' | t"
+                                        [title]="'View Message' | t" (click)="viewMessage(message)">
                                         <i class="bi bi-eye" aria-hidden="true"></i>
                                     </button>
 
                                     <!-- Delete Button -->
                                     <button mat-icon-button type="button" class="delete-button"
-                                        aria-label="Delete message" title="Delete Message"
-                                        (click)="deleteMessage(message.contactId)">
+                                        [attr.aria-label]="'Delete message' | t" [title]="'Delete Message' | t"
+                                        [disabled]="deletingId !== null || loading" (click)="deleteMessage(message.contactId)">
                                         <i class="bi bi-trash3" aria-hidden="true"></i>
                                     </button>
 
@@ -128,21 +128,18 @@
                                 <i class="bi bi-inbox empty-state-icon" aria-hidden="true"></i>
 
                                 <h6>
-                                    {{ searchText ? 'No matching messages found' : 'No messages found' }}
+                                    {{ (searchText ? 'No matching messages found' : 'No messages found') | t }}
                                 </h6>
 
                                 <p class="mb-0">
-                                    {{
-                                    searchText
+                                    {{ (searchText
                                     ? 'Try another search term.'
-                                    : 'Contact Us messages will appear here.'
-                                    }}
+                                    : 'Contact Us messages will appear here.') | t }}
                                 </p>
 
                                 <button *ngIf="searchText" type="button" class="btn btn-outline-secondary btn-sm mt-3"
                                     (click)="clearFilter()">
-                                    Clear Search
-                                </button>
+                                    {{ 'Clear Search' | t }}</button>
 
                             </td>
                         </tr>
@@ -153,14 +150,13 @@
                 <!-- Pagination -->
                 <div class="pagination-container">
                     <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 50]" [showFirstLastButtons]="true"
-                        aria-label="Contact messages pagination">
+                        [attr.aria-label]="'Contact messages pagination' | t">
                     </mat-paginator>
                 </div>
 
                 <!-- Table Footer -->
                 <div class="table-footer">
-                    Showing {{ dataSource.filteredData.length }} message(s)
-                </div>
+                    {{ 'Showing {p0} message(s)' | t:{p0: (dataSource.filteredData.length)} }}</div>
 
             </div>
 
@@ -173,11 +169,11 @@
                     <!-- Modal Header -->
                     <div class="modal-header-custom">
                         <div>
-                            <h5 id="message-modal-title" class="mb-1">Contact Message</h5>
-                            <p class="mb-0">Message details</p>
+                            <h5 id="message-modal-title" class="mb-1">{{ 'Contact Message' | t }}</h5>
+                            <p class="mb-0">{{ 'Message details' | t }}</p>
                         </div>
 
-                        <button type="button" class="modal-close-button" aria-label="Close" title="Close"
+                        <button type="button" class="modal-close-button" [attr.aria-label]="'Close' | t" [title]="'Close' | t"
                             (click)="closeMessage()">
                             <i class="bi bi-x-lg" aria-hidden="true"></i>
                         </button>
@@ -187,21 +183,21 @@
                     <div class="modal-body-custom">
 
                         <div class="detail-group">
-                            <label>Full Name</label>
-                            <p>{{ selectedMessage.fullName }}</p>
+                            <label>{{ 'Full Name' | t }}</label>
+                            <p>{{ (selectedMessage.fullName) | t }}</p>
                         </div>
 
                         <div class="detail-group">
-                            <label>Mobile Number</label>
+                            <label>{{ 'Mobile Number' | t }}</label>
                             <p>
                                 <a [href]="'tel:' + selectedMessage.mobileNo">
-                                    {{ selectedMessage.mobileNo }}
+                                    {{ (selectedMessage.mobileNo) | t }}
                                 </a>
                             </p>
                         </div>
 
                         <div class="detail-group">
-                            <label>Message</label>
+                            <label>{{ 'Message' | t }}</label>
                             <div class="full-message">{{ selectedMessage.message }}</div>
                         </div>
 
@@ -210,8 +206,7 @@
                     <!-- Modal Footer -->
                     <div class="modal-footer-custom">
                         <button type="button" class="btn btn-secondary modal-close-action" (click)="closeMessage()">
-                            Close
-                        </button>
+                            {{ 'Close' | t }}</button>
                     </div>
 
                 </div>

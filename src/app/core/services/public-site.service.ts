@@ -7,7 +7,6 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 import { PublicSite } from '../models/public-site.model';
-import { LoaderService } from './loader.service';
 import {
   AmenityResponseDto,
   CarouselResponseDto,
@@ -37,7 +36,6 @@ export class PublicSiteService {
 
   constructor(
     private http: HttpClient,
-    private loaderService: LoaderService,
   ) {}
 
   /**
@@ -61,8 +59,6 @@ export class PublicSiteService {
           if (response.success) {
             this.publicSiteSubject.next(response.data);
 
-            // Update global loader with the current farmhouse name
-            this.loaderService.setFarmhouseName(response.data.farmHouseName);
           }
         }),
       );

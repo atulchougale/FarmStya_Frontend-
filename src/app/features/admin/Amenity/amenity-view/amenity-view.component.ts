@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -8,11 +10,12 @@ import { AmenityResponse } from '../models/amenity.model';
 @Component({
   selector: 'app-amenity-view',
   standalone: true,
-  imports: [],
+  imports: [TranslationPipe, ],
   templateUrl: './amenity-view.component.html',
   styleUrl: './amenity-view.component.css',
 })
 export class AmenityViewComponent implements OnInit, OnDestroy {
+  readonly language = injectLanguage(LanguageService);
   amenityItems: AmenityResponse[] = [];
   filteredAmenityItems: AmenityResponse[] = [];
 
@@ -74,12 +77,12 @@ export class AmenityViewComponent implements OnInit, OnDestroy {
         this.loading = false;
 
         Swal.fire({
-          title: 'Error',
+          title: this.language.translate('Error'),
           text:
-            error?.error?.message ||
-            'Unable to load amenities. Please try again.',
+            this.language.translate(error?.error?.message ||
+            'Unable to load amenities. Please try again.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#dc3545',
         });
       },
@@ -115,12 +118,12 @@ export class AmenityViewComponent implements OnInit, OnDestroy {
 
   confirmDelete(item: AmenityResponse): void {
     Swal.fire({
-      title: 'Delete this item?',
-      text: `"${item.title}" will be deleted. This action cannot be undone.`,
+      title: this.language.translate('Delete this item?'),
+      text: this.language.translate("\"{p0}\" will be deleted. This action cannot be undone.", {p0: (item.title)}),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: this.language.translate('Yes, delete it'),
+      cancelButtonText: this.language.translate('Cancel'),
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
       reverseButtons: true,
@@ -140,10 +143,10 @@ export class AmenityViewComponent implements OnInit, OnDestroy {
 
         if (response?.success === false) {
           Swal.fire({
-            title: 'Failed',
-            text: response?.message || 'Unable to delete the amenity.',
+            title: this.language.translate('Failed'),
+            text: this.language.translate(response?.message || 'Unable to delete the amenity.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           });
 
@@ -153,10 +156,10 @@ export class AmenityViewComponent implements OnInit, OnDestroy {
         this.closePopup();
 
         Swal.fire({
-          title: 'Deleted!',
-          text: 'Amenity has been deleted successfully.',
+          title: this.language.translate('Deleted!'),
+          text: this.language.translate('Amenity has been deleted successfully.'),
           icon: 'success',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#198754',
         }).then(() => {
           this.loadAmenities();
@@ -169,12 +172,12 @@ export class AmenityViewComponent implements OnInit, OnDestroy {
         console.error('Failed to delete amenity:', error);
 
         Swal.fire({
-          title: 'Error',
+          title: this.language.translate('Error'),
           text:
-            error?.error?.message ||
-            'Something went wrong. Please try again.',
+            this.language.translate(error?.error?.message ||
+            'Something went wrong. Please try again.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#dc3545',
         });
       },

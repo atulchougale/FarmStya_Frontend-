@@ -7,15 +7,13 @@
             <div class="page-header">
                 <div>
                     <h2 class="mb-1">
-                        {{ isEditMode ? 'Edit Amenity' : 'Create Amenity' }}
+                        {{ (((isEditMode ? 'Edit Amenity' : 'Create Amenity') | t) | t) | t }}
                     </h2>
 
                     <p class="text-muted mb-0">
-                        {{
-                        isEditMode
+                        {{ (((isEditMode
                         ? 'Update the details of this amenity'
-                        : 'Add a new amenity to your farmhouse'
-                        }}
+                        : 'Add a new amenity to your farmhouse') | t) | t) | t }}
                     </p>
                 </div>
             </div>
@@ -25,10 +23,10 @@
             <!-- Loading -->
             <div class="gallery-form-loading">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ (('Loading...' | t) | t) | t }}</span>
                 </div>
 
-                <span>Loading amenity details...</span>
+                <span>{{ (('Loading amenity details...' | t) | t) | t }}</span>
             </div>
 
             } @else {
@@ -47,7 +45,7 @@
                     <div class="col-12 col-lg-4">
 
                         <label class="form-label">
-                            Image <span class="text-danger">*</span>
+                            {{ (('Image' | t) | t) | t }}<span class="text-danger">*</span>
                         </label>
 
                         <div class="media-upload-panel">
@@ -58,7 +56,7 @@
                                 @if (imagePreviewUrl) {
 
                                 <img [src]="imagePreviewUrl"
-                                     alt="Amenity Preview" />
+                                     [alt]="'Amenity Preview' | t" />
 
                                 } @else {
 
@@ -76,9 +74,7 @@
                                 <label class="btn btn-light upload-choose-btn mb-0">
 
                                     <i class="bi bi-upload me-1"></i>
-                                    Choose File
-
-                                    <input type="file"
+                                    {{ (('Choose File' | t) | t) | t }}<input type="file"
                                            hidden
                                            accept="image/*"
                                            (change)="onFileSelected($event)" />
@@ -96,14 +92,10 @@
                                           role="status">
                                     </span>
 
-                                    Uploading...
-
-                                    } @else {
+                                    {{ (('Uploading...' | t) | t) | t }}} @else {
 
                                     <i class="bi bi-cloud-upload me-1"></i>
-                                    Upload
-
-                                    }
+                                    {{ (('Upload' | t) | t) | t }}}
 
                                 </button>
 
@@ -139,8 +131,7 @@
                             f['imageUrl'].touched) {
 
                             <div class="invalid-feedback d-block">
-                                Please upload an image before submitting.
-                            </div>
+                                {{ (('Please upload an image before submitting.' | t) | t) | t }}</div>
 
                             }
 
@@ -161,13 +152,13 @@
                             <div class="col-12">
 
                                 <label class="form-label">
-                                    Title <span class="text-danger">*</span>
+                                    {{ (('Title' | t) | t) | t }}<span class="text-danger">*</span>
                                 </label>
 
                                 <input type="text"
                                        class="form-control"
                                        formControlName="title"
-                                       placeholder="e.g. Swimming Pool"
+                                       [placeholder]="'e.g. Swimming Pool' | t"
                                        maxlength="100"
                                        [class.is-invalid]="
                                            f['title'].invalid &&
@@ -180,16 +171,14 @@
                                 @if (f['title'].errors?.['required']) {
 
                                 <div class="invalid-feedback">
-                                    Title is required.
-                                </div>
+                                    {{ (('Title is required.' | t) | t) | t }}</div>
 
                                 }
 
                                 @if (f['title'].errors?.['maxlength']) {
 
                                 <div class="invalid-feedback">
-                                    Title cannot exceed 100 characters.
-                                </div>
+                                    {{ (('Title cannot exceed 100 characters.' | t) | t) | t }}</div>
 
                                 }
 
@@ -202,15 +191,14 @@
                             <div class="col-12">
 
                                 <label class="form-label">
-                                    Description
-                                    <span class="text-danger">*</span>
+                                    {{ (('Description' | t) | t) | t }}<span class="text-danger">*</span>
                                 </label>
 
                                 <textarea class="form-control"
                                           rows="5"
                                           formControlName="description"
                                           maxlength="500"
-                                          placeholder="Write a short description about this amenity..."
+                                          [placeholder]="'Write a short description about this amenity...' | t"
                                           [class.is-invalid]="
                                               f['description'].invalid &&
                                               f['description'].touched
@@ -223,16 +211,14 @@
                                 @if (f['description'].errors?.['required']) {
 
                                 <div class="invalid-feedback">
-                                    Description is required.
-                                </div>
+                                    {{ (('Description is required.' | t) | t) | t }}</div>
 
                                 }
 
                                 @if (f['description'].errors?.['maxlength']) {
 
                                 <div class="invalid-feedback">
-                                    Description cannot exceed 500 characters.
-                                </div>
+                                    {{ (('Description cannot exceed 500 characters.' | t) | t) | t }}</div>
 
                                 }
 
@@ -245,8 +231,7 @@
                             <div class="col-12">
 
                                 <label class="form-label">
-                                    Display Type
-                                    <span class="text-danger">*</span>
+                                    {{ (('Display Type' | t) | t) | t }}<span class="text-danger">*</span>
                                 </label>
 
                                 <div class="amenity-type-options">
@@ -263,9 +248,7 @@
                                                for="isAmenity">
 
                                             <i class="bi bi-house-check me-1"></i>
-                                            Show as Amenity
-
-                                        </label>
+                                            {{ (('Show as Amenity' | t) | t) | t }}</label>
 
                                     </div>
 
@@ -282,9 +265,7 @@
                                                for="isCarasoul">
 
                                             <i class="bi bi-images me-1"></i>
-                                            Show in Carousel
-
-                                        </label>
+                                            {{ (('Show in Carousel' | t) | t) | t }}</label>
 
                                     </div>
 
@@ -298,9 +279,7 @@
 
                                 <div class="invalid-feedback d-block">
 
-                                    Please select at least one option:
-                                    <strong>Amenity</strong> or
-                                    <strong>Carousel</strong>.
+                                    {{ (('Please select at least one option:' | t) | t) | t }}<strong>{{ (('Amenity' | t) | t) | t }}</strong> {{ (('or' | t) | t) | t }}<strong>{{ (('Carousel' | t) | t) | t }}</strong>.
 
                                 </div>
 
@@ -325,9 +304,7 @@
                             class="btn btn-light"
                             (click)="onCancel()">
 
-                        Cancel
-
-                    </button>
+                        {{ (('Cancel' | t) | t) | t }}</button>
 
 
                     <button type="submit"
@@ -342,11 +319,9 @@
 
                         }
 
-                        {{
-                        isEditMode
+                        {{ (((isEditMode
                         ? 'Update Amenity'
-                        : 'Create Amenity'
-                        }}
+                        : 'Create Amenity') | t) | t) | t }}
 
                     </button>
 

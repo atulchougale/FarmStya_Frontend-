@@ -22,6 +22,15 @@ import { ChangePasswordRequest } from '../../features/profile/models/change-pass
 export class AuthService {
   constructor(private http: HttpClient) {}
 
+  updateEmail(email: string | null) {
+    return this.http.put<{ success: boolean; message: string; data: {hasEmail:boolean;isEmailVerified:boolean;isMobileVerified:boolean} }>(
+      environment.apiUrl + '/auth/profile/email', { email });
+  }
+  verificationStatus(farmHouseId: number, userId: number) {
+    return this.http.get<{success:boolean;data:{hasEmail:boolean;isEmailVerified:boolean;isMobileVerified:boolean}}>(
+      environment.apiUrl + '/auth/verification-status', {params:{farmHouseId,userId}});
+  }
+
   // ============================================
   // Register
   // ============================================

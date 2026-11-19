@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +9,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 
 import Swal from 'sweetalert2';
+import { finalize } from 'rxjs';
 
 import { ContactResponseDto } from '../models/message.model';
 import { MessageService } from '../../../../core/services/message.service';
@@ -14,8 +17,7 @@ import { MessageService } from '../../../../core/services/message.service';
 @Component({
   selector: 'app-contact-messages',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [TranslationPipe, CommonModule,
     FormsModule,
     MatTableModule,
     MatPaginatorModule,
@@ -25,6 +27,7 @@ import { MessageService } from '../../../../core/services/message.service';
   styleUrl: './contact-messages.component.css',
 })
 export class ContactMessagesComponent implements OnInit, AfterViewInit {
+  readonly language = injectLanguage(LanguageService);
   displayedColumns: string[] = [
     'srNo',
     'fullName',
@@ -36,6 +39,8 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<ContactResponseDto>([]);
   selectedMessage: ContactResponseDto | null = null;
   searchText = '';
+  loading = false;
+  deletingId: number | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -63,7 +68,9 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
   }
 
   loadContactMessages(): void {
-    this.messageService.getContactAll().subscribe({
+    if (this.loading) return;
+    this.loading = true;
+    this.messageService.getContactAll().pipe(finalize(() => this.loading = false)).subscribe({
       next: (response) => {
         if (response.success && response.data) {
           this.dataSource.data = response.data;
@@ -80,9 +87,9 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
 
         Swal.fire({
           icon: 'error',
-          title: 'Unable to Load Messages',
-          text: 'Contact messages could not be loaded. Please try again.',
-          confirmButtonText: 'OK',
+          title: this.language.translate('Unable to Load Messages'),
+          text: this.language.translate('Contact messages could not be loaded. Please try again.'),
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#28643b',
         });
       },
@@ -122,27 +129,28 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
       (item) => item.contactId === contactId,
     );
 
-    if (!message) {
+    if (!message || this.deletingId !== null) {
       return;
     }
 
     Swal.fire({
-      title: 'Delete Message?',
-      text: `Are you sure you want to delete the message from ${message.fullName}?`,
+      title: this.language.translate('Delete Message?'),
+      text: this.language.translate("Are you sure you want to delete the message from {p0}?", {p0: (message.fullName)}),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Delete',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: this.language.translate('Yes, Delete'),
+      cancelButtonText: this.language.translate('Cancel'),
       reverseButtons: true,
       focusCancel: true,
       confirmButtonColor: '#c74747',
       cancelButtonColor: '#6c757d',
     }).then((result) => {
-      if (!result.isConfirmed) {
+      if (!result.isConfirmed || this.deletingId !== null) {
         return;
       }
 
-      this.messageService.deleteContact(contactId).subscribe({
+      this.deletingId = contactId;
+      this.messageService.deleteContact(contactId).pipe(finalize(() => this.deletingId = null)).subscribe({
         next: (response) => {
           if (response.success) {
             this.dataSource.data = this.dataSource.data.filter(
@@ -155,17 +163,17 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
 
             Swal.fire({
               icon: 'success',
-              title: 'Deleted!',
-              text: 'Contact message has been deleted successfully.',
-              confirmButtonText: 'OK',
+              title: this.language.translate('Deleted!'),
+              text: this.language.translate('Contact message has been deleted successfully.'),
+              confirmButtonText: this.language.translate('OK'),
               confirmButtonColor: '#28643b',
             });
           } else {
             Swal.fire({
               icon: 'error',
-              title: 'Delete Failed',
-              text: 'The contact message could not be deleted.',
-              confirmButtonText: 'OK',
+              title: this.language.translate('Delete Failed'),
+              text: this.language.translate('The contact message could not be deleted.'),
+              confirmButtonText: this.language.translate('OK'),
             });
           }
         },
@@ -174,9 +182,9 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
 
           Swal.fire({
             icon: 'error',
-            title: 'Delete Failed',
-            text: 'An error occurred while deleting the message.',
-            confirmButtonText: 'OK',
+            title: this.language.translate('Delete Failed'),
+            text: this.language.translate('An error occurred while deleting the message.'),
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#28643b',
           });
         },

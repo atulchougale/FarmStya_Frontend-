@@ -1,3 +1,4 @@
+import { TranslationPipe, LocalDatePipe } from '../../../core/i18n/language';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -6,18 +7,18 @@ import { BookingSubmissionService, SubmittedBooking } from '../../../core/servic
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [TranslationPipe, LocalDatePipe, CommonModule, RouterLink],
   template: `
     <main>
-      <header><h1>My Bookings</h1><a routerLink="/booking">Start a booking</a></header>
-      <p *ngIf="loading" role="status">Loading bookings…</p>
-      <p *ngIf="error" role="alert">{{ error }} <button type="button" (click)="load()">Retry</button></p>
-      <p *ngIf="!loading && !error && !bookings.length">Your booking requests will appear here.</p>
+      <header><h1>{{ 'My Bookings' | t }}</h1><a routerLink="/booking">{{ 'Start a booking' | t }}</a></header>
+      <p *ngIf="loading" role="status">{{ 'Loading bookings…' | t }}</p>
+      <p *ngIf="error" role="alert">{{ (error) | t }} <button type="button" (click)="load()">{{ 'Retry' | t }}</button></p>
+      <p *ngIf="!loading && !error && !bookings.length">{{ 'Your booking requests will appear here.' | t }}</p>
       <article *ngFor="let booking of bookings" [class.selected]="booking.bookingReference === selectedReference">
         <h2>{{ booking.bookingReference }}</h2>
-        <p>{{ booking.status === 'Pending' ? 'Awaiting farmhouse approval' : booking.status }}</p>
-        <p>{{ booking.checkInDate | date:'d MMM yyyy' }} to {{ booking.checkOutDate | date:'d MMM yyyy' }}</p>
-        <p>Total {{ booking.totalAmount | currency:booking.currencyCode }} · Advance {{ booking.advanceAmount | currency:booking.currencyCode }}</p>
+        <p>{{ (booking.status === 'Pending' ? 'Awaiting farmhouse approval' : booking.status) | t }}</p>
+        <p>{{ '{p0} to {p1}' | t:{p0: (booking.checkInDate | localDate:'d MMM yyyy'), p1: (booking.checkOutDate | localDate:'d MMM yyyy')} }}</p>
+        <p>{{ 'Total {p0} · Advance {p1}' | t:{p0: (booking.totalAmount | currency:booking.currencyCode), p1: (booking.advanceAmount | currency:booking.currencyCode)} }}</p>
       </article>
     </main>
   `,

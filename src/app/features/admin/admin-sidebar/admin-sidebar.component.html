@@ -1,4 +1,5 @@
 <aside class="admin-sidebar bg-white border-end d-flex flex-column">
+    <p *ngIf="loading" class="p-3" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading menu…' | t }}</p>
 
     <!-- ========================================= -->
     <!-- FarmHouse / Admin Brand -->
@@ -32,12 +33,15 @@
     <nav class="sidebar-menu grow p-2">
 
         <div class="small text-uppercase text-muted fw-semibold px-2 mb-2">
-            Administration
-        </div>
+            {{ 'Administration' | t }}</div>
 
         @for (item of menuItems; track item.moduleId) {
 
-        @if (item.subMenus?.length) {
+        @if (item.moduleName === 'Reports') {
+        <a routerLink="/admin/reports" routerLinkActive="active" class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
+            <i [class]="item.icon"></i><span>{{ 'Reports' | t }}</span>
+        </a>
+        } @else if (item.subMenus?.length) {
 
         <!-- Module with Sub Menu -->
         <a href="javascript:void(0)" (click)="toggleModule(item.moduleId)"
@@ -46,7 +50,7 @@
             <i [class]="item.icon"></i>
 
             <span>
-                {{ item.displayName }}
+                {{ (item.displayName) | t }}
             </span>
 
             <i class="bi ms-auto" [class.bi-chevron-down]="!isModuleExpanded(item.moduleId)"
@@ -57,6 +61,11 @@
         <!-- Sub Menu -->
         @if (isModuleExpanded(item.moduleId)) {
 
+        @if (item.moduleName === 'Bookings' && canCreateBooking) {
+        <a routerLink="/admin/bookings/create" routerLinkActive="active" class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
+            <i class="bi bi-plus-circle"></i><span>{{ 'Create customer booking' | t }}</span>
+        </a>
+        }
         @for (subMenu of item.subMenus; track subMenu.name) {
 
         <a [routerLink]="getAdminRoute(subMenu.route)" routerLinkActive="active"
@@ -66,7 +75,7 @@
             <i [class]="item.icon"></i>
 
             <span>
-                {{ subMenu.name }}
+                {{ (subMenu.name) | t }}
             </span>
 
         </a>
@@ -87,7 +96,7 @@
             <i [class]="item.icon"></i>
 
             <span>
-                {{ item.displayName }}
+                {{ (item.displayName) | t }}
             </span>
 
         </a>
@@ -113,8 +122,7 @@
             <i class="bi bi-house"></i>
 
             <span>
-                Back to Site
-            </span>
+                {{ 'Back to Site' | t }}</span>
 
         </a>
 

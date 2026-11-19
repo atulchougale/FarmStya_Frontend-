@@ -1,4 +1,7 @@
+import { TranslationPipe } from '../../../core/i18n/language';
 
+import { CommonModule } from '@angular/common';
+import { finalize } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import {
   RouterLink,
@@ -11,7 +14,7 @@ import { AdminService } from '../../../core/services/admin.service';
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [
+  imports: [TranslationPipe, CommonModule,
     RouterLink,
     RouterLinkActive
   ],
@@ -67,6 +70,10 @@ import { AdminService } from '../../../core/services/admin.service';
 export class AdminSidebarComponent implements OnInit {
 
   menuItems: AdminModuleMenu[] = [];
+  get canCreateBooking(): boolean {
+    return this.menuItems.some(m=>m.subMenus?.some(s=>s.permissions.includes('Bookings.Create')));
+  }
+  loading = false;
 
   expandedModules = new Set<number>();
 
@@ -79,7 +86,8 @@ export class AdminSidebarComponent implements OnInit {
   }
 
   private loadAdminMenu(): void {
-    this.adminService.getAdminMenu().subscribe({
+    this.loading = true;
+    this.adminService.getAdminMenu().pipe(finalize(() => this.loading = false)).subscribe({
       next: (response) => {
 
         if (response.success && response.data) {

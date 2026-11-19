@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -10,11 +12,12 @@ import { AboutUsService } from '../../../../core/services/about-us.service';
 @Component({
   selector: 'app-about-us-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslationPipe, CommonModule],
   templateUrl: './about-us-view.component.html',
   styleUrl: './about-us-view.component.css',
 })
 export class AboutUsViewComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   aboutUs: AboutUsResponseDto | null = null;
 
   isLoading = false;
@@ -54,9 +57,9 @@ export class AboutUsViewComponent implements OnInit {
 
         Swal.fire({
           icon: 'error',
-          title: 'Unable to Load',
-          text: 'About Us content could not be loaded. Please try again.',
-          confirmButtonText: 'OK',
+          title: this.language.translate('Unable to Load'),
+          text: this.language.translate('About Us content could not be loaded. Please try again.'),
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#28643b',
         });
       },

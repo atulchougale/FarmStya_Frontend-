@@ -1,3 +1,4 @@
+import { TranslationPipe } from '../../../core/i18n/language';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -10,7 +11,7 @@ import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [TranslationPipe, CommonModule, RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css',
 })

@@ -21,12 +21,10 @@
                             </div>
 
                             <h1 class="profile-title mt-3 mb-1">
-                                My Profile
-                            </h1>
+                                {{ 'My Profile' | t }}</h1>
 
                             <p class="profile-subtitle mb-0">
-                                View your account information
-                            </p>
+                                {{ 'View your account information' | t }}</p>
 
                         </div>
 
@@ -43,8 +41,7 @@
                             </div>
 
                             <p class="text-muted mt-3 mb-0">
-                                Loading profile...
-                            </p>
+                                {{ 'Loading profile...' | t }}</p>
 
                         </div>
 
@@ -69,8 +66,7 @@
                                 <div class="profile-content">
 
                                     <small class="profile-label">
-                                        Full Name
-                                    </small>
+                                        {{ 'Full Name' | t }}</small>
 
                                     <div class="profile-value">
                                         {{ profile.fullName }}
@@ -91,11 +87,23 @@
                                 <div class="profile-content">
 
                                     <small class="profile-label">
-                                        Email Address
-                                    </small>
+                                        {{ 'Email Address' | t }}</small>
 
                                     <div class="profile-value">
-                                        {{ profile.email }}
+                                        {{ profile.email || ('Not provided' | t) }}
+                                        <span>{{ (profile.isEmailVerified ? 'Verified' : profile.email ? 'Verification pending' : '') | t }}</span>
+                                        <form #emailForm="ngForm" (ngSubmit)="saveEmail()" class="mt-3">
+                                            <label for="profile-email">{{ 'Email (optional)' | t }}</label>
+                                            <input id="profile-email" type="email" name="email" class="form-control" maxlength="150"
+                                                [(ngModel)]="emailDraft" email [disabled]="savingEmail">
+                                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                                <button class="btn btn-outline-success" type="submit" [disabled]="savingEmail || emailForm.invalid">
+                                                    {{ (savingEmail ? 'Saving…' : 'Save / resend verification') | t }}
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" [disabled]="savingEmail || isLoading" (click)="refreshProfile()">{{ 'Refresh verification' | t }}</button>
+                                            </div>
+                                            <p role="status">{{ emailMessage | t }}</p><p role="alert" class="text-danger">{{ emailError | t }}</p>
+                                        </form>
                                     </div>
 
                                 </div>
@@ -113,8 +121,7 @@
                                 <div class="profile-content">
 
                                     <small class="profile-label">
-                                        Mobile Number
-                                    </small>
+                                        {{ 'Mobile Number' | t }}</small>
 
                                     <div class="profile-value">
                                         {{ profile.mobileNumber }}
@@ -135,8 +142,7 @@
                                 <div class="profile-content">
 
                                     <small class="profile-label">
-                                        FarmHouse
-                                    </small>
+                                        {{ 'FarmHouse' | t }}</small>
 
                                     <div class="profile-value">
                                         {{ profile.farmHouseName }}
@@ -157,13 +163,12 @@
                                 <div class="profile-content">
 
                                     <small class="profile-label">
-                                        Role
-                                    </small>
+                                        {{ 'Role' | t }}</small>
 
                                     <div class="profile-value">
 
                                         <span class="profile-badge">
-                                            {{ profile.roleName }}
+                                            {{ (profile.roleName) | t }}
                                         </span>
 
                                     </div>
@@ -185,18 +190,15 @@
                                 <div class="profile-content">
 
                                     <small class="profile-label">
-                                        Account Type
-                                    </small>
+                                        {{ 'Account Type' | t }}</small>
 
                                     <div class="profile-value">
 
                                         <span class="profile-badge">
 
                                             @if (profile.isOwner) {
-                                            Owner
-                                            } @else {
-                                            Staff
-                                            }
+                                            {{ 'Owner' | t }}} @else {
+                                            {{ 'Staff' | t }}}
 
                                         </span>
 
@@ -219,8 +221,7 @@
 
                             <button type="button" class="btn btn-register btn-lg w-100" (click)="goToChangePassword()">
                                 <i class="bi bi-key me-2"></i>
-                                Change Password
-                            </button>
+                                {{ 'Change Password' | t }}</button>
 
                         </div>
 
@@ -238,8 +239,7 @@
                             <i class="bi bi-person-x profile-error-icon"></i>
 
                             <p class="text-muted mt-3 mb-0">
-                                Unable to load profile information.
-                            </p>
+                                {{ 'Unable to load profile information.' | t }}</p>
 
                         </div>
 

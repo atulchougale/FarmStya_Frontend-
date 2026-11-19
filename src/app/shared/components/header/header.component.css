@@ -288,3 +288,9 @@
     font-size: 9px;
   }
 }
+
+.language-toggle { display: inline-flex; flex-shrink: 0; gap: 2px; padding: 3px; margin: 0 12px; border: 1px solid #cddbd1; border-radius: 9px; background: #f4f7f4; }
+.language-toggle button { border: 0; border-radius: 6px; padding: 7px 10px; background: transparent; color: #304b3b; font: inherit; font-size: .85rem; cursor: pointer; }
+.language-toggle button.selected { color: white; background: #246344; }
+.language-toggle button:focus-visible { outline: 2px solid #246344; outline-offset: 2px; }
+@media (max-width: 991px) { .language-toggle { margin: 8px 0 16px; } }

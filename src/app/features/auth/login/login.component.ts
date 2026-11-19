@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnDestroy } from '@angular/core';
 
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -28,11 +30,12 @@ type LoginApiResponse = {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [TranslationPipe, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnDestroy {
+  readonly language = injectLanguage(LanguageService);
   // ============================================
   // Forms
   // ============================================
@@ -76,7 +79,7 @@ export class LoginComponent implements OnDestroy {
     private route: ActivatedRoute,
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(/^(?:[0-9]{10}|[^\s@]+@[^\s@]+\.[^\s@]+)$/)]],
 
       password: ['', Validators.required],
 
@@ -240,7 +243,7 @@ export class LoginComponent implements OnDestroy {
             toast: true,
             position: 'top-end',
             icon: 'success',
-            title: 'OTP sent to your WhatsApp',
+            title: this.language.translate('OTP sent to your WhatsApp'),
             showConfirmButton: false,
             timer: 2500,
           });
@@ -394,8 +397,8 @@ export class LoginComponent implements OnDestroy {
 
     Swal.fire({
       icon: 'success',
-      title: 'Welcome',
-      text: response.message ?? 'Login successful.',
+      title: this.language.translate('Welcome'),
+      text: this.language.translate(response.message ?? 'Login successful.'),
       timer: 1500,
       showConfirmButton: false,
     }).then(() => {
@@ -468,10 +471,10 @@ export class LoginComponent implements OnDestroy {
 
     Swal.fire({
       icon: 'warning',
-      title: 'Verification Required',
+      title: this.language.translate('Verification Required'),
       text:
-        response?.message ??
-        'Please verify your email and mobile number to continue.',
+        this.language.translate(response?.message ??
+        'Please verify your email and mobile number to continue.'),
       confirmButtonColor: '#c4512d',
       allowOutsideClick: false,
     }).then(() => {
@@ -480,6 +483,7 @@ export class LoginComponent implements OnDestroy {
           userId: data.userId,
           farmHouseId: data.farmHouseId,
           isEmailVerified: data.isEmailVerified,
+                hasEmail: !!data.hasEmail,
           isMobileVerified: data.isMobileVerified,
         },
       });

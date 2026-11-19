@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, inject } from '@angular/core';
 
 import { Router, RouterLink } from '@angular/router';
@@ -18,11 +20,12 @@ import { ForgotPasswordRequest } from '../models/forgot-password-request.model';
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [TranslationPipe, ReactiveFormsModule, RouterLink],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css',
 })
 export class ForgotPasswordComponent {
+  readonly language = injectLanguage(LanguageService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
@@ -184,13 +187,13 @@ export class ForgotPasswordComponent {
             icon: 'error',
 
             title:
-              this.selectedMethod === 1
+              this.language.translate(this.selectedMethod === 1
                 ? 'Unable to Send Email'
-                : 'Unable to Send OTP',
+                : 'Unable to Send OTP'),
 
             text:
-              response?.message ??
-              'Unable to process your password reset request.',
+              this.language.translate(response?.message ??
+              'Unable to process your password reset request.'),
 
             confirmButtonColor: '#c4512d',
           });
@@ -205,11 +208,11 @@ export class ForgotPasswordComponent {
         if (this.selectedMethod === 1) {
           Swal.fire({
             icon: 'success',
-            title: 'Email Sent',
+            title: this.language.translate('Email Sent'),
 
             text:
-              response?.message ??
-              'Password reset instructions have been sent to your email.',
+              this.language.translate(response?.message ??
+              'Password reset instructions have been sent to your email.'),
 
             confirmButtonColor: '#c4512d',
           }).then(() => {
@@ -239,11 +242,11 @@ export class ForgotPasswordComponent {
 
           Swal.fire({
             icon: 'success',
-            title: 'OTP Sent',
+            title: this.language.translate('OTP Sent'),
 
             text:
-              response?.message ??
-              'Password reset OTP has been sent to your mobile.',
+              this.language.translate(response?.message ??
+              'Password reset OTP has been sent to your mobile.'),
 
             confirmButtonColor: '#c4512d',
           }).then(() => {
@@ -273,13 +276,13 @@ export class ForgotPasswordComponent {
           icon: 'error',
 
           title:
-            this.selectedMethod === 1
+            this.language.translate(this.selectedMethod === 1
               ? 'Email Reset Failed'
-              : 'OTP Reset Failed',
+              : 'OTP Reset Failed'),
 
           text:
-            error?.error?.message ??
-            'Something went wrong while processing your request.',
+            this.language.translate(error?.error?.message ??
+            'Something went wrong while processing your request.'),
 
           confirmButtonColor: '#c4512d',
         });

@@ -1,3 +1,7 @@
+import { ADMIN_BOOKING_CONTEXT } from '../../../../core/services/admin-booking-context';
+import { AuthService } from '../../../../core/services/auth.service';
+import { TranslationPipe, LocalDatePipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -90,13 +94,16 @@ interface BookingDraft {
 
   standalone: true,
 
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [TranslationPipe, LocalDatePipe, CommonModule, FormsModule, RouterLink],
 
   templateUrl: './booking-page.component.html',
 
   styleUrl: './booking-page.component.css',
 })
 export class BookingPageComponent implements OnInit, OnDestroy {
+  private readonly admin = injectLanguage(ADMIN_BOOKING_CONTEXT, { optional: true });
+  private readonly auth = injectLanguage(AuthService);
+  readonly language = injectLanguage(LanguageService);
   readonly bookingTypes = [
     { value: 'NormalEvent', label: 'Normal Event', rateKey: 'NORMAL_EVENT_DAILY' },
     { value: 'DecorationEvent', label: 'Event With Decoration', rateKey: 'DECORATION_EVENT_DAILY' },
@@ -214,15 +221,15 @@ export class BookingPageComponent implements OnInit, OnDestroy {
 
     void Swal.fire({
       icon: 'success',
-      title: 'Booking request received',
-      text: 'Your request is awaiting farmhouse approval.',
+      title: this.language.translate('Booking request received'),
+      text: this.language.translate('Your request is awaiting farmhouse approval.'),
       input: 'text',
-      inputLabel: 'Booking reference',
+      inputLabel: this.language.translate('Booking reference'),
       inputValue: booking.bookingReference,
       inputAttributes: { readonly: 'readonly' },
       showDenyButton: true,
       showCloseButton: true,
-      confirmButtonText: 'View My Booking',
+      confirmButtonText: this.language.translate('View My Booking'),
       denyButtonText: 'Copy reference',
       confirmButtonColor: '#2e3b27',
       preDeny: async () => {
@@ -231,13 +238,14 @@ export class BookingPageComponent implements OnInit, OnDestroy {
           Swal.getDenyButton()!.textContent = 'Copied';
         } catch {
           Swal.getInput()?.select();
-          Swal.showValidationMessage('Select and copy the booking reference shown above.');
+          Swal.showValidationMessage(this.language.translate('Select and copy the booking reference shown above.'));
         }
         return false;
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        void this.router.navigate(['/my-bookings'], { queryParams: { reference: booking.bookingReference } });
+        if (this.admin) void this.router.navigate(['/admin/booking',booking.bookingId]);
+        else void this.router.navigate(['/my-bookings'], { queryParams: { reference: booking.bookingReference } });
       }
     });
   }
@@ -305,7 +313,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
     const userId = this.registeredUser?.userId;
     const farmHouseId = this.registeredUser?.farmHouseId;
     return this.getStoredAccessToken() && Number.isInteger(userId) && Number.isInteger(farmHouseId)
-      ? `farmstay_booking_draft_v2:${farmHouseId}:${userId}`
+      ? `farmstay_booking_draft_v2:${this.admin ? "admin:" : ""}${farmHouseId}:${userId}`
       : null;
   }
 
@@ -346,6 +354,8 @@ export class BookingPageComponent implements OnInit, OnDestroy {
     fullName?: string;
     mobileNumber?: string;
     email?: string;
+    isMobileVerified?: boolean;
+    isEmailVerified?: boolean;
   } | null = null;
 
   private getStoredAccessToken(): string | null {
@@ -367,8 +377,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
 
     try {
       const storedUser = this.getStoredUser();
-
-      this.registeredUser = storedUser ? JSON.parse(storedUser) : null;
+      this.registeredUser = this.admin ? this.admin.customer : storedUser ? JSON.parse(storedUser) : null;
 
       this.customerDetails = {
         fullName: this.registeredUser?.fullName ?? '',
@@ -441,12 +450,13 @@ export class BookingPageComponent implements OnInit, OnDestroy {
         'This mobile number does not match your registered account.';
     }
 
-    if (!enteredEmail) {
-      this.customerDetailsError.email = 'Email address is required.';
-    } else if (!registeredEmail || enteredEmail !== registeredEmail) {
+    if (enteredEmail !== registeredEmail) {
       this.customerDetailsError.email =
         'This email address does not match your registered account.';
     }
+
+    if (!this.registeredUser.isMobileVerified || (registeredEmail && !this.registeredUser.isEmailVerified))
+      this.customerDetailsError.general = 'Verify your mobile and any supplied email before booking.';
 
     return !Object.values(this.customerDetailsError).some(
       (message) => !!message,
@@ -464,6 +474,18 @@ export class BookingPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCustomerDetails();
+    if (!this.admin && this.getStoredAccessToken()) {
+      this.auth.getProfile().subscribe({
+        next: response => {
+          if (response.data) {
+            this.registeredUser = { ...this.registeredUser, ...response.data };
+            this.customerDetails.mobileNumber = response.data.mobileNumber;
+            this.customerDetails.email = response.data.email ?? '';
+          }
+        },
+        error: () => { this.customerDetailsError.general = 'Could not load your registered account details.'; }
+      });
+    }
 
     // Restore previously saved form data.
     this.restoreBookingDraft();
@@ -614,7 +636,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
   }
 
   get monthLabel(): string {
-    return this.calendarMonth.toLocaleDateString('en-IN', {
+    return this.calendarMonth.toLocaleDateString(this.language.locale, {
       month: 'long',
 
       year: 'numeric',
@@ -1236,7 +1258,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
       const isReserved = reservedDates.has(dateKey) && !isOwnReserved;
 
       // Only dates before today are past dates.
-      const isPast = date <= today;
+      const isPast = (this.admin ? date < today : date <= today);
 
       const isCheckIn = dateKey === this.checkInDate;
       const isCheckOut = dateKey === this.checkOutDate;
@@ -1492,9 +1514,9 @@ export class BookingPageComponent implements OnInit, OnDestroy {
       if (!accessToken) {
         await Swal.fire({
           icon: 'warning',
-          title: 'Login Required',
-          text: 'You are not logged in. Please log in and try again.',
-          confirmButtonText: 'OK',
+          title: this.language.translate('Login Required'),
+          text: this.language.translate('You are not logged in. Please log in and try again.'),
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#2e3b27',
           allowOutsideClick: false,
           allowEscapeKey: false,

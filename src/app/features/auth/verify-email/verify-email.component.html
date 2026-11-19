@@ -21,18 +21,15 @@
                             <div class="spinner-border text-success mb-4" role="status">
 
                                 <span class="visually-hidden">
-                                    Loading...
-                                </span>
+                                    {{ 'Loading...' | t }}</span>
 
                             </div>
 
                             <h2 class="fw-bold mb-3">
-                                Checking Verification
-                            </h2>
+                                {{ 'Checking Verification' | t }}</h2>
 
                             <p class="text-muted mb-0">
-                                Please wait while we check your verification status.
-                            </p>
+                                {{ 'Please wait while we check your verification status.' | t }}</p>
 
                         </div>
 
@@ -54,12 +51,10 @@
                                 </i>
 
                                 <h2 class="fw-bold mt-3 mb-2">
-                                    Account Verification
-                                </h2>
+                                    {{ 'Account Verification' | t }}</h2>
 
                                 <p class="text-muted">
-                                    Complete both verifications to activate your FarmStay account.
-                                </p>
+                                    {{ (hasEmail ? 'Verify mobile and the supplied email to continue booking.' : 'Verify your mobile number to activate your account.') | t }}</p>
 
                             </div>
 
@@ -68,6 +63,7 @@
                             <!-- Email Verification Status -->
                             <!-- ============================= -->
 
+                            @if (hasEmail) {
                             <div class="border rounded-3 p-3 mb-3">
 
                                 <div class="d-flex align-items-center justify-content-between">
@@ -89,20 +85,17 @@
                                         <div>
 
                                             <h6 class="fw-bold mb-1">
-                                                Email Verification
-                                            </h6>
+                                                {{ 'Email Verification' | t }}</h6>
 
                                             @if (isEmailVerified) {
 
                                             <span class="text-success small">
-                                                Email verified successfully
-                                            </span>
+                                                {{ 'Email verified successfully' | t }}</span>
 
                                             } @else {
 
                                             <span class="text-muted small">
-                                                Verification pending
-                                            </span>
+                                                {{ 'Verification pending' | t }}</span>
 
                                             }
 
@@ -114,30 +107,26 @@
                                     @if (isEmailVerified) {
 
                                     <span class="badge bg-success">
-                                        Verified
-                                    </span>
+                                        {{ 'Verified' | t }}</span>
 
                                     } @else {
 
                                     <span class="badge bg-warning text-dark">
-                                        Pending
-                                    </span>
+                                        {{ 'Pending' | t }}</span>
 
                                     }
 
                                 </div>
 
 
-                                @if (!isEmailVerified) {
+                                @if (hasEmail && !isEmailVerified) {
 
                                 <div class="mt-3">
 
                                     <p class="small text-muted mb-0">
 
                                         <i class="bi bi-info-circle me-1"> </i>
-                                        Please check your email and click the verification link to verify your email address.
-
-                                    </p>
+                                        {{ 'Please check your email and click the verification link to verify your email address.' | t }}</p>
 
                                 </div>
 
@@ -147,6 +136,7 @@
 
 
                             <!-- ============================= -->
+                            }
                             <!-- Mobile Verification Status -->
                             <!-- ============================= -->
 
@@ -171,20 +161,17 @@
                                         <div>
 
                                             <h6 class="fw-bold mb-1">
-                                                Mobile Verification
-                                            </h6>
+                                                {{ 'Mobile Verification' | t }}</h6>
 
                                             @if (isMobileVerified) {
 
                                             <span class="text-success small">
-                                                Mobile number verified successfully
-                                            </span>
+                                                {{ 'Mobile number verified successfully' | t }}</span>
 
                                             } @else {
 
                                             <span class="text-muted small">
-                                                OTP verification pending
-                                            </span>
+                                                {{ 'OTP verification pending' | t }}</span>
 
                                             }
 
@@ -196,14 +183,12 @@
                                     @if (isMobileVerified) {
 
                                     <span class="badge bg-success">
-                                        Verified
-                                    </span>
+                                        {{ 'Verified' | t }}</span>
 
                                     } @else {
 
                                     <span class="badge bg-warning text-dark">
-                                        Pending
-                                    </span>
+                                        {{ 'Pending' | t }}</span>
 
                                     }
 
@@ -220,9 +205,7 @@
 
                                     <label for="otpCode" class="form-label fw-semibold">
 
-                                        Enter OTP
-
-                                    </label>
+                                        {{ 'Enter OTP' | t }}</label>
 
 
                                     <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
@@ -231,7 +214,7 @@
 
                                             <input type="text" id="otpCode"
                                                 class="form-control form-control-lg text-center"
-                                                placeholder="Enter 6 digit OTP" maxlength="6" inputmode="numeric"
+                                                [placeholder]="'Enter 6 digit OTP' | t" maxlength="6" inputmode="numeric"
                                                 formControlName="otpCode" />
 
                                             <button type="submit" class="btn btn-register px-4"
@@ -242,13 +225,9 @@
                                                 <span class="spinner-border spinner-border-sm me-2">
                                                 </span>
 
-                                                Verifying...
+                                                {{ 'Verifying...' | t }}} @else {
 
-                                                } @else {
-
-                                                Verify OTP
-
-                                                }
+                                                {{ 'Verify OTP' | t }}}
 
                                             </button>
 
@@ -265,16 +244,14 @@
                                             @if (f['otpCode'].errors?.['required']) {
 
                                             <span>
-                                                Please enter OTP.
-                                            </span>
+                                                {{ 'Please enter OTP.' | t }}</span>
 
                                             }
 
                                             @if (f['otpCode'].errors?.['pattern']) {
 
                                             <span>
-                                                OTP must be exactly 6 digits.
-                                            </span>
+                                                {{ 'OTP must be exactly 6 digits.' | t }}</span>
 
                                             }
 
@@ -288,8 +265,7 @@
                                         <div class="text-center mt-3">
 
                                             <span class="text-muted small">
-                                                Didn't receive the OTP?
-                                            </span>
+                                                {{ 'Didn\'t receive the OTP?' | t }}</span>
 
                                             <button type="button" class="btn btn-link btn-sm text-decoration-none"
                                                 (click)="resendOtp()" [disabled]="isResendingOtp">
@@ -299,13 +275,9 @@
                                                 <span class="spinner-border spinner-border-sm me-1">
                                                 </span>
 
-                                                Sending...
+                                                {{ 'Sending...' | t }}} @else {
 
-                                                } @else {
-
-                                                Resend OTP
-
-                                                }
+                                                {{ 'Resend OTP' | t }}}
 
                                             </button>
 
@@ -328,7 +300,7 @@
 
                             <div class="alert alert-info text-center small mb-4">
 
-                                {{ message }}
+                                {{ (message) | t }}
 
                             </div>
 
@@ -346,25 +318,20 @@
                                 </i>
 
                                 <h3 class="fw-bold text-success mt-3">
-                                    Verification Complete
-                                </h3>
+                                    {{ 'Verification Complete' | t }}</h3>
 
                                 <p class="text-muted mt-3">
-                                    Your email and mobile number have been verified successfully.
-                                </p>
+                                    {{ 'Your email and mobile number have been verified successfully.' | t }}</p>
 
                                 <p class="small text-secondary mb-4">
-                                    Your account is now ready. You can login and start exploring FarmStay.
-                                </p>
+                                    {{ 'Your account is now ready. You can login and start exploring FarmStay.' | t }}</p>
 
                                 <a routerLink="/login" class="btn btn-register btn-lg px-4">
 
                                     <i class="bi bi-box-arrow-in-right me-2">
                                     </i>
 
-                                    Go To Login
-
-                                </a>
+                                    {{ 'Go To Login' | t }}</a>
 
                             </div>
 

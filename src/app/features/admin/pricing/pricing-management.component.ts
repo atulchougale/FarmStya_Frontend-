@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -8,11 +10,12 @@ import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslationPipe, CommonModule, FormsModule],
   templateUrl: './pricing-management.component.html',
   styleUrl: './pricing-management.component.css'
 })
 export class PricingManagementComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   entries: PricingEntry[] = [];
   draft: PricingEntry | null = null;
   loading = false;
@@ -67,9 +70,9 @@ export class PricingManagementComponent implements OnInit {
   async remove(entry: PricingEntry): Promise<void> {
     if (!this.canDelete || this.saving) return;
     const decision = await Swal.fire({
-      title: 'Delete pricing?',
-      text: entry.pricingName + ' will be removed from active pricing. Bookings requiring this rate will need it restored before submission.',
-      icon: 'warning', showCancelButton: true, confirmButtonText: 'Delete', confirmButtonColor: '#b23b3b'
+      title: this.language.translate('Delete pricing?'),
+      text: this.language.translate(entry.pricingName + ' will be removed from active pricing. Bookings requiring this rate will need it restored before submission.'),
+      icon: 'warning', showCancelButton: true, confirmButtonText: this.language.translate('Delete'), confirmButtonColor: '#b23b3b'
     });
     if (!decision.isConfirmed || this.saving) return;
     this.saving = true;

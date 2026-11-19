@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
@@ -23,11 +25,12 @@ import { FileUploadService } from '../../../../core/services/file-upload.service
 @Component({
   selector: 'app-about-us-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [TranslationPipe, CommonModule, ReactiveFormsModule],
   templateUrl: './about-us-form.component.html',
   styleUrl: './about-us-form.component.css',
 })
 export class AboutUsFormComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   aboutUsForm!: FormGroup;
   featureForm!: FormGroup;
 
@@ -154,9 +157,9 @@ export class AboutUsFormComponent implements OnInit {
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'About Us Not Found',
-            text: 'About Us content could not be found.',
-            confirmButtonText: 'OK',
+            title: this.language.translate('About Us Not Found'),
+            text: this.language.translate('About Us content could not be found.'),
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#28643b',
           }).then(() => {
             this.router.navigate(['/admin/website-settings/aboutus']);
@@ -169,9 +172,9 @@ export class AboutUsFormComponent implements OnInit {
 
         Swal.fire({
           icon: 'error',
-          title: 'Unable to Load',
-          text: 'About Us content could not be loaded.',
-          confirmButtonText: 'OK',
+          title: this.language.translate('Unable to Load'),
+          text: this.language.translate('About Us content could not be loaded.'),
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#28643b',
         }).then(() => {
           this.router.navigate(['/admin/website-settings/aboutus']);
@@ -196,10 +199,10 @@ export class AboutUsFormComponent implements OnInit {
     // Only image files are allowed for About Us Hero Image.
     if (!file.type.startsWith('image/')) {
       Swal.fire({
-        title: 'Invalid File',
-        text: 'Please select an image file only.',
+        title: this.language.translate('Invalid File'),
+        text: this.language.translate('Please select an image file only.'),
         icon: 'warning',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#28643b',
       });
 
@@ -232,10 +235,10 @@ export class AboutUsFormComponent implements OnInit {
   uploadSelectedFile(): void {
     if (!this.selectedFile) {
       Swal.fire({
-        title: 'No File Selected',
-        text: 'Please select an image first.',
+        title: this.language.translate('No File Selected'),
+        text: this.language.translate('Please select an image first.'),
         icon: 'warning',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#28643b',
       });
 
@@ -266,10 +269,10 @@ export class AboutUsFormComponent implements OnInit {
               this.uploadProgress = 0;
 
               Swal.fire({
-                title: 'Upload Failed',
-                text: response?.message || 'Unable to upload hero image.',
+                title: this.language.translate('Upload Failed'),
+                text: this.language.translate(response?.message || 'Unable to upload hero image.'),
                 icon: 'error',
-                confirmButtonText: 'OK',
+                confirmButtonText: this.language.translate('OK'),
                 confirmButtonColor: '#c74747',
               });
 
@@ -284,10 +287,10 @@ export class AboutUsFormComponent implements OnInit {
             this.aboutUsForm.get('heroImageUrl')?.markAsTouched();
 
             Swal.fire({
-              title: 'Uploaded!',
-              text: 'Hero image uploaded successfully.',
+              title: this.language.translate('Uploaded!'),
+              text: this.language.translate('Hero image uploaded successfully.'),
               icon: 'success',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.language.translate('OK'),
               confirmButtonColor: '#198754',
             });
           }
@@ -300,12 +303,12 @@ export class AboutUsFormComponent implements OnInit {
           console.error('File upload failed:', error);
 
           Swal.fire({
-            title: 'Upload Failed',
+            title: this.language.translate('Upload Failed'),
             text:
-              error?.error?.message ||
-              'Unable to upload hero image. Please try again.',
+              this.language.translate(error?.error?.message ||
+              'Unable to upload hero image. Please try again.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#c74747',
           });
         },
@@ -394,12 +397,12 @@ export class AboutUsFormComponent implements OnInit {
     const feature = this.features[index];
 
     Swal.fire({
-      title: 'Delete Feature?',
-      text: `Are you sure you want to remove "${feature.title}"?`,
+      title: this.language.translate('Delete Feature?'),
+      text: this.language.translate("Are you sure you want to remove \"{p0}\"?", {p0: (feature.title)}),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Delete',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: this.language.translate('Yes, Delete'),
+      cancelButtonText: this.language.translate('Cancel'),
       reverseButtons: true,
       focusCancel: true,
       confirmButtonColor: '#c74747',
@@ -470,9 +473,9 @@ export class AboutUsFormComponent implements OnInit {
     if (this.features.length === 0) {
       Swal.fire({
         icon: 'warning',
-        title: 'No Features Added',
-        text: 'Please add at least one feature before saving About Us.',
-        confirmButtonText: 'OK',
+        title: this.language.translate('No Features Added'),
+        text: this.language.translate('Please add at least one feature before saving About Us.'),
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#28643b',
       });
 
@@ -514,11 +517,11 @@ export class AboutUsFormComponent implements OnInit {
         if (response.success) {
           Swal.fire({
             icon: 'success',
-            title: this.isEditMode
+            title: this.language.translate(this.isEditMode
               ? 'Updated Successfully'
-              : 'Created Successfully',
-            text: response.message,
-            confirmButtonText: 'OK',
+              : 'Created Successfully'),
+            text: this.language.translate(response.message),
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#28643b',
           }).then(() => {
             this.router.navigate(['/admin/website-settings/aboutus']);
@@ -526,9 +529,9 @@ export class AboutUsFormComponent implements OnInit {
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Save Failed',
-            text: response.message || 'Unable to save About Us.',
-            confirmButtonText: 'OK',
+            title: this.language.translate('Save Failed'),
+            text: this.language.translate(response.message || 'Unable to save About Us.'),
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#28643b',
           });
         }
@@ -541,9 +544,9 @@ export class AboutUsFormComponent implements OnInit {
 
         Swal.fire({
           icon: 'error',
-          title: 'Save Failed',
-          text: 'Something went wrong while saving About Us.',
-          confirmButtonText: 'OK',
+          title: this.language.translate('Save Failed'),
+          text: this.language.translate('Something went wrong while saving About Us.'),
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#28643b',
         });
       },

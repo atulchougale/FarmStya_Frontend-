@@ -11,13 +11,13 @@
 
                 @if(site?.logoUrl)
                 {
-                <img [src]="logoUrl" [alt]="site?.farmHouseName" class="header-logo-image rounded-2">
+                <img [src]="logoUrl" [alt]="site?.farmHouseName | t" class="header-logo-image rounded-2">
                 }
                 @else
                 {
                 <div class="logo-box rounded-2 d-flex align-items-center justify-content-center flex-shrink-0">
 
-                    {{ site?.farmHouseName?.charAt(0) || 'F' }}
+                    {{ (site?.farmHouseName?.charAt(0) || 'F') | t }}
 
                 </div>
                 }
@@ -59,49 +59,48 @@
 
                     <li class="nav-item">
                         <a routerLink="/home" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            Home
-                        </a>
+                            {{ 'Home' | t }}</a>
                     </li>
 
                     <li class="nav-item">
                         <a routerLink="/about" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            About
-                        </a>
+                            {{ 'About' | t }}</a>
                     </li>
 
                     <li class="nav-item">
                         <a routerLink="/gallery" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            Gallery
-                        </a>
+                            {{ 'Gallery' | t }}</a>
                     </li>
 
                     <li class="nav-item">
                         <a routerLink="/booking" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            Booking
-                        </a>
+                            {{ 'Booking' | t }}</a>
                     </li>
 
                     <li class="nav-item">
                         <a routerLink="/my-bookings" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            My Bookings
-                        </a>
+                            {{ 'My Bookings' | t }}</a>
                     </li>
 
                     <li class="nav-item">
                         <a routerLink="/contact" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            Contact
-                        </a>
+                            {{ 'Contact' | t }}</a>
                     </li>
 
                     @if (isAdministrationRole(currentUser?.roleName)) {
                         <li class="nav-item">
                             <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                                Dashboard
-                            </a>
+                                {{ 'Dashboard' | t }}</a>
                         </li>
                     }
                 </ul>
 
+                <div class="language-toggle" role="group" aria-label="Language / भाषा">
+                    <button type="button" [class.selected]="language.language() === 'en'"
+                        [attr.aria-pressed]="language.language() === 'en'" (click)="language.setLanguage('en')" lang="en">English</button>
+                    <button type="button" [class.selected]="language.language() === 'mr'"
+                        [attr.aria-pressed]="language.language() === 'mr'" (click)="language.setLanguage('mr')" lang="mr">मराठी</button>
+                </div>
                 <!-- Guest -->
 
                 @if(!currentUser)
@@ -110,12 +109,10 @@
                 <div class="d-flex align-items-center gap-3 header-actions">
 
                     <a routerLink="/login" class="login-link text-decoration-none">
-                        Login
-                    </a>
+                        {{ 'Login' | t }}</a>
 
                     <a routerLink="/register" class="btn register-btn rounded-2 d-flex align-items-center">
-                        Register
-                    </a>
+                        {{ 'Register' | t }}</a>
 
                 </div>
 
@@ -146,14 +143,12 @@
 
                         <li>
                             <a routerLink="/profile" class="dropdown-item rounded-2" (click)="closeDropdown()">
-                                Profile
-                            </a>
+                                {{ 'Profile' | t }}</a>
                         </li>
 
                         <li>
                             <a routerLink="/my-bookings" class="dropdown-item rounded-2" (click)="closeDropdown()">
-                                My Bookings
-                            </a>
+                                {{ 'My Bookings' | t }}</a>
                         </li>
 
                         <li>
@@ -162,8 +157,7 @@
 
                         <li>
                             <button class="dropdown-item rounded-2" (click)="logout()">
-                                Logout
-                            </button>
+                                {{ 'Logout' | t }}</button>
                         </li>
 
                     </ul>

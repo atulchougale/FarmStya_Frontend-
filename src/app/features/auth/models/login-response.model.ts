@@ -8,6 +8,7 @@ export interface LoginResponse {
   fullName: string;
 
   email: string;
+  hasEmail?: boolean;
 
   mobileNumber: string;
 

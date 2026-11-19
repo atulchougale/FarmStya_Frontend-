@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpEventType } from '@angular/common/http';
@@ -19,11 +21,12 @@ import { FileUploadService } from '../../../../core/services/file-upload.service
 @Component({
   selector: 'app-amenity-create',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [TranslationPipe, ReactiveFormsModule],
   templateUrl: './amenity-create.component.html',
   styleUrl: './amenity-create.component.css',
 })
 export class AmenityCreateComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   amenityForm!: FormGroup;
 
   // =========================================
@@ -121,10 +124,10 @@ export class AmenityCreateComponent implements OnInit {
 
         if (!item) {
           Swal.fire({
-            title: 'Not Found',
-            text: 'Amenity item not found.',
+            title: this.language.translate('Not Found'),
+            text: this.language.translate('Amenity item not found.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           }).then(() => {
             this.router.navigate(['/admin/website-settings/amenity']);
@@ -150,10 +153,10 @@ export class AmenityCreateComponent implements OnInit {
         console.error('Failed to load amenity item:', error);
 
         Swal.fire({
-          title: 'Error',
-          text: 'Unable to load amenity item details.',
+          title: this.language.translate('Error'),
+          text: this.language.translate('Unable to load amenity item details.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#dc3545',
         }).then(() => {
           this.router.navigate(['/admin/website-settings/amenity']);
@@ -190,10 +193,10 @@ export class AmenityCreateComponent implements OnInit {
   uploadSelectedFile(): void {
     if (!this.selectedFile) {
       Swal.fire({
-        title: 'No File Selected',
-        text: 'Please select an image first.',
+        title: this.language.translate('No File Selected'),
+        text: this.language.translate('Please select an image first.'),
         icon: 'warning',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
       });
 
       return;
@@ -226,10 +229,10 @@ export class AmenityCreateComponent implements OnInit {
               this.uploadProgress = 0;
 
               Swal.fire({
-                title: 'Upload Failed',
-                text: response?.message || 'Unable to upload file.',
+                title: this.language.translate('Upload Failed'),
+                text: this.language.translate(response?.message || 'Unable to upload file.'),
                 icon: 'error',
-                confirmButtonText: 'OK',
+                confirmButtonText: this.language.translate('OK'),
                 confirmButtonColor: '#dc3545',
               });
 
@@ -242,10 +245,10 @@ export class AmenityCreateComponent implements OnInit {
             });
 
             Swal.fire({
-              title: 'Uploaded!',
-              text: 'Image uploaded successfully.',
+              title: this.language.translate('Uploaded!'),
+              text: this.language.translate('Image uploaded successfully.'),
               icon: 'success',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.language.translate('OK'),
               confirmButtonColor: '#198754',
             });
           }
@@ -258,12 +261,12 @@ export class AmenityCreateComponent implements OnInit {
           console.error('File upload failed:', error);
 
           Swal.fire({
-            title: 'Upload Failed',
+            title: this.language.translate('Upload Failed'),
             text:
-              error?.error?.message ||
-              'Unable to upload file. Please try again.',
+              this.language.translate(error?.error?.message ||
+              'Unable to upload file. Please try again.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           });
         },
@@ -302,10 +305,10 @@ export class AmenityCreateComponent implements OnInit {
       farmHouseId === undefined
     ) {
       Swal.fire({
-        title: 'Error',
-        text: 'Farm house information is missing. Please try again.',
+        title: this.language.translate('Error'),
+        text: this.language.translate('Farm house information is missing. Please try again.'),
         icon: 'error',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#dc3545',
       });
 
@@ -330,14 +333,14 @@ export class AmenityCreateComponent implements OnInit {
 
         if (response?.success === false) {
           Swal.fire({
-            title: 'Failed',
+            title: this.language.translate('Failed'),
             text:
-              response?.message ||
+              this.language.translate(response?.message ||
               `Unable to ${
                 this.isEditMode ? 'update' : 'save'
-              } the amenity.`,
+              } the amenity.`),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           });
 
@@ -345,15 +348,13 @@ export class AmenityCreateComponent implements OnInit {
         }
 
         Swal.fire({
-          title: this.isEditMode ? 'Updated!' : 'Created!',
+          title: this.language.translate(this.isEditMode ? 'Updated!' : 'Created!'),
 
-          text: `Amenity has been ${
-            this.isEditMode ? 'updated' : 'created'
-          } successfully.`,
+          text: this.language.translate("Amenity has been {p0} successfully.", {p0: (this.isEditMode ? 'updated' : 'created')}),
 
           icon: 'success',
 
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
 
           confirmButtonColor: '#198754',
         }).then(() => {
@@ -374,12 +375,12 @@ export class AmenityCreateComponent implements OnInit {
         );
 
         Swal.fire({
-          title: 'Error',
+          title: this.language.translate('Error'),
           text:
-            error?.error?.message ||
-            'Something went wrong. Please try again.',
+            this.language.translate(error?.error?.message ||
+            'Something went wrong. Please try again.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#dc3545',
         });
       },

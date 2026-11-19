@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpEventType } from '@angular/common/http';
@@ -18,11 +20,12 @@ import { GalleryCategory } from '../models/gallery.model';
 @Component({
   selector: 'app-gallery-create',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [TranslationPipe, ReactiveFormsModule],
   templateUrl: './gallery-create.component.html',
   styleUrl: './gallery-create.component.css',
 })
 export class GalleryCreateComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   galleryForm!: FormGroup;
 
   categories: GalleryCategory[] = [];
@@ -124,10 +127,10 @@ export class GalleryCreateComponent implements OnInit {
 
         if (!item) {
           Swal.fire({
-            title: 'Not Found',
-            text: 'Gallery item not found.',
+            title: this.language.translate('Not Found'),
+            text: this.language.translate('Gallery item not found.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           }).then(() => {
             this.router.navigate(['/admin/website-settings/gallery']);
@@ -156,10 +159,10 @@ export class GalleryCreateComponent implements OnInit {
         console.error('Failed to load gallery item:', error);
 
         Swal.fire({
-          title: 'Error',
-          text: 'Unable to load gallery item details.',
+          title: this.language.translate('Error'),
+          text: this.language.translate('Unable to load gallery item details.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#dc3545',
         }).then(() => {
           this.router.navigate(['/admin/website-settings/gallery']);
@@ -222,10 +225,10 @@ export class GalleryCreateComponent implements OnInit {
   uploadSelectedFile(): void {
     if (!this.selectedFile) {
       Swal.fire({
-        title: 'No File Selected',
-        text: 'Please select an image or video first.',
+        title: this.language.translate('No File Selected'),
+        text: this.language.translate('Please select an image or video first.'),
         icon: 'warning',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
       });
 
       return;
@@ -255,10 +258,10 @@ export class GalleryCreateComponent implements OnInit {
               this.uploadProgress = 0;
 
               Swal.fire({
-                title: 'Upload Failed',
-                text: response?.message || 'Unable to upload file.',
+                title: this.language.translate('Upload Failed'),
+                text: this.language.translate(response?.message || 'Unable to upload file.'),
                 icon: 'error',
-                confirmButtonText: 'OK',
+                confirmButtonText: this.language.translate('OK'),
                 confirmButtonColor: '#dc3545',
               });
 
@@ -271,10 +274,10 @@ export class GalleryCreateComponent implements OnInit {
             });
 
             Swal.fire({
-              title: 'Uploaded!',
-              text: 'File uploaded successfully.',
+              title: this.language.translate('Uploaded!'),
+              text: this.language.translate('File uploaded successfully.'),
               icon: 'success',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.language.translate('OK'),
               confirmButtonColor: '#198754',
             });
           }
@@ -287,12 +290,12 @@ export class GalleryCreateComponent implements OnInit {
           console.error('File upload failed:', error);
 
           Swal.fire({
-            title: 'Upload Failed',
+            title: this.language.translate('Upload Failed'),
             text:
-              error?.error?.message ||
-              'Unable to upload file. Please try again.',
+              this.language.translate(error?.error?.message ||
+              'Unable to upload file. Please try again.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           });
         },
@@ -350,10 +353,10 @@ export class GalleryCreateComponent implements OnInit {
 
     if (farmHouseId === null || farmHouseId === undefined) {
       Swal.fire({
-        title: 'Error',
-        text: 'Farm house information is missing. Please try again.',
+        title: this.language.translate('Error'),
+        text: this.language.translate('Farm house information is missing. Please try again.'),
         icon: 'error',
-        confirmButtonText: 'OK',
+        confirmButtonText: this.language.translate('OK'),
         confirmButtonColor: '#dc3545',
       });
 
@@ -378,14 +381,14 @@ export class GalleryCreateComponent implements OnInit {
 
         if (response?.success === false) {
           Swal.fire({
-            title: 'Failed',
+            title: this.language.translate('Failed'),
             text:
-              response?.message ||
+              this.language.translate(response?.message ||
               `Unable to ${
                 this.isEditMode ? 'update' : 'save'
-              } the gallery item.`,
+              } the gallery item.`),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: this.language.translate('OK'),
             confirmButtonColor: '#dc3545',
           });
 
@@ -393,15 +396,13 @@ export class GalleryCreateComponent implements OnInit {
         }
 
         Swal.fire({
-          title: this.isEditMode ? 'Updated!' : 'Created!',
+          title: this.language.translate(this.isEditMode ? 'Updated!' : 'Created!'),
 
-          text: `Gallery item has been ${
-            this.isEditMode ? 'updated' : 'created'
-          } successfully.`,
+          text: this.language.translate("Gallery item has been {p0} successfully.", {p0: (this.isEditMode ? 'updated' : 'created')}),
 
           icon: 'success',
 
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
 
           confirmButtonColor: '#198754',
         }).then(() => {
@@ -418,11 +419,11 @@ export class GalleryCreateComponent implements OnInit {
         );
 
         Swal.fire({
-          title: 'Error',
+          title: this.language.translate('Error'),
           text:
-            error?.error?.message || 'Something went wrong. Please try again.',
+            this.language.translate(error?.error?.message || 'Something went wrong. Please try again.'),
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.language.translate('OK'),
           confirmButtonColor: '#dc3545',
         });
       },

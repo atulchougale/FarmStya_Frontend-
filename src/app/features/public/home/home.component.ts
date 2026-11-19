@@ -1,3 +1,5 @@
+import { TranslationPipe, LocalDatePipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import {
   Component,
   OnInit,
@@ -55,11 +57,12 @@ interface CalendarMonth {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [TranslationPipe, LocalDatePipe, CommonModule, RouterModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  readonly language = injectLanguage(LanguageService);
   amenities: AmenityResponseDto[] = [];
   carouselImages: CarouselResponseDto[] = [];
   feedbacks: FeedbackResponseDto[] = [];
@@ -435,7 +438,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return {
         year: month.getFullYear(),
         month: month.getMonth(),
-        label: month.toLocaleDateString('en-IN', {
+        label: month.toLocaleDateString(this.language.locale, {
           month: 'long',
           year: 'numeric',
         }),

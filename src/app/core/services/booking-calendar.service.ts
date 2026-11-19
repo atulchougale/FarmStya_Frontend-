@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { ADMIN_BOOKING_CONTEXT } from './admin-booking-context';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -25,9 +26,14 @@ import { ActiveBookingDateReservation } from '../../features/public/booking/mode
   providedIn: 'root',
 })
 export class BookingCalendarService {
+  private readonly admin = inject(ADMIN_BOOKING_CONTEXT, { optional: true });
   private readonly apiUrl = `${environment.apiUrl}/booking-calendar`;
 
   constructor(private readonly http: HttpClient) {}
+
+  private get reservationUrl(): string {
+    return this.admin ? environment.apiUrl + '/administration/bookings' : this.apiUrl;
+  }
 
   // Existing API: Get date availability
   getAvailability(
@@ -63,7 +69,7 @@ export class BookingCalendarService {
     request: CreateBookingDateReservationRequest,
   ): Observable<ApiResponse<CreateBookingDateReservationResponse>> {
     return this.http.post<ApiResponse<CreateBookingDateReservationResponse>>(
-      `${this.apiUrl}/reserve`,
+      `${this.reservationUrl}/reserve`,
       request,
     );
   }
@@ -81,7 +87,7 @@ export class BookingCalendarService {
     }
 
     return this.http.delete<ApiResponse<DeleteBookingDateReservationResponse>>(
-      `${this.apiUrl}/reserve`,
+      `${this.reservationUrl}/reserve`,
       { params },
     );
   }
@@ -91,7 +97,7 @@ export class BookingCalendarService {
     ApiResponse<ActiveBookingDateReservation[]>
   > {
     return this.http.get<ApiResponse<ActiveBookingDateReservation[]>>(
-      `${this.apiUrl}/reserve/active`,
+      `${this.reservationUrl}/reserve/active`,
     );
   }
 }

@@ -1,3 +1,4 @@
+import { TranslationPipe, LocalDatePipe } from '../../../../core/i18n/language';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,7 @@ import { Booking } from '../models/booking.model';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [TranslationPipe, LocalDatePipe, CommonModule, FormsModule, RouterLink],
   templateUrl: './checkout.component.html'
 })
 export class CheckoutComponent implements OnInit {
@@ -21,6 +22,7 @@ export class CheckoutComponent implements OnInit {
   discount: number | null = null;
   reason = '';
   busy = false;
+  loading = false;
   error = '';
   notice = '';
 
@@ -29,7 +31,9 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    forkJoin([this.service.getBookingById(this.id), this.service.checkoutBalance(this.id)]).subscribe({
+    this.loading = true;
+    forkJoin([this.service.getBookingById(this.id), this.service.checkoutBalance(this.id)])
+      .pipe(finalize(() => this.loading = false)).subscribe({
       next: ([booking, balance]) => { this.booking = booking.data; this.balance = balance.data; },
       error: error => { this.error = error.error?.message ?? 'Could not load checkout.'; }
     });

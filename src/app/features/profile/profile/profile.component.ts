@@ -1,3 +1,5 @@
+import { FormsModule } from '@angular/forms';
+import { TranslationPipe } from '../../../core/i18n/language';
 import { Component, inject, OnInit } from '@angular/core';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -7,7 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [],
+  imports: [TranslationPipe, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
@@ -22,6 +24,27 @@ export class ProfileComponent implements OnInit {
   profile: Profile | null = null;
 
   isLoading = false;
+  emailDraft = '';
+  savingEmail = false;
+  emailMessage = '';
+  emailError = '';
+
+  saveEmail(): void {
+    if (this.savingEmail) return;
+    this.savingEmail = true;
+    this.emailMessage = '';
+    this.emailError = '';
+    this.authService.updateEmail(this.emailDraft.trim() || null).subscribe({
+      next: response => {
+        this.savingEmail = false;
+        this.emailMessage = response.message;
+        this.getProfile();
+      },
+      error: error => { this.savingEmail = false; this.emailError = error.error?.message ?? 'Could not update email.'; }
+    });
+  }
+
+  refreshProfile(): void { this.getProfile(); }
 
   // ============================================
   // Initial Load
@@ -55,6 +78,7 @@ export class ProfileComponent implements OnInit {
         }
 
         this.profile = response.data;
+        this.emailDraft = response.data.email ?? "";
       },
 
       // ==========================================

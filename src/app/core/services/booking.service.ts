@@ -8,12 +8,26 @@ import { environment } from '../../../environments/environment';
 import { Booking } from '../../features/admin/Booking/models/booking.model';
 import { ApiResponse } from '../models/api-response.model';
 
+export const IDENTITY_DOCUMENT_TYPES = ['Aadhaar Card', 'PAN Card', 'Passport', 'Driving Licence', 'Voter ID', 'Government-issued Photo ID', 'Other'] as const;
+
+export interface IdentityProofFile {
+  id: number;
+  fileName: string;
+  contentType: string;
+}
+
 export interface BookingIdentityDocument {
   id: number;
   fileName: string;
   contentType: string;
   status: 'Uploaded' | 'Verified' | 'ReuploadRequested';
   reason?: string;
+  documentType: string;
+  otherDocumentType?: string;
+  files: IdentityProofFile[];
+  uploadedBy: number;
+  uploadedAt: string;
+  uploadedByAdministration: boolean;
 }
 
 export interface AdvancePaymentOrder {
@@ -107,11 +121,21 @@ export class BookingService {
     return this.http.get<ApiResponse<BookingIdentityDocument | null>>(`${this.apiUrl}/${path}/id-proof`);
   }
 
-  uploadIdentity(bookingId: number, file: File) {
+  uploadIdentity(bookingId: number, files: File[], documentType: string, otherDocumentType: string, administration = false) {
     const body = new FormData();
-    body.append('file', file);
+    files.forEach(file => body.append('files', file));
+    body.append('documentType', documentType);
+    if (documentType === 'Other') body.append('otherDocumentType', otherDocumentType.trim());
     return this.http.post<ApiResponse<BookingIdentityDocument>>(
-      `${this.apiUrl}/my-bookings/${bookingId}/id-proof`, body);
+      `${this.apiUrl}/${administration ? bookingId : 'my-bookings/' + bookingId}/id-proof`, body);
+  }
+
+  collectCashAdvance(bookingId: number, amount: number) {
+    return this.http.post<ApiResponse<unknown>>(`${this.apiUrl}/${bookingId}/advance-cash`, { amount, cashReceived: true });
+  }
+
+  sendAdvanceReminder(bookingId: number) {
+    return this.http.post<ApiResponse<unknown>>(`${this.apiUrl}/${bookingId}/advance-reminder`, {});
   }
 
   createAdvanceOrder(bookingId: number) {

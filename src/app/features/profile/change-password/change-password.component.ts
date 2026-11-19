@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, inject } from '@angular/core';
 
 import {
@@ -22,11 +24,12 @@ import { ChangePasswordRequest } from '../models/change-password-request.model';
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [TranslationPipe, ReactiveFormsModule],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.css',
 })
 export class ChangePasswordComponent {
+  readonly language = injectLanguage(LanguageService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
@@ -180,10 +183,10 @@ export class ChangePasswordComponent {
         if (!response?.success) {
           Swal.fire({
             icon: 'error',
-            title: 'Change Password Failed',
+            title: this.language.translate('Change Password Failed'),
             text:
-              response?.message ??
-              'Unable to change your password. Please try again.',
+              this.language.translate(response?.message ??
+              'Unable to change your password. Please try again.'),
             confirmButtonColor: '#c4512d',
           });
 
@@ -196,10 +199,10 @@ export class ChangePasswordComponent {
 
         Swal.fire({
           icon: 'success',
-          title: 'Password Changed Successfully',
+          title: this.language.translate('Password Changed Successfully'),
           text:
-            response?.message ??
-            'Your password has been changed successfully.',
+            this.language.translate(response?.message ??
+            'Your password has been changed successfully.'),
           confirmButtonColor: '#c4512d',
         }).then(() => {
           this.changePasswordForm.reset();
@@ -217,10 +220,10 @@ export class ChangePasswordComponent {
 
         Swal.fire({
           icon: 'error',
-          title: 'Change Password Failed',
+          title: this.language.translate('Change Password Failed'),
           text:
-            error?.error?.message ??
-            'Something went wrong while changing your password.',
+            this.language.translate(error?.error?.message ??
+            'Something went wrong while changing your password.'),
           confirmButtonColor: '#c4512d',
         });
 

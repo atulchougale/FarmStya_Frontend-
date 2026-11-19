@@ -1,3 +1,5 @@
+import { adminBookingCreateGuard } from './core/guards/admin-booking-create.guard';
+import { reportingGuard } from './features/admin/reporting/guards/reporting.guard';
 import { pricingManagementGuard } from './core/guards/pricing-management.guard';
 import { Routes } from '@angular/router';
 
@@ -191,12 +193,27 @@ export const routes: Routes = [
 
       // Gallery List
       {
+        path: 'reports', canActivate: [authGuard, bookingAdministrationGuard],
+        children: [
+          { path: '', loadComponent: () => import('./features/admin/reporting/pages/reports.component').then(c => c.ReportsComponent), canActivate: [reportingGuard] },
+          { path: 'bookings', data: { reportKey: 'bookings' }, loadComponent: () => import('./features/admin/reporting/pages/booking-report.component').then(c => c.BookingReportComponent), canActivate: [reportingGuard] },
+          { path: 'revenue', data: { reportKey: 'revenue' }, loadComponent: () => import('./features/admin/reporting/pages/revenue-report.component').then(c => c.RevenueReportComponent), canActivate: [reportingGuard] },
+          { path: 'customers', data: { reportKey: 'customers' }, loadComponent: () => import('./features/admin/reporting/pages/customer-report.component').then(c => c.CustomerReportComponent), canActivate: [reportingGuard] },
+          { path: 'occupancy', data: { reportKey: 'occupancy' }, loadComponent: () => import('./features/admin/reporting/pages/occupancy-report.component').then(c => c.OccupancyReportComponent), canActivate: [reportingGuard] }
+        ]
+      },
+      {
         path: 'booking',
         loadComponent: () =>
           import('./features/admin/Booking/booking-view/booking-view.component').then((c) => c.BookingViewComponent),
         canActivate: [authGuard, bookingAdministrationGuard],
       },
       { path: 'bookings', redirectTo: 'booking', pathMatch: 'full' },
+      {
+        path: 'bookings/create',
+        loadComponent: () => import('./features/admin/Booking/create-booking/admin-create-booking.component').then(c=>c.AdminCreateBookingComponent),
+        canActivate: [authGuard,bookingAdministrationGuard,adminBookingCreateGuard],
+      },
       {
         path: 'booking/:bookingId/checkout',
         loadComponent: () => import('./features/admin/Booking/checkout/checkout.component').then(c => c.CheckoutComponent),

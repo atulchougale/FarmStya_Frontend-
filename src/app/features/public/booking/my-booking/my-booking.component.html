@@ -6,10 +6,9 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold mb-1">My Bookings</h2>
+        <h2 class="fw-bold mb-1">{{ 'My Bookings' | t }}</h2>
         <p class="text-muted mb-0">
-          View your farm stay reservations.
-        </p>
+          {{ 'View your farm stay reservations.' | t }}</p>
       </div>
 
       <button
@@ -18,14 +17,13 @@
         [disabled]="loading">
 
         <i class="bi bi-arrow-clockwise me-2"></i>
-        Refresh
-      </button>
+        {{ 'Refresh' | t }}</button>
     </div>
 
     <!-- Loading -->
     <div class="text-center py-5" *ngIf="loading">
       <div class="spinner-border text-success"></div>
-      <p class="text-muted mt-3">Loading your bookings...</p>
+      <p class="text-muted mt-3">{{ 'Loading your bookings...' | t }}</p>
     </div>
 
     <!-- Error -->
@@ -33,7 +31,7 @@
       class="alert alert-danger"
       *ngIf="!loading && errorMessage">
 
-      {{ errorMessage }}
+      {{ (errorMessage) | t }}
     </div>
 
     <!-- Empty -->
@@ -42,8 +40,8 @@
       *ngIf="!loading && !errorMessage && bookings.length === 0">
 
       <i class="bi bi-calendar-x empty-icon"></i>
-      <h4 class="mt-3">No Bookings Found</h4>
-      <p class="text-muted">Your bookings will appear here.</p>
+      <h4 class="mt-3">{{ 'No Bookings Found' | t }}</h4>
+      <p class="text-muted">{{ 'Your bookings will appear here.' | t }}</p>
     </div>
 
     <!-- Booking Cards -->
@@ -61,7 +59,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
 
               <div>
-                <small class="text-muted">Booking Reference</small>
+                <small class="text-muted">{{ 'Booking Reference' | t }}</small>
                 <h5 class="fw-bold mb-0">
                   {{ booking.bookingReference }}
                 </h5>
@@ -71,7 +69,7 @@
                 class="booking-status"
                 [ngClass]="getStatusClass(booking.status)">
 
-                {{ booking.status || 'Unknown' }}
+                {{ (booking.status || 'Unknown') | t }}
               </span>
 
             </div>
@@ -82,40 +80,40 @@
             <div class="row g-3">
 
               <div class="col-md-4">
-                <small class="text-muted">Guest Name</small>
+                <small class="text-muted">{{ 'Guest Name' | t }}</small>
                 <div class="fw-semibold">{{ booking.fullName }}</div>
               </div>
 
               <div class="col-md-4">
-                <small class="text-muted">Mobile Number</small>
+                <small class="text-muted">{{ 'Mobile Number' | t }}</small>
                 <div class="fw-semibold">
                   {{ booking.mobileNumber || '-' }}
                 </div>
               </div>
 
               <div class="col-md-4">
-                <small class="text-muted">Total Guests</small>
+                <small class="text-muted">{{ 'Total Guests' | t }}</small>
                 <div class="fw-semibold">{{ booking.personCount }}</div>
               </div>
 
               <div class="col-md-4">
-                <small class="text-muted">Check In</small>
+                <small class="text-muted">{{ 'Check In' | t }}</small>
                 <div class="fw-semibold">
-                  {{ booking.checkInDate | date:'dd MMM yyyy' }}
+                  {{ (booking.checkInDate | localDate:'dd MMM yyyy') | t }}
                 </div>
               </div>
 
               <div class="col-md-4">
-                <small class="text-muted">Check Out</small>
+                <small class="text-muted">{{ 'Check Out' | t }}</small>
                 <div class="fw-semibold">
-                  {{ booking.checkOutDate | date:'dd MMM yyyy' }}
+                  {{ (booking.checkOutDate | localDate:'dd MMM yyyy') | t }}
                 </div>
               </div>
 
               <div class="col-md-4">
-                <small class="text-muted">Booking Date</small>
+                <small class="text-muted">{{ 'Booking Date' | t }}</small>
                 <div class="fw-semibold">
-                  {{ booking.createdDate | date:'dd MMM yyyy' }}
+                  {{ (booking.createdDate | localDate:'dd MMM yyyy') | t }}
                 </div>
               </div>
 
@@ -134,10 +132,9 @@
 
                 <i class="bi bi-eye me-2"></i>
 
-                View Details
-              </button>
+                {{ 'View Details' | t }}</button>
               <button *ngIf="booking.status === 'Approved'" type="button" class="btn btn-success"
-                (click)="viewBookingDetails(booking.bookingId)">Confirm Booking</button>
+                (click)="viewBookingDetails(booking.bookingId)">{{ 'Confirm Booking' | t }}</button>
 
             </div>
 
@@ -148,10 +145,10 @@
       </div>
     </div>
 
-    <nav class="d-flex align-items-center justify-content-center gap-3 mt-3" aria-label="My booking pages">
-      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || page === 1" (click)="changePage(-1)">Previous</button>
-      <span>Page {{ page }}</span>
-      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || bookings.length < pageSize" (click)="changePage(1)">Next</button>
+    <nav class="d-flex align-items-center justify-content-center gap-3 mt-3" [attr.aria-label]="'My booking pages' | t">
+      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || page === 1" (click)="changePage(-1)">{{ 'Previous' | t }}</button>
+      <span>{{ 'Page {p0}' | t:{p0: (page)} }}</span>
+      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || bookings.length < pageSize" (click)="changePage(1)">{{ 'Next' | t }}</button>
     </nav>
   </div>
 </div>

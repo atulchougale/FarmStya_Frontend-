@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -15,11 +17,12 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [TranslationPipe, ReactiveFormsModule, RouterLink],
   templateUrl: './verify-email.component.html',
   styleUrl: './verify-email.component.css',
 })
 export class VerifyEmailComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private authService = inject(AuthService);
@@ -36,6 +39,7 @@ export class VerifyEmailComponent implements OnInit {
   // Verification Status
   // ============================================
 
+  hasEmail = true;
   isEmailVerified = false;
   isMobileVerified = false;
 
@@ -74,6 +78,7 @@ export class VerifyEmailComponent implements OnInit {
   // ============================================
 
   ngOnInit(): void {
+    this.hasEmail = this.route.snapshot.queryParamMap.get("hasEmail") !== "false";
     const userIdParam = this.route.snapshot.queryParamMap.get('userId');
 
     const farmHouseIdParam =
@@ -163,12 +168,20 @@ export class VerifyEmailComponent implements OnInit {
     // Check Initial Status
     // ============================================
 
-    if (this.isEmailVerified && this.isMobileVerified) {
+    if ((!this.hasEmail || this.isEmailVerified) && this.isMobileVerified) {
       this.redirectToLogin();
       return;
     }
 
     this.updateVerificationMessage();
+    this.authService.verificationStatus(this.farmHouseId, this.userId).subscribe({
+      next: response => {
+        this.hasEmail = response.data.hasEmail;
+        this.isEmailVerified = response.data.isEmailVerified;
+        this.isMobileVerified = response.data.isMobileVerified;
+        this.updateVerificationMessage();
+      }
+    });
   }
 
   // ============================================
@@ -201,6 +214,7 @@ export class VerifyEmailComponent implements OnInit {
           // ========================================
 
           if (response.data) {
+            this.hasEmail = response.data.hasEmail ?? true;
             this.isEmailVerified = response.data.isEmailVerified ?? false;
 
             this.isMobileVerified = response.data.isMobileVerified ?? false;
@@ -215,7 +229,7 @@ export class VerifyEmailComponent implements OnInit {
           // Check Both Verification
           // ========================================
 
-          if (this.isEmailVerified && this.isMobileVerified) {
+          if ((!this.hasEmail || this.isEmailVerified) && this.isMobileVerified) {
             this.redirectToLogin();
             return;
           }
@@ -278,8 +292,8 @@ export class VerifyEmailComponent implements OnInit {
           if (!response?.success) {
             Swal.fire({
               icon: 'error',
-              title: 'OTP Verification Failed',
-              text: response?.message ?? 'Invalid OTP.',
+              title: this.language.translate('OTP Verification Failed'),
+              text: this.language.translate(response?.message ?? 'Invalid OTP.'),
               confirmButtonColor: '#c4512d',
             });
 
@@ -291,6 +305,7 @@ export class VerifyEmailComponent implements OnInit {
           // ========================================
 
           if (response.data) {
+            this.hasEmail = response.data.hasEmail ?? true;
             this.isEmailVerified = response.data.isEmailVerified ?? false;
 
             this.isMobileVerified = response.data.isMobileVerified ?? false;
@@ -307,7 +322,7 @@ export class VerifyEmailComponent implements OnInit {
           // Both Verification Completed
           // ========================================
 
-          if (this.isEmailVerified && this.isMobileVerified) {
+          if ((!this.hasEmail || this.isEmailVerified) && this.isMobileVerified) {
             this.redirectToLogin();
             return;
           }
@@ -322,8 +337,8 @@ export class VerifyEmailComponent implements OnInit {
 
           Swal.fire({
             icon: 'success',
-            title: 'Mobile Verified',
-            text: 'Your mobile number has been verified successfully.',
+            title: this.language.translate('Mobile Verified'),
+            text: this.language.translate('Your mobile number has been verified successfully.'),
             timer: 1800,
             showConfirmButton: false,
           });
@@ -334,8 +349,8 @@ export class VerifyEmailComponent implements OnInit {
 
           Swal.fire({
             icon: 'error',
-            title: 'OTP Verification Failed',
-            text: error?.error?.message ?? 'Invalid OTP.',
+            title: this.language.translate('OTP Verification Failed'),
+            text: this.language.translate(error?.error?.message ?? 'Invalid OTP.'),
             confirmButtonColor: '#c4512d',
           });
         },
@@ -358,8 +373,8 @@ export class VerifyEmailComponent implements OnInit {
     if (this.isMobileVerified) {
       Swal.fire({
         icon: 'info',
-        title: 'Already Verified',
-        text: 'Your mobile number is already verified.',
+        title: this.language.translate('Already Verified'),
+        text: this.language.translate('Your mobile number is already verified.'),
         confirmButtonColor: '#c4512d',
       });
 
@@ -384,8 +399,8 @@ export class VerifyEmailComponent implements OnInit {
           if (!response?.success) {
             Swal.fire({
               icon: 'error',
-              title: 'Unable to Resend OTP',
-              text: response?.message ?? 'Unable to resend OTP.',
+              title: this.language.translate('Unable to Resend OTP'),
+              text: this.language.translate(response?.message ?? 'Unable to resend OTP.'),
               confirmButtonColor: '#c4512d',
             });
 
@@ -398,10 +413,10 @@ export class VerifyEmailComponent implements OnInit {
 
           Swal.fire({
             icon: 'success',
-            title: 'OTP Sent',
+            title: this.language.translate('OTP Sent'),
             text:
-              response?.message ??
-              'A new OTP has been sent to your WhatsApp number.',
+              this.language.translate(response?.message ??
+              'A new OTP has been sent to your WhatsApp number.'),
             timer: 2000,
             showConfirmButton: false,
           });
@@ -412,10 +427,10 @@ export class VerifyEmailComponent implements OnInit {
 
           Swal.fire({
             icon: 'error',
-            title: 'Unable to Resend OTP',
+            title: this.language.translate('Unable to Resend OTP'),
             text:
-              error?.error?.message ??
-              'Something went wrong while resending OTP.',
+              this.language.translate(error?.error?.message ??
+              'Something went wrong while resending OTP.'),
             confirmButtonColor: '#c4512d',
           });
         },
@@ -431,7 +446,7 @@ export class VerifyEmailComponent implements OnInit {
     // Both Verified
     // ============================================
 
-    if (this.isEmailVerified && this.isMobileVerified) {
+    if ((!this.hasEmail || this.isEmailVerified) && this.isMobileVerified) {
       this.message =
         'Your email and mobile number have been verified successfully.';
 
@@ -442,7 +457,7 @@ export class VerifyEmailComponent implements OnInit {
     // Email Pending
     // ============================================
 
-    if (!this.isEmailVerified) {
+    if (this.hasEmail && !this.isEmailVerified) {
       if (this.isMobileVerified) {
         this.message =
           'Your mobile number is verified. Please check your email and click the verification link.';
@@ -471,8 +486,8 @@ export class VerifyEmailComponent implements OnInit {
   private redirectToLogin(): void {
     Swal.fire({
       icon: 'success',
-      title: 'Verification Complete',
-      text: 'Your email and mobile number have been verified successfully.',
+      title: this.language.translate('Verification Complete'),
+      text: this.language.translate(this.hasEmail ? 'Your email and mobile number have been verified successfully.' : 'Your mobile number has been verified successfully.'),
       timer: 1800,
       showConfirmButton: false,
       allowOutsideClick: false,

@@ -1,3 +1,5 @@
+import { TranslationPipe, LocalDatePipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -9,14 +11,14 @@ import { FeedbackResponse } from '../feedback.model';
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [TranslationPipe, LocalDatePipe, CommonModule,
     MatTableModule
   ],
   templateUrl: './feedback-view.component.html',
   styleUrl: './feedback-view.component.css'
 })
 export class FeedbackViewComponent implements OnInit {
+  readonly language = injectLanguage(LanguageService);
 
   feedbackItems: FeedbackResponse[] = [];
 
@@ -70,10 +72,10 @@ export class FeedbackViewComponent implements OnInit {
         this.loading = false;
 
         Swal.fire({
-          title: 'Error',
-          text: error?.error?.message || 'Unable to load feedback.',
+          title: this.language.translate('Error'),
+          text: this.language.translate(error?.error?.message || 'Unable to load feedback.'),
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: this.language.translate('OK')
         });
       }
     });
@@ -93,17 +95,17 @@ export class FeedbackViewComponent implements OnInit {
 
     Swal.fire({
 
-      title: 'Delete this feedback?',
+      title: this.language.translate('Delete this feedback?'),
 
-      text: `Feedback from "${feedback.createdByName || 'Guest'}" will be deleted.`,
+      text: this.language.translate("Feedback from \"{p0}\" will be deleted.", {p0: (feedback.createdByName || 'Guest')}),
 
       icon: 'warning',
 
       showCancelButton: true,
 
-      confirmButtonText: 'Yes, delete it',
+      confirmButtonText: this.language.translate('Yes, delete it'),
 
-      cancelButtonText: 'Cancel',
+      cancelButtonText: this.language.translate('Cancel'),
 
       confirmButtonColor: '#dc3545',
 
@@ -136,20 +138,20 @@ export class FeedbackViewComponent implements OnInit {
         if (response?.success === false) {
 
           Swal.fire({
-            title: 'Failed',
-            text: response?.message || 'Unable to delete feedback.',
+            title: this.language.translate('Failed'),
+            text: this.language.translate(response?.message || 'Unable to delete feedback.'),
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: this.language.translate('OK')
           });
 
           return;
         }
 
         Swal.fire({
-          title: 'Deleted!',
-          text: 'Feedback has been deleted successfully.',
+          title: this.language.translate('Deleted!'),
+          text: this.language.translate('Feedback has been deleted successfully.'),
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: this.language.translate('OK')
         });
 
         // Reload table
@@ -163,11 +165,11 @@ export class FeedbackViewComponent implements OnInit {
         console.error('Failed to delete feedback:', error);
 
         Swal.fire({
-          title: 'Error',
-          text: error?.error?.message ||
-                'Something went wrong. Please try again.',
+          title: this.language.translate('Error'),
+          text: this.language.translate(error?.error?.message ||
+                'Something went wrong. Please try again.'),
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: this.language.translate('OK')
         });
       }
     });

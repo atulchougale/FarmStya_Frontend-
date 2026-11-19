@@ -4,10 +4,9 @@
 
       <!-- Heading -->
       <div class="contact-header mx-auto text-center">
-        <h1 class="contact-title">Contact us</h1>
+        <h1 class="contact-title">{{ 'Contact us' | t }}</h1>
         <p class="contact-subtitle">
-          Have a question? We respond fastest on WhatsApp.
-        </p>
+          {{ 'Have a question? We respond fastest on WhatsApp.' | t }}</p>
       </div>
 
       <div class="contact-grid">
@@ -16,48 +15,48 @@
         <!-- Left: Contact Form -->
         <!-- ================================= -->
         <div class="contact-card">
-          <h2 class="contact-card-title">Send a message</h2>
+          <h2 class="contact-card-title">{{ 'Send a message' | t }}</h2>
 
           <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" autocomplete="off">
 
             <!-- Full Name -->
             <div class="mb-3">
-              <label class="form-label" for="name">Full name</label>
+              <label class="form-label" for="name">{{ 'Full name' | t }}</label>
 
-              <input type="text" id="name" class="form-control contact-input" placeholder="Your name"
+              <input type="text" id="name" class="form-control contact-input" [placeholder]="'Your name' | t"
                 formControlName="fullName" [class.is-invalid]="f['fullName'].touched && f['fullName'].invalid" />
 
               @if (f['fullName'].touched && f['fullName'].errors?.['required']) {
-              <small class="text-danger">Full name is required</small>
+              <small class="text-danger">{{ 'Full name is required' | t }}</small>
               }
             </div>
 
             <!-- Mobile -->
             <div class="mb-3">
-              <label class="form-label" for="mobile">Mobile (WhatsApp)</label>
+              <label class="form-label" for="mobile">{{ 'Mobile (WhatsApp)' | t }}</label>
 
               <input type="tel" id="mobile" inputmode="numeric" maxlength="10" class="form-control contact-input"
                 placeholder="99999 99999" formControlName="mobileNo"
                 [class.is-invalid]="f['mobileNo'].touched && f['mobileNo'].invalid" />
 
               @if (f['mobileNo'].touched && f['mobileNo'].errors?.['required']) {
-              <small class="text-danger">Mobile number is required</small>
+              <small class="text-danger">{{ 'Mobile number is required' | t }}</small>
               }
 
               @if (f['mobileNo'].touched && f['mobileNo'].errors?.['pattern']) {
-              <small class="text-danger">Enter a valid 10 digit mobile number</small>
+              <small class="text-danger">{{ 'Enter a valid 10 digit mobile number' | t }}</small>
               }
             </div>
 
             <!-- Message -->
             <div class="mb-4">
-              <label class="form-label" for="message">Message</label>
+              <label class="form-label" for="message">{{ 'Message' | t }}</label>
 
-              <textarea id="message" rows="4" class="form-control contact-input" placeholder="How can we help?"
+              <textarea id="message" rows="4" class="form-control contact-input" [placeholder]="'How can we help?' | t"
                 formControlName="message" [class.is-invalid]="f['message'].touched && f['message'].invalid"></textarea>
 
               @if (f['message'].touched && f['message'].errors?.['required']) {
-              <small class="text-danger">Message is required</small>
+              <small class="text-danger">{{ 'Message is required' | t }}</small>
               }
             </div>
 
@@ -65,10 +64,8 @@
             <button type="submit" class="btn contact-submit-btn w-100" [disabled]="submitting">
               @if (submitting) {
               <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-              Sending...
-              } @else {
-              Send message
-              }
+              {{ 'Sending...' | t }}} @else {
+              {{ 'Send message' | t }}}
             </button>
 
           </form>
@@ -83,14 +80,13 @@
             <!-- Loading -->
             @if (loading) {
             <div class="contact-info-text">
-              Loading contact information...
-            </div>
+              {{ 'Loading contact information...' | t }}</div>
             }
 
             <!-- Error -->
             @else if (errorMessage) {
             <div class="contact-info-text text-danger">
-              {{ errorMessage }}
+              {{ (errorMessage) | t }}
             </div>
             }
 
@@ -102,7 +98,7 @@
               <i class="bi bi-geo-alt-fill contact-info-icon" aria-hidden="true"></i>
 
               <div>
-                <div class="contact-info-label">Address</div>
+                <div class="contact-info-label">{{ 'Address' | t }}</div>
 
                 <p class="contact-info-text">
                   {{ contactInfo.address }}
@@ -124,7 +120,7 @@
               <i class="bi bi-telephone-fill contact-info-icon" aria-hidden="true"></i>
 
               <div>
-                <div class="contact-info-label">Phone</div>
+                <div class="contact-info-label">{{ 'Phone' | t }}</div>
 
                 <a [href]="'tel:' + contactInfo.mobileNumber" class="contact-info-link">
                   {{ contactInfo.mobileNumber }}
@@ -138,7 +134,7 @@
               <i class="bi bi-telephone contact-info-icon" aria-hidden="true"></i>
 
               <div>
-                <div class="contact-info-label">Alternate Phone</div>
+                <div class="contact-info-label">{{ 'Alternate Phone' | t }}</div>
 
                 <a [href]="'tel:' + contactInfo.alternateMobileNumber" class="contact-info-link">
                   {{ contactInfo.alternateMobileNumber }}
@@ -152,12 +148,11 @@
               <i class="bi bi-whatsapp contact-info-icon" aria-hidden="true"></i>
 
               <div>
-                <div class="contact-info-label">WhatsApp</div>
+                <div class="contact-info-label">{{ 'WhatsApp' | t }}</div>
 
                 <a [href]="'https://wa.me/' + contactInfo.mobileNumber.replace('+', '').replace(' ', '')"
                   target="_blank" rel="noopener noreferrer" class="contact-info-link">
-                  Chat with us
-                </a>
+                  {{ 'Chat with us' | t }}</a>
               </div>
             </div>
 
@@ -166,7 +161,7 @@
               <i class="bi bi-envelope-fill contact-info-icon" aria-hidden="true"></i>
 
               <div>
-                <div class="contact-info-label">Email</div>
+                <div class="contact-info-label">{{ 'Email' | t }}</div>
 
                 <a [href]="'mailto:' + contactInfo.email" class="contact-info-link">
                   {{ contactInfo.email }}
@@ -179,7 +174,7 @@
 
           <!-- Map -->
           <div class="contact-map-wrapper" *ngIf="mapSafeUrl">
-            <iframe [title]="(contactInfo?.farmHouseName || 'Farmhouse') + ' location'" [src]="mapSafeUrl" width="100%"
+            <iframe [title]="(contactInfo?.farmHouseName || 'Farmhouse') + ' location' | t" [src]="mapSafeUrl" width="100%"
               height="280" loading="lazy" style="border: 0">
             </iframe>
           </div>

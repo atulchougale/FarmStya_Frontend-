@@ -4,30 +4,28 @@
 
       <!-- Gallery Heading -->
       <div class="public-gallery-header text-center mx-auto">
-        <h1 class="public-gallery-title">Gallery</h1>
+        <h1 class="public-gallery-title">{{ 'Gallery' | t }}</h1>
         <p class="public-gallery-subtitle mb-0">
-          A glimpse of life at Chougale Farms.
-        </p>
+          {{ 'A glimpse of life at Chougale Farms.' | t }}</p>
       </div>
 
       <!-- Loading State -->
       <div class="gallery-status" *ngIf="loading">
         <div class="spinner-border text-warning" role="status">
-          <span class="visually-hidden">Loading gallery...</span>
+          <span class="visually-hidden">{{ 'Loading gallery...' | t }}</span>
         </div>
 
-        <p class="mt-3 mb-0">Loading gallery...</p>
+        <p class="mt-3 mb-0">{{ 'Loading gallery...' | t }}</p>
       </div>
 
       <!-- Error State -->
       <div class="gallery-status" *ngIf="!loading && errorMessage">
         <i class="bi bi-exclamation-circle gallery-status-icon" aria-hidden="true"></i>
 
-        <p>{{ errorMessage }}</p>
+        <p>{{ (errorMessage) | t }}</p>
 
         <button type="button" class="btn gallery-retry-btn" (click)="loadGallery()">
-          Try Again
-        </button>
+          {{ 'Try Again' | t }}</button>
       </div>
 
       <!-- Empty State -->
@@ -38,11 +36,10 @@
         ">
         <i class="bi bi-images gallery-status-icon" aria-hidden="true"></i>
 
-        <h2>Gallery coming soon</h2>
+        <h2>{{ 'Gallery coming soon' | t }}</h2>
 
         <p>
-          Photos of our farmhouse will be available here soon.
-        </p>
+          {{ 'Photos of our farmhouse will be available here soon.' | t }}</p>
       </div>
 
       <!-- Responsive Gallery Grid -->
@@ -75,7 +72,7 @@
                 <img class="public-gallery-image" [src]="item.imageUrl" [alt]="
                     item.imageName ||
                     'Chougale Farms gallery image'
-                  " loading="lazy" width="1024" height="768" />
+                   | t" loading="lazy" width="1024" height="768" />
               </ng-template>
 
               <!-- Hover Overlay -->
@@ -93,11 +90,11 @@
                   </span>
 
                   <span class="gallery-overlay-title">
-                    {{ item.imageName || 'Chougale Farms' }}
+                    {{ (item.imageName || 'Chougale Farms') | t }}
                   </span>
 
                   <span class="gallery-overlay-subtitle" *ngIf="item.category">
-                    {{ item.category }}
+                    {{ (item.category) | t }}
                   </span>
                 </div>
               </div>
@@ -105,8 +102,7 @@
               <!-- Video Badge -->
               <span class="gallery-media-badge" *ngIf="isVideo(item.imageUrl)">
                 <i class="bi bi-camera-video-fill"></i>
-                Video
-              </span>
+                {{ 'Video' | t }}</span>
 
               <!-- Media Open Hint -->
               <span class="gallery-open-hint" aria-hidden="true">
@@ -132,15 +128,15 @@
     <header class="gallery-modal-header">
       <div class="gallery-modal-heading">
         <h2>
-          {{ selectedItem.imageName || 'Chougale Farms' }}
+          {{ (selectedItem.imageName || 'Chougale Farms') | t }}
         </h2>
 
         <p *ngIf="selectedItem.category">
-          {{ selectedItem.category }}
+          {{ (selectedItem.category) | t }}
         </p>
       </div>
 
-      <button type="button" class="gallery-modal-close" aria-label="Close gallery popup" title="Close"
+      <button type="button" class="gallery-modal-close" [attr.aria-label]="'Close gallery popup' | t" [title]="'Close' | t"
         (click)="closeGalleryModal()">
         <i class="bi bi-x-lg"></i>
       </button>
@@ -161,14 +157,14 @@
         <img class="gallery-modal-image" [src]="selectedItem.imageUrl" [alt]="
             selectedItem.imageName ||
             'Chougale Farms gallery image'
-          " />
+           | t" />
       </ng-template>
 
     </div>
 
     <!-- Modal Description -->
     <footer class="gallery-modal-footer" *ngIf="selectedItem.description">
-      <p>{{ selectedItem.description }}</p>
+      <p>{{ (selectedItem.description) | t }}</p>
     </footer>
 
   </section>

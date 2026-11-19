@@ -4,8 +4,8 @@
   <div class="page-header">
 
     <div>
-      <h2>Feedback</h2>
-      <p>View and manage guest feedback</p>
+      <h2>{{ 'Feedback' | t }}</h2>
+      <p>{{ 'View and manage guest feedback' | t }}</p>
     </div>
 
     <button
@@ -15,9 +15,7 @@
       [disabled]="loading">
 
       <span>↻</span>
-      Refresh
-
-    </button>
+      {{ 'Refresh' | t }}</button>
 
   </div>
 
@@ -27,7 +25,7 @@
 
     <div class="spinner"></div>
 
-    <p>Loading feedback...</p>
+    <p>{{ 'Loading feedback...' | t }}</p>
 
   </div>
 
@@ -39,9 +37,9 @@
 
     <div class="empty-icon">💬</div>
 
-    <h3>No Feedback Found</h3>
+    <h3>{{ 'No Feedback Found' | t }}</h3>
 
-    <p>There is no feedback available.</p>
+    <p>{{ 'There is no feedback available.' | t }}</p>
 
   </div>
 
@@ -74,14 +72,13 @@
       <ng-container matColumnDef="guest">
 
         <th mat-header-cell *matHeaderCellDef>
-          Guest
-        </th>
+          {{ 'Guest' | t }}</th>
 
         <td mat-cell *matCellDef="let feedback">
 
           <div class="guest-name">
 
-            {{ feedback.createdByName || 'Guest' }}
+            {{ feedback.createdByName || ('Guest' | t) }}
 
           </div>
 
@@ -94,8 +91,7 @@
       <ng-container matColumnDef="rating">
 
         <th mat-header-cell *matHeaderCellDef>
-          Rating
-        </th>
+          {{ 'Rating' | t }}</th>
 
         <td mat-cell *matCellDef="let feedback">
 
@@ -125,8 +121,7 @@
       <ng-container matColumnDef="review">
 
         <th mat-header-cell *matHeaderCellDef>
-          Review
-        </th>
+          {{ 'Review' | t }}</th>
 
         <td mat-cell *matCellDef="let feedback">
 
@@ -145,12 +140,11 @@
       <ng-container matColumnDef="date">
 
         <th mat-header-cell *matHeaderCellDef>
-          Date
-        </th>
+          {{ 'Date' | t }}</th>
 
         <td mat-cell *matCellDef="let feedback">
 
-          {{ feedback.createdDate | date:'dd/MM/yyyy' }}
+          {{ (feedback.createdDate | localDate:'dd/MM/yyyy') | t }}
 
         </td>
 
@@ -161,8 +155,7 @@
       <ng-container matColumnDef="action">
 
         <th mat-header-cell *matHeaderCellDef>
-          Action
-        </th>
+          {{ 'Action' | t }}</th>
 
         <td mat-cell *matCellDef="let feedback">
 
@@ -172,9 +165,7 @@
             (click)="confirmDelete(feedback)"
             [disabled]="deleting">
 
-            🗑 Delete
-
-          </button>
+            {{ '🗑 Delete' | t }}</button>
 
         </td>
 

@@ -1,3 +1,5 @@
+import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
@@ -20,11 +22,12 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [TranslationPipe, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  readonly language = injectLanguage(LanguageService);
   registerForm: FormGroup;
 
   showPassword = false;
@@ -42,7 +45,7 @@ export class RegisterComponent {
       {
         fullName: ['', [Validators.required]],
 
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.email]],
 
         mobileNumber: [
           '',
@@ -103,8 +106,8 @@ export class RegisterComponent {
     this.isLoading = true;
 
     Swal.fire({
-      title: 'Creating Account...',
-      text: 'Please wait',
+      title: this.language.translate('Creating Account...'),
+      text: this.language.translate('Please wait'),
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -130,10 +133,10 @@ export class RegisterComponent {
           if (!response?.success || !response?.data) {
             Swal.fire({
               icon: 'error',
-              title: 'Registration Failed',
+              title: this.language.translate('Registration Failed'),
               text:
-                response?.message ??
-                'Unable to create your account. Please try again.',
+                this.language.translate(response?.message ??
+                'Unable to create your account. Please try again.'),
               confirmButtonColor: '#c4512d',
             });
 
@@ -159,8 +162,8 @@ export class RegisterComponent {
           if (!userId || !farmHouseId) {
             Swal.fire({
               icon: 'error',
-              title: 'Registration Failed',
-              text: 'Verification information could not be generated.',
+              title: this.language.translate('Registration Failed'),
+              text: this.language.translate('Verification information could not be generated.'),
               confirmButtonColor: '#c4512d',
             });
 
@@ -173,8 +176,8 @@ export class RegisterComponent {
 
           Swal.fire({
             icon: 'success',
-            title: 'Registration Successful',
-            text: 'Please complete your account verification to continue.',
+            title: this.language.translate('Registration Successful'),
+            text: this.language.translate('Please complete your account verification to continue.'),
             confirmButtonColor: '#c4512d',
             allowOutsideClick: false,
           }).then(() => {
@@ -196,6 +199,7 @@ export class RegisterComponent {
                 farmHouseId: farmHouseId,
                 isEmailVerified: isEmailVerified,
                 isMobileVerified: isMobileVerified,
+                hasEmail: !!data.hasEmail,
               },
             });
           });
@@ -208,10 +212,10 @@ export class RegisterComponent {
 
           Swal.fire({
             icon: 'error',
-            title: 'Registration Failed',
+            title: this.language.translate('Registration Failed'),
             text:
-              error?.error?.message ??
-              'Something went wrong while creating your account.',
+              this.language.translate(error?.error?.message ??
+              'Something went wrong while creating your account.'),
             confirmButtonColor: '#c4512d',
           });
 

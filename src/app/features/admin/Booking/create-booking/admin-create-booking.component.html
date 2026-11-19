@@ -1,0 +1,46 @@
+<main class="container py-4">
+ <h1 class="h3">{{ 'Create customer booking' | t }}</h1>
+ <section *ngIf="!bookingOpen" class="card p-4 mt-3" style="max-width:780px">
+  <label for="booking-source" class="form-label">{{ 'Booking source' | t }}</label>
+  <select id="booking-source" class="form-select mb-3" [(ngModel)]="context.source" [disabled]="busy">
+   <option value="WalkIn">{{ 'Walk-in' | t }}</option><option value="Phone">{{ 'Phone enquiry' | t }}</option>
+  </select>
+  <form (ngSubmit)="lookup()" #lookupForm="ngForm">
+   <label for="customer-mobile" class="form-label">{{ 'Customer mobile number' | t }}</label>
+   <div class="input-group">
+    <input id="customer-mobile" name="mobile" class="form-control" maxlength="10" required pattern="[0-9]{10}"
+      [(ngModel)]="mobile" [disabled]="busy" (ngModelChange)="searched=false;context.customer=null">
+    <button class="btn btn-outline-success" type="submit" [disabled]="lookupForm.invalid || busy">{{ 'Find customer' | t }}</button>
+   </div>
+  </form>
+  <p *ngIf="busy" class="mt-3" role="status">{{ 'Processing…' | t }}</p>
+  <p *ngIf="error" class="text-danger mt-3" role="alert">{{ error | t }}</p>
+  <p *ngIf="message" class="text-success mt-3" role="status">{{ message | t }}</p>
+  <form *ngIf="searched && !context.customer" #registerForm="ngForm" (ngSubmit)="register()" class="mt-4">
+   <h2 class="h5">{{ 'Register customer' | t }}</h2>
+   <label for="customer-name">{{ 'Full Name' | t }}</label>
+   <input id="customer-name" name="name" class="form-control mb-3" maxlength="100" required [(ngModel)]="fullName" [disabled]="busy">
+   <label for="customer-email">{{ 'Email (optional)' | t }}</label>
+   <input id="customer-email" name="email" class="form-control mb-3" type="email" email maxlength="150" [(ngModel)]="email" [disabled]="busy">
+   <p class="text-muted">{{ 'The customer can sign in with mobile OTP and set a password using Forgot Password.' | t }}</p>
+   <button class="btn btn-success" type="submit" [disabled]="registerForm.invalid || busy">{{ 'Register and send verification' | t }}</button>
+  </form>
+  <section *ngIf="context.customer as customer" class="mt-4">
+   <h2 class="h5">{{ customer.fullName }}</h2><p>{{ customer.mobileNumber }}<span *ngIf="customer.email"> · {{ customer.email }}</span></p>
+   <p>{{ 'Mobile verification' | t }} · {{ (customer.isMobileVerified ? 'Verified' : 'Pending') | t }}</p>
+   <p *ngIf="customer.email">{{ 'Email Verification' | t }} · {{ (customer.isEmailVerified ? 'Verified' : 'Pending') | t }}</p>
+   <form *ngIf="!customer.isMobileVerified" #otpForm="ngForm" (ngSubmit)="verify()">
+    <label for="customer-otp">{{ 'Customer mobile OTP' | t }}</label>
+    <input id="customer-otp" name="otp" class="form-control mb-2" required pattern="[0-9]{6}" maxlength="6" [(ngModel)]="otp" [disabled]="busy">
+    <button class="btn btn-success" type="submit" [disabled]="otpForm.invalid || busy">{{ 'Verify OTP' | t }}</button>
+   </form>
+   <div class="d-flex flex-wrap gap-2 mt-3">
+    <button *ngIf="!customer.canBook" type="button" class="btn btn-outline-success" [disabled]="busy" (click)="resend()">{{ 'Resend verification' | t }}</button>
+    <button type="button" class="btn btn-outline-secondary" [disabled]="busy" (click)="lookup()">{{ 'Refresh verification' | t }}</button>
+    <button type="button" class="btn btn-success" [disabled]="busy || !customer.canBook" (click)="bookingOpen=true">{{ 'Continue to booking' | t }}</button>
+   </div>
+   <p *ngIf="!customer.canBook" class="text-muted mt-3">{{ 'A verified mobile, customer membership and verification of any supplied email are required before booking.' | t }}</p>
+  </section>
+ </section>
+ <app-booking *ngIf="bookingOpen" />
+</main>

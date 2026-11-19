@@ -5,10 +5,10 @@
             <!-- Header -->
             <div class="page-header">
                 <div>
-                    <h2 class="mb-1">{{ isEditMode ? 'Edit Gallery Item' : 'Create Gallery Item' }}</h2>
+                    <h2 class="mb-1">{{ (isEditMode ? 'Edit Gallery Item' : 'Create Gallery Item') | t }}</h2>
                     <p class="text-muted mb-0">
-                        {{ isEditMode ? 'Update the details of this gallery item' : 'Add a new image or video to your
-                        gallery' }}
+                        {{ (isEditMode ? 'Update the details of this gallery item' : 'Add a new image or video to your
+                        gallery') | t }}
                     </p>
                 </div>
             </div>
@@ -16,9 +16,9 @@
             @if (loadingItem) {
             <div class="gallery-form-loading">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ 'Loading...' | t }}</span>
                 </div>
-                <span>Loading item details...</span>
+                <span>{{ 'Loading item details...' | t }}</span>
             </div>
             } @else {
 
@@ -33,7 +33,7 @@
                     <div class="col-12 col-lg-4">
 
                         <label class="form-label">
-                            Image / Video <span class="text-danger">*</span>
+                            {{ 'Image / Video' | t }}<span class="text-danger">*</span>
                         </label>
 
                         <div class="media-upload-panel">
@@ -45,7 +45,7 @@
                                 @if (isPreviewVideo()) {
                                 <video [src]="imagePreviewUrl" controls></video>
                                 } @else {
-                                <img [src]="imagePreviewUrl" alt="Preview" />
+                                <img [src]="imagePreviewUrl" [alt]="'Preview' | t" />
                                 }
 
                                 } @else {
@@ -63,9 +63,7 @@
 
                                 <label class="btn btn-light upload-choose-btn mb-0">
                                     <i class="bi bi-upload me-1"></i>
-                                    Choose File
-
-                                    <input type="file" hidden accept="image/*,video/*"
+                                    {{ 'Choose File' | t }}<input type="file" hidden accept="image/*,video/*"
                                         (change)="onFileSelected($event)" />
                                 </label>
 
@@ -74,11 +72,9 @@
 
                                     @if (uploadingFile) {
                                     <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                                    Uploading...
-                                    } @else {
+                                    {{ 'Uploading...' | t }}} @else {
                                     <i class="bi bi-cloud-upload me-1"></i>
-                                    Upload
-                                    }
+                                    {{ 'Upload' | t }}}
 
                                 </button>
 
@@ -97,8 +93,7 @@
 
                             @if (f['imageUrl'].invalid && f['imageUrl'].touched) {
                             <div class="invalid-feedback d-block">
-                                Please upload an image or video before submitting.
-                            </div>
+                                {{ 'Please upload an image or video before submitting.' | t }}</div>
                             }
 
                         </div>
@@ -116,32 +111,32 @@
                             <!-- Image Name -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label">
-                                    Image Name <span class="text-danger">*</span>
+                                    {{ 'Image Name' | t }}<span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control" formControlName="imageName"
-                                    placeholder="e.g. Sunset View"
+                                    [placeholder]="'e.g. Sunset View' | t"
                                     [class.is-invalid]="f['imageName'].invalid && f['imageName'].touched" />
                                 @if (f['imageName'].invalid && f['imageName'].touched) {
-                                <div class="invalid-feedback">Image name is required.</div>
+                                <div class="invalid-feedback">{{ 'Image name is required.' | t }}</div>
                                 }
                             </div>
 
                             <!-- Display Order -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label">
-                                    Display Order <span class="text-danger">*</span>
+                                    {{ 'Display Order' | t }}<span class="text-danger">*</span>
                                 </label>
                                 <input type="number" class="form-control" formControlName="displayOrder" min="0"
                                     [class.is-invalid]="f['displayOrder'].invalid && f['displayOrder'].touched" />
                                 @if (f['displayOrder'].invalid && f['displayOrder'].touched) {
-                                <div class="invalid-feedback">Valid display order is required.</div>
+                                <div class="invalid-feedback">{{ 'Valid display order is required.' | t }}</div>
                                 }
                             </div>
 
                             <!-- Category -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label">
-                                    Category <span class="text-danger">*</span>
+                                    {{ 'Category' | t }}<span class="text-danger">*</span>
                                 </label>
 
                                 <div class="category-field">
@@ -149,30 +144,28 @@
                                     @if (!isNewCategory) {
                                     <select class="form-select" formControlName="category"
                                         [class.is-invalid]="f['category'].invalid && f['category'].touched">
-                                        <option value="" disabled selected>Select category</option>
+                                        <option value="" disabled selected>{{ 'Select category' | t }}</option>
                                         @for (cat of categories; track cat.value) {
-                                        <option [value]="cat.value">{{ cat.label }}</option>
+                                        <option [value]="cat.value">{{ (cat.label) | t }}</option>
                                         }
                                     </select>
                                     } @else {
                                     <input type="text" class="form-control" formControlName="category"
-                                        placeholder="Type new category"
+                                        [placeholder]="'Type new category' | t"
                                         [class.is-invalid]="f['category'].invalid && f['category'].touched" />
                                     }
 
                                     <button type="button" class="btn btn-link btn-sm category-toggle-btn"
                                         (click)="toggleNewCategory()">
                                         @if (!isNewCategory) {
-                                        <i class="bi bi-plus-lg me-1"></i>New
-                                        } @else {
-                                        <i class="bi bi-list me-1"></i>Existing
-                                        }
+                                        <i class="bi bi-plus-lg me-1"></i>{{ 'New' | t }}} @else {
+                                        <i class="bi bi-list me-1"></i>{{ 'Existing' | t }}}
                                     </button>
 
                                 </div>
 
                                 @if (f['category'].invalid && f['category'].touched) {
-                                <div class="invalid-feedback d-block">Category is required.</div>
+                                <div class="invalid-feedback d-block">{{ 'Category is required.' | t }}</div>
                                 }
                             </div>
 
@@ -182,21 +175,20 @@
                                     <input type="checkbox" class="form-check-input" id="isFavorite"
                                         formControlName="isFavorite" />
                                     <label class="form-check-label" for="isFavorite">
-                                        Mark as Favorite
-                                    </label>
+                                        {{ 'Mark as Favorite' | t }}</label>
                                 </div>
                             </div>
 
                             <!-- Description -->
                             <div class="col-12">
                                 <label class="form-label">
-                                    Description <span class="text-danger">*</span>
+                                    {{ 'Description' | t }}<span class="text-danger">*</span>
                                 </label>
                                 <textarea class="form-control" rows="5" formControlName="description"
-                                    placeholder="Write a short description..."
+                                    [placeholder]="'Write a short description...' | t"
                                     [class.is-invalid]="f['description'].invalid && f['description'].touched"></textarea>
                                 @if (f['description'].invalid && f['description'].touched) {
-                                <div class="invalid-feedback">Description is required.</div>
+                                <div class="invalid-feedback">{{ 'Description is required.' | t }}</div>
                                 }
                             </div>
 
@@ -209,14 +201,13 @@
                 <!-- Actions -->
                 <div class="form-actions">
                     <button type="button" class="btn btn-light" (click)="onCancel()">
-                        Cancel
-                    </button>
+                        {{ 'Cancel' | t }}</button>
 
                     <button type="submit" class="btn btn-primary" [disabled]="submitting">
                         @if (submitting) {
                         <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                         }
-                        {{ isEditMode ? 'Update Gallery Item' : 'Create Gallery Item' }}
+                        {{ (isEditMode ? 'Update Gallery Item' : 'Create Gallery Item') | t }}
                     </button>
                 </div>
 

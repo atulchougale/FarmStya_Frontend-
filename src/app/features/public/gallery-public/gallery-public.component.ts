@@ -1,3 +1,4 @@
+import { TranslationPipe } from '../../../core/i18n/language';
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,7 +9,7 @@ import { GalleryResponseDto } from './gallery.model';
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslationPipe, CommonModule],
   templateUrl: './gallery-public.component.html',
   styleUrl: './gallery-public.component.css',
 })

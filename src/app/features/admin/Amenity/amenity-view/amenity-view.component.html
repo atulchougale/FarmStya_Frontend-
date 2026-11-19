@@ -8,11 +8,10 @@
 
       <div class="amenity-header">
         <div>
-          <h2 class="mb-1">Amenities</h2>
+          <h2 class="mb-1">{{ (('Amenities' | t) | t) | t }}</h2>
 
           <p class="text-muted mb-0">
-            Manage your amenities and carousel images
-          </p>
+            {{ (('Manage your amenities and carousel images' | t) | t) | t }}</p>
         </div>
       </div>
 
@@ -31,8 +30,7 @@
           (click)="AmenityCreate()"
         >
           <i class="bi bi-plus-lg me-1"></i>
-          Create New
-        </button>
+          {{ (('Create New' | t) | t) | t }}</button>
 
       </div>
 
@@ -50,13 +48,11 @@
             role="status"
           >
             <span class="visually-hidden">
-              Loading...
-            </span>
+              {{ (('Loading...' | t) | t) | t }}</span>
           </div>
 
           <span>
-            Loading amenities...
-          </span>
+            {{ (('Loading amenities...' | t) | t) | t }}</span>
 
         </div>
 
@@ -76,12 +72,10 @@
           </div>
 
           <h5>
-            No Amenities Found
-          </h5>
+            {{ (('No Amenities Found' | t) | t) | t }}</h5>
 
           <p class="text-muted mb-3">
-            Start adding amenities to your farmhouse.
-          </p>
+            {{ (('Start adding amenities to your farmhouse.' | t) | t) | t }}</p>
 
           <button
             type="button"
@@ -89,8 +83,7 @@
             (click)="AmenityCreate()"
           >
             <i class="bi bi-plus-lg me-1"></i>
-            Create New
-          </button>
+            {{ (('Create New' | t) | t) | t }}</button>
 
         </div>
 
@@ -124,7 +117,7 @@
 
                     <img
                       [src]="item.imageUrl"
-                      [alt]="item.title"
+                      [alt]="item.title | t"
                       class="amenity-image"
                     />
 
@@ -143,16 +136,14 @@
                     @if (item.isAmenity) {
 
                       <span class="badge bg-primary">
-                        Amenity
-                      </span>
+                        {{ (('Amenity' | t) | t) | t }}</span>
 
                     }
 
                     @if (item.isCarasoul) {
 
                       <span class="badge bg-secondary">
-                        Carousel
-                      </span>
+                        {{ (('Carousel' | t) | t) | t }}</span>
 
                     }
 
@@ -168,8 +159,7 @@
                       (click)="$event.stopPropagation(); openPopup(item)"
                     >
                       <i class="bi bi-eye me-1"></i>
-                      Show Details
-                    </button>
+                      {{ (('Show Details' | t) | t) | t }}</button>
 
                   </div>
 
@@ -226,7 +216,7 @@
 
             <img
               [src]="selectedItem.imageUrl"
-              [alt]="selectedItem.title"
+              [alt]="selectedItem.title | t"
             />
 
           } @else {
@@ -251,7 +241,7 @@
           <div class="amenity-popup-top">
 
             <h4 class="amenity-popup-title">
-              {{ selectedItem.title }}
+              {{ (((selectedItem.title) | t) | t) | t }}
             </h4>
 
 
@@ -261,16 +251,14 @@
               @if (selectedItem.isAmenity) {
 
                 <span class="badge bg-primary">
-                  Amenity
-                </span>
+                  {{ (('Amenity' | t) | t) | t }}</span>
 
               }
 
               @if (selectedItem.isCarasoul) {
 
                 <span class="badge bg-secondary">
-                  Carousel
-                </span>
+                  {{ (('Carousel' | t) | t) | t }}</span>
 
               }
 
@@ -284,7 +272,7 @@
           @if (selectedItem.description) {
 
             <p class="amenity-popup-description">
-              {{ selectedItem.description }}
+              {{ (((selectedItem.description) | t) | t) | t }}
             </p>
 
           }
@@ -302,8 +290,7 @@
               (click)="editItem(selectedItem)"
             >
               <i class="bi bi-pencil me-1"></i>
-              Edit
-            </button>
+              {{ (('Edit' | t) | t) | t }}</button>
 
 
             <button
@@ -326,9 +313,7 @@
 
               }
 
-              Delete
-
-            </button>
+              {{ (('Delete' | t) | t) | t }}</button>
 
           </div>
 

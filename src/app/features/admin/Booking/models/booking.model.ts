@@ -1,6 +1,10 @@
 
 export interface Booking {
   bookingId: number;
+  bookingSource: 'Online' | 'WalkIn' | 'Phone';
+  createdBy: number;
+  canManageConfirmation?: boolean;
+  hasPendingAdvanceOrder?: boolean;
   bookingReference: string;
   fullName: string;
   email: string;
@@ -32,6 +36,9 @@ export interface Booking {
   discountAmount: number;
   remainingAmount: number;
   hasIdentityDocument?: boolean;
+  identityDocumentType?: string;
+  otherIdentityDocumentType?: string;
+  identityFileCount?: number;
 
   advanceDailyRateSnapshot?: number;
   advanceAmount: number;

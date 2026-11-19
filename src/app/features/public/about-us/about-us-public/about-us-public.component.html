@@ -6,8 +6,7 @@
         <div class="loading-spinner"></div>
 
         <p>
-            Loading About Us...
-        </p>
+            {{ 'Loading About Us...' | t }}</p>
 
     </div>
 
@@ -15,18 +14,15 @@
     <div class="about-state error-state" *ngIf="!loading && errorMessage">
 
         <h3>
-            About Us
-        </h3>
+            {{ 'About Us' | t }}</h3>
 
         <p>
-            {{ errorMessage }}
+            {{ (errorMessage) | t }}
         </p>
 
         <button class="retry-button" (click)="loadAboutUs()">
 
-            Try Again
-
-        </button>
+            {{ 'Try Again' | t }}</button>
 
     </div>
 
@@ -43,11 +39,11 @@
                 <div class="hero-content">
 
                     <h1>
-                        {{ about.heroTitle }}
+                        {{ (about.heroTitle) | t }}
                     </h1>
 
                     <p>
-                        {{ about.heroSubtitle }}
+                        {{ (about.heroSubtitle) | t }}
                     </p>
 
                 </div>
@@ -65,11 +61,11 @@
                 <div class="story-content">
 
                     <h2>
-                        {{ about.storyTitle }}
+                        {{ (about.storyTitle) | t }}
                     </h2>
 
                     <p class="story-description">
-                        {{ about.storyDescription }}
+                        {{ (about.storyDescription) | t }}
                     </p>
 
                 </div>
@@ -90,11 +86,11 @@
                         </div>
 
                         <h3 class="mb-2">
-                            {{ feature.title }}
+                            {{ (feature.title) | t }}
                         </h3>
 
                         <p class="mb-0">
-                            {{ feature.description }}
+                            {{ (feature.description) | t }}
                         </p>
 
                     </article>

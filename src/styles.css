@@ -51,3 +51,6 @@
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html[lang="mr"] body { font-family: "Nirmala UI", "Mangal", sans-serif; line-height: 1.65; }
+html[lang="mr"] .nav-link, html[lang="mr"] .btn { white-space: normal; }

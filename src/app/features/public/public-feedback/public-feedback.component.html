@@ -9,25 +9,21 @@
 
                 <div class="feedback-eyebrow">
                     <span class="sparkle-icon" aria-hidden="true">✦</span>
-                    <span>THANK YOU FOR BEING WITH US</span>
+                    <span>{{ 'THANK YOU FOR BEING WITH US' | t }}</span>
                     <span class="sparkle-icon" aria-hidden="true">✦</span>
                 </div>
 
                 <h1 class="feedback-intro-title">
-                    Thank you for choosing
-                    <span class="feedback-farmhouse-name">{{ farmHouseName }}</span>
+                    {{ 'Thank you for choosing' | t }}<span class="feedback-farmhouse-name">{{ farmHouseName }}</span>
                 </h1>
 
                 <div class="feedback-intro-divider" aria-hidden="true"></div>
 
                 <p class="feedback-intro-message">
-                    We hope you take home beautiful memories, peaceful moments, and a reason to visit us again.
-                </p>
+                    {{ 'We hope you take home beautiful memories, peaceful moments, and a reason to visit us again.' | t }}</p>
 
                 <p class="feedback-intro-description">
-                    Whether it was a celebration, family gathering, friends' get-together, or simply a peaceful escape
-                    from everyday life, we truly hope your time with us was special.
-                </p>
+                    {{ 'Whether it was a celebration, family gathering, friends\' get-together, or simply a peaceful escape from everyday life, we truly hope your time with us was special.' | t }}</p>
 
             </div>
         </header>
@@ -46,17 +42,13 @@
                     <div class="welcome-heart-icon" aria-hidden="true">♥</div>
 
                     <h2 class="welcome-title">
-                        Come back again
-                    </h2>
+                        {{ 'Come back again' | t }}</h2>
 
                     <p class="welcome-message">
-                        We'd love to welcome you again.
-                    </p>
+                        {{ 'We\'d love to welcome you again.' | t }}</p>
 
                     <p class="welcome-description">
-                        Your moments with us are what make every stay meaningful. We hope to see you again soon for
-                        another memorable experience in the lap of nature.
-                    </p>
+                        {{ 'Your moments with us are what make every stay meaningful. We hope to see you again soon for another memorable experience in the lap of nature.' | t }}</p>
 
                     <div class="welcome-accent-line" aria-hidden="true"></div>
 
@@ -70,11 +62,9 @@
 
                         <div class="feedback-card-header">
                             <h2 class="feedback-card-title">
-                                How was your experience?
-                            </h2>
+                                {{ 'How was your experience?' | t }}</h2>
                             <p class="feedback-card-subtitle">
-                                We'd love to hear what made your visit special.
-                            </p>
+                                {{ 'We\'d love to hear what made your visit special.' | t }}</p>
                         </div>
 
                         <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" autocomplete="off" novalidate>
@@ -82,8 +72,7 @@
                             <!-- Rating -->
                             <div class="feedback-field mb-4">
                                 <label class="form-label" id="rating-label">
-                                    Your rating
-                                </label>
+                                    {{ 'Your rating' | t }}</label>
 
                                 <div class="rating-stars" role="radiogroup" aria-labelledby="rating-label">
                                     @for (star of getStars(); track star) {
@@ -99,26 +88,23 @@
 
                                 @if (f['rating'].touched && f['rating'].errors?.['min']) {
                                 <small class="text-danger" role="alert">
-                                    Please select a rating.
-                                </small>
+                                    {{ 'Please select a rating.' | t }}</small>
                                 }
                             </div>
 
                             <!-- Review -->
                             <div class="feedback-field mb-4">
                                 <label class="form-label" for="review">
-                                    Your review
-                                </label>
+                                    {{ 'Your review' | t }}</label>
 
                                 <textarea id="review" rows="5" class="form-control feedback-input"
-                                    placeholder="Tell us about your experience..." formControlName="review"
+                                    [placeholder]="'Tell us about your experience...' | t" formControlName="review"
                                     [class.is-invalid]="f['review'].touched && f['review'].invalid">
                                 </textarea>
 
                                 @if (f['review'].touched && f['review'].errors?.['required']) {
                                 <small class="text-danger" role="alert">
-                                    Please enter your review.
-                                </small>
+                                    {{ 'Please enter your review.' | t }}</small>
                                 }
                             </div>
 
@@ -127,10 +113,8 @@
                                 @if (submitting) {
                                 <span class="spinner-border spinner-border-sm me-2" role="status"
                                     aria-hidden="true"></span>
-                                Submitting...
-                                } @else {
-                                Share my experience
-                                }
+                                {{ 'Submitting...' | t }}} @else {
+                                {{ 'Share my experience' | t }}}
                             </button>
 
                         </form>

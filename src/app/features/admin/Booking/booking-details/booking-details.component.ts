@@ -1,25 +1,86 @@
+import { TranslationPipe, LocalDatePipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 import { PaymentReceiptsComponent } from '../../../../shared/components/payment-receipts/payment-receipts.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize, Subscription, switchMap, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
-import { BookingIdentityDocument, BookingService } from '../../../../core/services/booking.service';
+import { BookingIdentityDocument, BookingService, IDENTITY_DOCUMENT_TYPES } from '../../../../core/services/booking.service';
 import { Booking } from '../models/booking.model';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink, PaymentReceiptsComponent],
+  imports: [TranslationPipe, LocalDatePipe, CommonModule, FormsModule, RouterLink, PaymentReceiptsComponent],
   templateUrl: './booking-details.component.html',
   styleUrl: './booking-details.component.css',
 })
 export class BookingDetailsComponent implements OnInit, OnDestroy {
+  readonly language = injectLanguage(LanguageService);
   @ViewChild('identityDialog', { static: true }) private identityDialog!: ElementRef<HTMLDialogElement>;
   private readonly service = inject(BookingService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly bookingId = Number(inject(ActivatedRoute).snapshot.paramMap.get('bookingId'));
   booking: Booking | null = null;
+  readonly documentTypes = IDENTITY_DOCUMENT_TYPES;
+  documentType = '';
+  otherDocumentType = '';
+  selectedFiles: File[] = [];
+  confirmationIdentity: BookingIdentityDocument | null = null;
+  confirmationLoading = false;
+  savingConfirmation = false;
+  advanceMethod = 'Cash';
+  cashReceived = false;
+  get canUploadIdentity(): boolean {
+    return !!this.booking?.canManageConfirmation && (this.booking.status === 'Approved' ||
+      (this.booking.status === 'Confirmed' && this.confirmationIdentity?.status === 'ReuploadRequested'));
+  }
+
+  chooseFiles(event: Event): void {
+    this.selectedFiles = Array.from((event.target as HTMLInputElement).files ?? []);
+  }
+
+  uploadCustomerIdentity(): void {
+    if (!this.canUploadIdentity || this.savingConfirmation) return;
+    this.error = '';
+    if (!this.documentType || (this.documentType === 'Other' && !this.otherDocumentType.trim()) ||
+      this.selectedFiles.length < 1 || this.selectedFiles.length > 2 ||
+      this.selectedFiles.some(f => f.size === 0 || f.size > 5 * 1024 * 1024)) {
+      this.error = 'Select a document type and one or two PDF, JPG or PNG files up to 5 MB each.';
+      return;
+    }
+    this.savingConfirmation = true;
+    this.service.uploadIdentity(this.bookingId, this.selectedFiles, this.documentType, this.otherDocumentType, true)
+      .pipe(finalize(() => this.savingConfirmation = false)).subscribe({
+        next: r => { this.confirmationIdentity = r.data; this.selectedFiles = []; this.notice = 'Customer ID proof uploaded successfully.'; this.load(); },
+        error: e => { this.error = e.error?.message ?? 'Could not upload ID proof.'; }
+      });
+  }
+
+  async collectAdvance(): Promise<void> {
+    if (!this.booking?.canManageConfirmation || this.booking.status !== 'Approved' ||
+      !this.confirmationIdentity || this.confirmationIdentity.status === 'ReuploadRequested' || this.savingConfirmation) return;
+    const amount = this.booking.advanceAmount;
+    if (this.advanceMethod === 'Cash' && !this.cashReceived) return;
+    if (this.advanceMethod === 'Cash' && this.booking.hasPendingAdvanceOrder) return;
+    this.savingConfirmation = true;
+    if (this.advanceMethod === 'Cash') {
+      const result = await Swal.fire({ title: this.language.translate('Record cash advance?'),
+        text: this.language.translate('Confirm only after physically receiving the full advance amount.') +
+          ' ₹' + amount.toLocaleString('en-IN'), icon: 'question', showCancelButton: true,
+        confirmButtonText: this.language.translate('Cash received — confirm booking') });
+      if (!result.isConfirmed) { this.savingConfirmation = false; return; }
+    }
+    this.error = '';
+    const request = this.advanceMethod === 'Cash' ? this.service.collectCashAdvance(this.bookingId, amount)
+      : this.service.sendAdvanceReminder(this.bookingId);
+    request.pipe(finalize(() => this.savingConfirmation = false)).subscribe({
+      next: r => { this.notice = r.message; this.cashReceived = false; this.load(); },
+      error: e => { this.error = e.error?.message ?? 'Could not process the advance.'; this.load(); }
+    });
+  }
   get canCheckIn(): boolean {
     return this.booking?.canCheckIn === true;
   }
@@ -38,6 +99,7 @@ export class BookingDetailsComponent implements OnInit, OnDestroy {
   error = '';
   notice = '';
   identity: BookingIdentityDocument | null = null;
+  identityIndex = 0;
   identityPreview: SafeResourceUrl | null = null;
   identityImage: string | null = null;
   identityLoading = false;
@@ -52,15 +114,16 @@ export class BookingDetailsComponent implements OnInit, OnDestroy {
     this.clearIdentity();
   }
 
-  openIdentity(): void {
+  openIdentity(index = 0): void {
     this.clearIdentity();
-    this.identityDialog.nativeElement.showModal();
+    this.identityIndex = index;
+    if (!this.identityDialog.nativeElement.open) this.identityDialog.nativeElement.showModal();
     this.identityLoading = true;
     this.identityRequest = this.service.getIdentity(this.bookingId, false).pipe(
       switchMap(response => {
         this.identity = response.data;
         return this.identity
-          ? this.service.getIdentityContent(this.bookingId, this.identity.id)
+          ? this.service.getIdentityContent(this.bookingId, this.identity.files[index]?.id ?? this.identity.id)
           : throwError(() => new Error('No ID proof has been uploaded.'));
       }),
       finalize(() => this.identityLoading = false),
@@ -119,7 +182,16 @@ export class BookingDetailsComponent implements OnInit, OnDestroy {
     }
     this.loading = true;
     this.service.getBookingById(this.bookingId).pipe(finalize(() => this.loading = false)).subscribe({
-      next: (response) => { this.booking = response.data; },
+      next: (response) => {
+        this.booking = response.data;
+        if (this.booking.hasPendingAdvanceOrder) this.advanceMethod = 'Online';
+        this.confirmationIdentity = null;
+        this.confirmationLoading = true;
+        this.service.getIdentity(this.bookingId, false).pipe(finalize(() => this.confirmationLoading = false)).subscribe({
+          next: r => { this.confirmationIdentity = r.data; },
+          error: () => { this.error = 'Could not load ID proof status. Refresh before collecting payment.'; }
+        });
+      },
       error: (error) => {
         this.booking = null;
         this.error = error.status === 403 ? 'You do not have access to this booking.'
@@ -132,10 +204,10 @@ export class BookingDetailsComponent implements OnInit, OnDestroy {
     if (!this.canDecide || this.deciding) return;
     this.deciding = true;
     const dialog = approve
-      ? await Swal.fire({ title: 'Approve booking?', text: 'The guest will have 24 hours to confirm.',
-          icon: 'question', showCancelButton: true, confirmButtonText: 'Approve booking' })
-      : await Swal.fire({ title: 'Reject booking?', input: 'textarea', inputLabel: 'Reason shared with the guest',
-          inputAttributes: { maxlength: '1000' }, showCancelButton: true, confirmButtonText: 'Reject booking',
+      ? await Swal.fire({ title: this.language.translate('Approve booking?'), text: this.language.translate('The guest will have 24 hours to confirm.'),
+          icon: 'question', showCancelButton: true, confirmButtonText: this.language.translate('Approve booking') })
+      : await Swal.fire({ title: this.language.translate('Reject booking?'), input: 'textarea', inputLabel: this.language.translate('Reason shared with the guest'),
+          inputAttributes: { maxlength: '1000' }, showCancelButton: true, confirmButtonText: this.language.translate('Reject booking'),
           inputValidator: (value: string) => value.trim() ? '' : 'Enter a rejection reason.' });
     if (!dialog.isConfirmed || !this.canDecide) {
       this.deciding = false;

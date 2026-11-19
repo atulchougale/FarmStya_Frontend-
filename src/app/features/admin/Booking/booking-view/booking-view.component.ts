@@ -1,3 +1,6 @@
+import { AdminService } from '../../../../core/services/admin.service';
+import { TranslationPipe, LocalDatePipe, LanguageService } from '../../../../core/i18n/language';
+import { inject as injectLanguage } from '@angular/core';
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,8 +15,7 @@ import { Booking } from '../models/booking.model';
 @Component({
   selector: 'app-booking-view',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [TranslationPipe, LocalDatePipe, CommonModule,
     MatTableModule,
     FormsModule,
     RouterLink
@@ -22,6 +24,9 @@ import { Booking } from '../models/booking.model';
   styleUrl: './booking-view.component.css'
 })
 export class BookingViewComponent implements OnInit {
+  canCreateBooking = false;
+  private readonly adminService = injectLanguage(AdminService);
+  readonly language = injectLanguage(LanguageService);
 
   // Booking List
   bookingItems: Booking[] = [];
@@ -55,6 +60,9 @@ export class BookingViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBookings();
+    this.adminService.getAdminMenu().subscribe({
+      next: r => { this.canCreateBooking=!!r.data?.modules.some(m=>m.subMenus?.some(s=>s.permissions.includes('Bookings.Create'))); }
+    });
   }
 
   // GET ALL BOOKINGS
@@ -93,11 +101,11 @@ export class BookingViewComponent implements OnInit {
         this.loading = false;
 
         Swal.fire({
-          title: 'Error',
-          text: error?.error?.message ||
-                'Unable to load bookings.',
+          title: this.language.translate('Error'),
+          text: this.language.translate(error?.error?.message ||
+                'Unable to load bookings.'),
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: this.language.translate('OK')
         });
       }
     });

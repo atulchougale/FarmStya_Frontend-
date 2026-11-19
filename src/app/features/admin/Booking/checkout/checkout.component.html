@@ -1,38 +1,39 @@
 <main class="container py-4" style="max-width: 760px">
-  <a [routerLink]="['/admin/booking', id]" class="btn btn-outline-secondary mb-3">Back to booking</a>
-  <h1 class="h3 mb-3">Check Out</h1>
-  <p *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</p>
-  <p *ngIf="notice" class="alert alert-success" role="status">{{ notice }}</p>
+  <a [routerLink]="['/admin/booking', id]" class="btn btn-outline-secondary mb-3">{{ 'Back to booking' | t }}</a>
+  <h1 class="h3 mb-3">{{ 'Check Out' | t }}</h1>
+  <p *ngIf="loading" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading checkout…' | t }}</p>
+  <p *ngIf="error" class="alert alert-danger" role="alert">{{ (error) | t }}</p>
+  <p *ngIf="notice" class="alert alert-success" role="status">{{ (notice) | t }}</p>
   <section *ngIf="booking && balance" class="card shadow-sm p-4">
     <h2 class="h5">{{ booking.bookingReference }} · {{ booking.fullName }}</h2>
-    <p>{{ booking.checkInDate | date:'mediumDate' }} to {{ booking.checkOutDate | date:'mediumDate' }} · {{ booking.bookingType }}</p>
+    <p>{{ '{p0} to {p1} · {p2}' | t:{p0: (booking.checkInDate | localDate:'mediumDate'), p1: (booking.checkOutDate | localDate:'mediumDate'), p2: (booking.bookingType)} }}</p>
     <ul *ngIf="booking.eventDates?.length" class="list-unstyled">
-      <li *ngFor="let event of booking.eventDates">{{ event.eventType }} · {{ event.eventDate | date:'mediumDate' }}</li>
+      <li *ngFor="let event of booking.eventDates">{{ (event.eventType) | t }} · {{ (event.eventDate | localDate:'mediumDate') | t }}</li>
     </ul>
     <dl class="row mb-2">
-      <dt class="col-7">Booking total</dt><dd class="col-5 text-end">{{ balance.total | currency:balance.currency }}</dd>
-      <dt class="col-7">Advance paid</dt><dd class="col-5 text-end">{{ balance.advancePaid | currency:balance.currency }}</dd>
-      <dt *ngIf="balance.discount" class="col-7">Saved discount</dt>
+      <dt class="col-7">{{ 'Booking total' | t }}</dt><dd class="col-5 text-end">{{ balance.total | currency:balance.currency }}</dd>
+      <dt class="col-7">{{ 'Advance paid' | t }}</dt><dd class="col-5 text-end">{{ balance.advancePaid | currency:balance.currency }}</dd>
+      <dt *ngIf="balance.discount" class="col-7">{{ 'Saved discount' | t }}</dt>
       <dd *ngIf="balance.discount" class="col-5 text-end">{{ balance.discount | currency:balance.currency }}</dd>
     </dl>
-    <p *ngIf="balance.paymentStatus === 'Pending'">Waiting for {{ balance.payable | currency:balance.currency }} through My Bookings.</p>
-    <p *ngIf="balance.paymentStatus === 'Success'">Payment and check out completed.</p>
+    <p *ngIf="balance.paymentStatus === 'Pending'">{{ 'Waiting for {p0} through My Bookings.' | t:{p0: (balance.payable | currency:balance.currency)} }}</p>
+    <p *ngIf="balance.paymentStatus === 'Success'">{{ 'Payment and check out completed.' | t }}</p>
     <form *ngIf="booking.status === 'CheckedIn' && !balance.paymentStatus" #checkout="ngForm" (ngSubmit)="submit()">
-      <label class="form-label" for="method">Payment method</label>
+      <label class="form-label" for="method">{{ 'Payment method' | t }}</label>
       <select class="form-select mb-3" id="method" name="method" [(ngModel)]="method">
-        <option value="Cash">Cash</option>
-        <option value="Online">Online</option>
+        <option value="Cash">{{ 'Cash' | t }}</option>
+        <option value="Online">{{ 'Online' | t }}</option>
       </select>
-      <label class="form-check mb-3"><input class="form-check-input" type="checkbox" name="applyDiscount" [(ngModel)]="applyDiscount"> Apply discount</label>
+      <label class="form-check mb-3"><input class="form-check-input" type="checkbox" name="applyDiscount" [(ngModel)]="applyDiscount"> {{ 'Apply discount' | t }}</label>
       <div *ngIf="applyDiscount" class="mb-3">
-        <label class="form-label" for="discount">Discount amount (INR)</label>
+        <label class="form-label" for="discount">{{ 'Discount amount (INR)' | t }}</label>
         <input class="form-control mb-2" id="discount" name="discount" type="number" min="0.01" [max]="balance.payable" step="0.01" required [(ngModel)]="discount">
-        <label class="form-label" for="reason">Discount reason</label>
+        <label class="form-label" for="reason">{{ 'Discount reason' | t }}</label>
         <textarea class="form-control" id="reason" name="reason" maxlength="500" required [(ngModel)]="reason"></textarea>
       </div>
-      <p class="fw-semibold">Total payable {{ payable | currency:balance.currency }}</p>
-      <button class="btn btn-success" type="submit" [disabled]="busy || checkout.invalid || (applyDiscount && !reason.trim())">
-        {{ payable === 0 ? 'Complete checkout' : method === 'Cash' ? 'Confirm cash collected' : 'Request payment' }}
+      <p class="fw-semibold">{{ 'Total payable {p0}' | t:{p0: (payable | currency:balance.currency)} }}</p>
+      <button class="btn btn-success" type="submit" [disabled]="busy || loading || checkout.invalid || (applyDiscount && !reason.trim())">
+        {{ (busy ? 'Processing…' : payable === 0 ? 'Complete checkout' : method === 'Cash' ? 'Confirm cash collected' : 'Request payment') | t }}
       </button>
     </form>
   </section>

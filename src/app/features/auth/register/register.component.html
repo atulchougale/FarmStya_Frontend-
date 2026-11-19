@@ -11,12 +11,10 @@
                     <div class="card-body p-3 p-md-4">
 
                         <h1 class="display-6 fw-bold mb-2">
-                            Create your account
-                        </h1>
+                            {{ 'Create your account' | t }}</h1>
 
                         <p class="text-muted mb-4">
-                            It only takes a minute.
-                        </p>
+                            {{ 'It only takes a minute.' | t }}</p>
 
                         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
 
@@ -26,20 +24,17 @@
 
                                 <label for="fullName" class="form-label fw-semibold">
 
-                                    Full Name
-
-                                </label>
+                                    {{ 'Full Name' | t }}</label>
 
                                 <input id="fullName" type="text" class="form-control custom-input"
-                                    placeholder="Enter full name" formControlName="fullName"
+                                    [placeholder]="'Enter full name' | t" formControlName="fullName"
                                     [class.is-invalid]="f['fullName'].touched && f['fullName'].invalid"
                                     [class.is-valid]="f['fullName'].touched && f['fullName'].valid">
 
                                 @if( f['fullName'].touched && f['fullName'].errors?.['required'] )
                                 {
                                 <small class="text-danger">
-                                    Full Name is required
-                                </small>
+                                    {{ 'Full Name is required' | t }}</small>
                                 }
 
                             </div>
@@ -50,27 +45,23 @@
 
                                 <label for="email" class="form-label fw-semibold">
 
-                                    Email
-
-                                </label>
+                                    {{ 'Email' | t }}</label>
 
                                 <input id="email" type="email" class="form-control custom-input"
-                                    placeholder="Enter email address" formControlName="email" autocomplete="off"
+                                    [placeholder]="'Enter email address' | t" formControlName="email" autocomplete="off"
                                     [class.is-invalid]="f['email'].touched && f['email'].invalid"
                                     [class.is-valid]="f['email'].touched && f['email'].valid">
 
                                 @if( f['email'].touched && f['email'].errors?.['required'] )
                                 {
                                 <small class="text-danger">
-                                    Email is required
-                                </small>
+                                    {{ 'Email is required' | t }}</small>
                                 }
 
                                 @if(f['email'].touched && f['email'].errors?.['email'])
                                 {
                                 <small class="text-danger">
-                                    Invalid email format
-                                </small>
+                                    {{ 'Invalid email format' | t }}</small>
                                 }
 
                             </div>
@@ -80,8 +71,7 @@
                             <div class="mb-3">
 
                                 <label for="mobileNumber" class="form-label fw-semibold">
-                                    WhatsApp Number
-                                </label>
+                                    {{ 'WhatsApp Number' | t }}</label>
 
                                 <input id="mobileNumber" type="text" class="form-control custom-input"
                                     placeholder="9999999999" formControlName="mobileNumber" autocomplete="off"
@@ -91,15 +81,13 @@
                                 @if(f['mobileNumber'].touched && f['mobileNumber'].errors?.['required'])
                                 {
                                 <small class="text-danger">
-                                    WhatsApp number is required
-                                </small>
+                                    {{ 'WhatsApp number is required' | t }}</small>
                                 }
 
                                 @if(f['mobileNumber'].touched && f['mobileNumber'].errors?.['pattern'])
                                 {
                                 <small class="text-danger">
-                                    Enter valid 10 digit WhatsApp number
-                                </small>
+                                    {{ 'Enter valid 10 digit WhatsApp number' | t }}</small>
                                 }
 
                             </div>
@@ -110,14 +98,12 @@
 
                                 <label for="password" class="form-label fw-semibold">
 
-                                    Password
-
-                                </label>
+                                    {{ 'Password' | t }}</label>
 
                                 <div class="input-group">
 
                                     <input id="password" [type]="showPassword ? 'text' : 'password'"
-                                        class="form-control custom-input" placeholder="Enter password"
+                                        class="form-control custom-input" [placeholder]="'Enter password' | t"
                                         formControlName="password" autocomplete="new-password"
                                         [class.is-invalid]="f['password'].touched && f['password'].invalid"
                                         [class.is-valid]="f['password'].touched && f['password'].valid">
@@ -135,16 +121,13 @@
                                 @if( f['password'].touched && f['password'].errors?.['required'] )
                                 {
                                 <small class="text-danger">
-                                    Password is required
-                                </small>
+                                    {{ 'Password is required' | t }}</small>
                                 }
 
                                 @if( f['password'].touched && f['password'].errors?.['pattern'] )
                                 {
                                 <small class="text-danger">
-                                    Password must contain uppercase,
-                                    lowercase, number and special character
-                                </small>
+                                    {{ 'Password must contain uppercase, lowercase, number and special character' | t }}</small>
                                 }
 
                             </div>
@@ -155,14 +138,12 @@
 
                                 <label for="confirmPassword" class="form-label fw-semibold">
 
-                                    Confirm Password
-
-                                </label>
+                                    {{ 'Confirm Password' | t }}</label>
 
                                 <div class="input-group">
 
                                     <input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
-                                        class="form-control custom-input" placeholder="Confirm password"
+                                        class="form-control custom-input" [placeholder]="'Confirm password' | t"
                                         formControlName="confirmPassword" autocomplete="new-password"
                                         [class.is-invalid]="f['confirmPassword'].touched && f['confirmPassword'].invalid"
                                         [class.is-valid]="f['confirmPassword'].touched && f['confirmPassword'].valid">
@@ -181,15 +162,13 @@
                                 @if(f['confirmPassword'].touched && f['confirmPassword'].errors?.['required'] )
                                 {
                                 <small class="text-danger">
-                                    Confirm Password is required
-                                </small>
+                                    {{ 'Confirm Password is required' | t }}</small>
                                 }
 
                                 @if( registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].touched )
                                 {
                                 <small class="text-danger">
-                                    Passwords do not match
-                                </small>
+                                    {{ 'Passwords do not match' | t }}</small>
                                 }
 
                             </div>
@@ -202,8 +181,7 @@
                                 @if(!isLoading)
                                 {
                                 <span>
-                                    Create Account
-                                </span>
+                                    {{ 'Create Account' | t }}</span>
                                 }
 
                                 @if(isLoading)
@@ -212,8 +190,7 @@
                                 </span>
 
                                 <span>
-                                    Creating Account...
-                                </span>
+                                    {{ 'Creating Account...' | t }}</span>
                                 }
 
 
@@ -225,22 +202,16 @@
 
                                 <p class="mb-2 col-md-6">
 
-                                    Already have an account?
-
-                                    <a routerLink="/login" class="fw-semibold text-decoration-none"
+                                    {{ 'Already have an account?' | t }}<a routerLink="/login" class="fw-semibold text-decoration-none"
                                         style="color: oklch(55% .16 35);">
 
-                                        Login
-
-                                    </a>
+                                        {{ 'Login' | t }}</a>
 
                                 </p>
 
                                 <a routerLink="/forgot-password" class="text-decoration-none col-md-6">
 
-                                    Forgot Password?
-
-                                </a>
+                                    {{ 'Forgot Password?' | t }}</a>
 
                             </div>
 

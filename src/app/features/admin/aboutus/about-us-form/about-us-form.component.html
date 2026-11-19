@@ -10,17 +10,15 @@
 
                 <h2 class="page-title mb-1">
 
-                    {{ isEditMode ? 'Update About Us' : 'Create About Us' }}
+                    {{ (isEditMode ? 'Update About Us' : 'Create About Us') | t }}
 
                 </h2>
 
                 <p class="page-subtitle mb-0">
 
-                    {{
-                        isEditMode
+                    {{ (isEditMode
                             ? 'Update your website About Us content and manage its features.'
-                            : 'Create your website About Us content and add multiple features.'
-                    }}
+                            : 'Create your website About Us content and add multiple features.') | t }}
 
                 </p>
 
@@ -36,9 +34,7 @@
                     aria-hidden="true">
                 </i>
 
-                Back
-
-            </button>
+                {{ 'Back' | t }}</button>
 
         </div>
 
@@ -57,16 +53,13 @@
                     <div>
 
                         <span class="section-label">
-                            About Us
-                        </span>
+                            {{ 'About Us' | t }}</span>
 
                         <h4 class="section-title">
-                            Main Content
-                        </h4>
+                            {{ 'Main Content' | t }}</h4>
 
                         <p class="section-description mb-0">
-                            Add the main About Us information for your farmhouse website.
-                        </p>
+                            {{ 'Add the main About Us information for your farmhouse website.' | t }}</p>
 
                     </div>
 
@@ -79,8 +72,7 @@
 
                         <label class="form-label">
 
-                            Hero Title
-                            <span class="required">*</span>
+                            {{ 'Hero Title' | t }}<span class="required">*</span>
 
                         </label>
 
@@ -88,7 +80,7 @@
                             type="text"
                             class="form-control"
                             formControlName="heroTitle"
-                            placeholder="Enter hero title"
+                            [placeholder]="'Enter hero title' | t"
                             maxlength="200"
                             [class.is-invalid]="isInvalid(aboutUsForm, 'heroTitle')" />
 
@@ -96,9 +88,7 @@
                             class="invalid-feedback"
                             *ngIf="isInvalid(aboutUsForm, 'heroTitle')">
 
-                            Hero title is required.
-
-                        </div>
+                            {{ 'Hero title is required.' | t }}</div>
 
                     </div>
 
@@ -107,8 +97,7 @@
 
                         <label class="form-label">
 
-                            Hero Subtitle
-                            <span class="required">*</span>
+                            {{ 'Hero Subtitle' | t }}<span class="required">*</span>
 
                         </label>
 
@@ -116,7 +105,7 @@
                             type="text"
                             class="form-control"
                             formControlName="heroSubtitle"
-                            placeholder="Enter hero subtitle"
+                            [placeholder]="'Enter hero subtitle' | t"
                             maxlength="500"
                             [class.is-invalid]="isInvalid(aboutUsForm, 'heroSubtitle')" />
 
@@ -124,9 +113,7 @@
                             class="invalid-feedback"
                             *ngIf="isInvalid(aboutUsForm, 'heroSubtitle')">
 
-                            Hero subtitle is required.
-
-                        </div>
+                            {{ 'Hero subtitle is required.' | t }}</div>
 
                     </div>
 
@@ -135,8 +122,7 @@
 
                         <label class="form-label">
 
-                            Hero Image
-                            <span class="required">*</span>
+                            {{ 'Hero Image' | t }}<span class="required">*</span>
 
                         </label>
 
@@ -149,7 +135,7 @@
 
                                     <img
                                         [src]="imagePreviewUrl"
-                                        alt="Hero Image Preview" />
+                                        [alt]="'Hero Image Preview' | t" />
 
                                 </ng-container>
 
@@ -163,8 +149,7 @@
                                         </i>
 
                                         <span>
-                                            No image selected
-                                        </span>
+                                            {{ 'No image selected' | t }}</span>
 
                                     </div>
 
@@ -183,9 +168,7 @@
                                         aria-hidden="true">
                                     </i>
 
-                                    Choose Image
-
-                                    <input
+                                    {{ 'Choose Image' | t }}<input
                                         type="file"
                                         hidden
                                         accept="image/*"
@@ -206,9 +189,7 @@
                                             role="status">
                                         </span>
 
-                                        Uploading...
-
-                                    </ng-container>
+                                        {{ 'Uploading...' | t }}</ng-container>
 
                                     <ng-template #uploadButtonText>
 
@@ -217,9 +198,7 @@
                                             aria-hidden="true">
                                         </i>
 
-                                        Upload
-
-                                    </ng-template>
+                                        {{ 'Upload' | t }}</ng-template>
 
                                 </button>
 
@@ -279,25 +258,20 @@
                                         aria-hidden="true">
                                     </i>
 
-                                    Remove
-
-                                </button>
+                                    {{ 'Remove' | t }}</button>
 
                             </div>
 
                         </div>
 
                         <span class="form-hint">
-                            Select an image and upload it before saving About Us.
-                        </span>
+                            {{ 'Select an image and upload it before saving About Us.' | t }}</span>
 
                         <div
                             class="invalid-feedback d-block"
                             *ngIf="isInvalid(aboutUsForm, 'heroImageUrl')">
 
-                            Please upload a hero image before saving.
-
-                        </div>
+                            {{ 'Please upload a hero image before saving.' | t }}</div>
 
                     </div>
 
@@ -306,8 +280,7 @@
 
                         <label class="form-label">
 
-                            Story Title
-                            <span class="required">*</span>
+                            {{ 'Story Title' | t }}<span class="required">*</span>
 
                         </label>
 
@@ -315,7 +288,7 @@
                             type="text"
                             class="form-control"
                             formControlName="storyTitle"
-                            placeholder="Enter story title"
+                            [placeholder]="'Enter story title' | t"
                             maxlength="200"
                             [class.is-invalid]="isInvalid(aboutUsForm, 'storyTitle')" />
 
@@ -323,9 +296,7 @@
                             class="invalid-feedback"
                             *ngIf="isInvalid(aboutUsForm, 'storyTitle')">
 
-                            Story title is required.
-
-                        </div>
+                            {{ 'Story title is required.' | t }}</div>
 
                     </div>
 
@@ -334,15 +305,13 @@
 
                         <label class="form-label">
 
-                            Story Description
-
-                        </label>
+                            {{ 'Story Description' | t }}</label>
 
                         <textarea
                             class="form-control story-textarea"
                             formControlName="storyDescription"
                             rows="6"
-                            placeholder="Enter story description">
+                            [placeholder]="'Enter story description' | t">
                         </textarea>
 
                     </div>
@@ -362,18 +331,16 @@
                     <div>
 
                         <span class="section-label">
-                            Features
-                        </span>
+                            {{ 'Features' | t }}</span>
 
                         <h4 class="section-title">
 
-                            {{ editingFeatureIndex !== null ? 'Edit Feature' : 'Add Feature' }}
+                            {{ (editingFeatureIndex !== null ? 'Edit Feature' : 'Add Feature') | t }}
 
                         </h4>
 
                         <p class="section-description mb-0">
-                            Add multiple features to your About Us page.
-                        </p>
+                            {{ 'Add multiple features to your About Us page.' | t }}</p>
 
                     </div>
 
@@ -390,8 +357,7 @@
 
                             <label class="form-label">
 
-                                Feature Title
-                                <span class="required">*</span>
+                                {{ 'Feature Title' | t }}<span class="required">*</span>
 
                             </label>
 
@@ -399,7 +365,7 @@
                                 type="text"
                                 class="form-control"
                                 formControlName="title"
-                                placeholder="Enter feature title"
+                                [placeholder]="'Enter feature title' | t"
                                 maxlength="200"
                                 [class.is-invalid]="isInvalid(featureForm, 'title')" />
 
@@ -407,9 +373,7 @@
                                 class="invalid-feedback"
                                 *ngIf="isInvalid(featureForm, 'title')">
 
-                                Feature title is required.
-
-                            </div>
+                                {{ 'Feature title is required.' | t }}</div>
 
                         </div>
 
@@ -418,8 +382,7 @@
 
                             <label class="form-label">
 
-                                Icon
-                                <span class="required">*</span>
+                                {{ 'Icon' | t }}<span class="required">*</span>
 
                             </label>
 
@@ -434,7 +397,7 @@
                                         *ngFor="let icon of iconOptions"
                                         [value]="icon.value">
 
-                                        {{ icon.label }}
+                                        {{ (icon.label) | t }}
 
                                     </option>
 
@@ -455,9 +418,7 @@
                                 class="invalid-feedback d-block"
                                 *ngIf="isInvalid(featureForm, 'icon')">
 
-                                Icon is required.
-
-                            </div>
+                                {{ 'Icon is required.' | t }}</div>
 
                         </div>
 
@@ -466,8 +427,7 @@
 
                             <label class="form-label">
 
-                                Feature Description
-                                <span class="required">*</span>
+                                {{ 'Feature Description' | t }}<span class="required">*</span>
 
                             </label>
 
@@ -475,7 +435,7 @@
                                 class="form-control"
                                 formControlName="description"
                                 rows="4"
-                                placeholder="Enter feature description"
+                                [placeholder]="'Enter feature description' | t"
                                 [class.is-invalid]="isInvalid(featureForm, 'description')">
                             </textarea>
 
@@ -483,9 +443,7 @@
                                 class="invalid-feedback"
                                 *ngIf="isInvalid(featureForm, 'description')">
 
-                                Feature description is required.
-
-                            </div>
+                                {{ 'Feature description is required.' | t }}</div>
 
                         </div>
 
@@ -494,8 +452,7 @@
 
                             <label class="form-label">
 
-                                Display Order
-                                <span class="required">*</span>
+                                {{ 'Display Order' | t }}<span class="required">*</span>
 
                             </label>
 
@@ -510,9 +467,7 @@
                                 class="invalid-feedback"
                                 *ngIf="isInvalid(featureForm, 'displayOrder')">
 
-                                Display order must be at least 1.
-
-                            </div>
+                                {{ 'Display order must be at least 1.' | t }}</div>
 
                         </div>
 
@@ -535,11 +490,9 @@
                                 aria-hidden="true">
                             </i>
 
-                            {{
-                                editingFeatureIndex !== null
+                            {{ (editingFeatureIndex !== null
                                     ? 'Update Feature'
-                                    : 'Add Feature'
-                            }}
+                                    : 'Add Feature') | t }}
 
                         </button>
 
@@ -554,9 +507,7 @@
                                 aria-hidden="true">
                             </i>
 
-                            Cancel
-
-                        </button>
+                            {{ 'Cancel' | t }}</button>
 
                     </div>
 
@@ -576,16 +527,13 @@
                     <div>
 
                         <span class="section-label">
-                            Feature List
-                        </span>
+                            {{ 'Feature List' | t }}</span>
 
                         <h4 class="section-title">
-                            About Us Features
-                        </h4>
+                            {{ 'About Us Features' | t }}</h4>
 
                         <p class="section-description mb-0">
-                            Review, edit or remove features before saving.
-                        </p>
+                            {{ 'Review, edit or remove features before saving.' | t }}</p>
 
                     </div>
 
@@ -611,24 +559,19 @@
                                 </th>
 
                                 <th class="icon-column">
-                                    Icon
-                                </th>
+                                    {{ 'Icon' | t }}</th>
 
                                 <th>
-                                    Title
-                                </th>
+                                    {{ 'Title' | t }}</th>
 
                                 <th>
-                                    Description
-                                </th>
+                                    {{ 'Description' | t }}</th>
 
                                 <th class="order-column">
-                                    Order
-                                </th>
+                                    {{ 'Order' | t }}</th>
 
                                 <th class="actions-column">
-                                    Actions
-                                </th>
+                                    {{ 'Actions' | t }}</th>
 
                             </tr>
 
@@ -663,7 +606,7 @@
                                 <td>
 
                                     <span class="feature-title">
-                                        {{ feature.title }}
+                                        {{ (feature.title) | t }}
                                     </span>
 
                                 </td>
@@ -671,7 +614,7 @@
                                 <td>
 
                                     <span class="feature-description">
-                                        {{ feature.description }}
+                                        {{ (feature.description) | t }}
                                     </span>
 
                                 </td>
@@ -687,8 +630,8 @@
                                         <button
                                             type="button"
                                             class="action-button edit-button"
-                                            title="Edit Feature"
-                                            aria-label="Edit Feature"
+                                            [title]="'Edit Feature' | t"
+                                            [attr.aria-label]="'Edit Feature' | t"
                                             (click)="editFeature(i)">
 
                                             <i
@@ -701,8 +644,8 @@
                                         <button
                                             type="button"
                                             class="action-button delete-button"
-                                            title="Delete Feature"
-                                            aria-label="Delete Feature"
+                                            [title]="'Delete Feature' | t"
+                                            [attr.aria-label]="'Delete Feature' | t"
                                             (click)="deleteFeature(i)">
 
                                             <i
@@ -739,12 +682,10 @@
                     </div>
 
                     <h5>
-                        No Features Added
-                    </h5>
+                        {{ 'No Features Added' | t }}</h5>
 
                     <p class="mb-0">
-                        Add a feature using the form above.
-                    </p>
+                        {{ 'Add a feature using the form above.' | t }}</p>
 
                 </div>
 
@@ -767,9 +708,7 @@
                         aria-hidden="true">
                     </i>
 
-                    Cancel
-
-                </button>
+                    {{ 'Cancel' | t }}</button>
 
                 <button
                     type="submit"
@@ -793,11 +732,9 @@
                         aria-hidden="true">
                     </i>
 
-                    {{
-                        isSubmitting
+                    {{ (isSubmitting
                             ? 'Saving...'
-                            : (isEditMode ? 'Update About Us' : 'Create About Us')
-                    }}
+                            : (isEditMode ? 'Update About Us' : 'Create About Us')) | t }}
 
                 </button>
 

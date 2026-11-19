@@ -1,3 +1,4 @@
+import { TranslationPipe, LocalDatePipe } from '../../../core/i18n/language';
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -9,8 +10,7 @@ import { Booking } from '../Booking/models/booking.model';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [TranslationPipe, LocalDatePipe, CommonModule,
     RouterLink
   ],
   templateUrl: './admin-dashboard.component.html',
