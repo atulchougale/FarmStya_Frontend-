@@ -143,13 +143,23 @@ export const routes: Routes = [
       {
         path: 'my-bookings',
         loadComponent: () =>
-          import('./features/public/booking/my-booking/my-booking.component').then((c) => c.MyBookingComponent),
+          import('./features/public/booking/my-booking/my-booking.component').then(
+            (c) => c.MyBookingComponent,
+          ),
         canActivate: [authGuard],
       },
       {
         path: 'my-bookings/:bookingId',
         loadComponent: () =>
-          import('./features/public/booking/customer-booking-details/customer-booking-details.component').then(c => c.CustomerBookingDetailsComponent),
+          import('./features/public/booking/customer-booking-details/customer-booking-details.component').then(
+            (c) => c.CustomerBookingDetailsComponent,
+          ),
+        canActivate: [authGuard],
+      },
+
+      {
+        path: 'profile/edit',
+        loadComponent: () => import('./features/profile/edit-profile/edit-profile.component').then(c => c.EditProfileComponent),
         canActivate: [authGuard],
       },
 
@@ -181,6 +191,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
+      {path: 'accounts', canActivate: [authGuard], loadChildren: () => import('./features/admin/accounts/accounts.routes').then(m => m.ACCOUNTS_ROUTES)},
       // Admin Dashboard
       {
         path: 'dashboard',
@@ -188,48 +199,110 @@ export const routes: Routes = [
           import('./features/admin/admin-dashboard/admin-dashboard.component').then(
             (c) => c.AdminDashboardComponent,
           ),
-        canActivate: [authGuard],
+        canActivate: [authGuard, bookingAdministrationGuard],
       },
 
       // Gallery List
       {
-        path: 'reports', canActivate: [authGuard, bookingAdministrationGuard],
+        path: 'reports',
+        canActivate: [authGuard, bookingAdministrationGuard],
         children: [
-          { path: '', loadComponent: () => import('./features/admin/reporting/pages/reports.component').then(c => c.ReportsComponent), canActivate: [reportingGuard] },
-          { path: 'bookings', data: { reportKey: 'bookings' }, loadComponent: () => import('./features/admin/reporting/pages/booking-report.component').then(c => c.BookingReportComponent), canActivate: [reportingGuard] },
-          { path: 'revenue', data: { reportKey: 'revenue' }, loadComponent: () => import('./features/admin/reporting/pages/revenue-report.component').then(c => c.RevenueReportComponent), canActivate: [reportingGuard] },
-          { path: 'customers', data: { reportKey: 'customers' }, loadComponent: () => import('./features/admin/reporting/pages/customer-report.component').then(c => c.CustomerReportComponent), canActivate: [reportingGuard] },
-          { path: 'occupancy', data: { reportKey: 'occupancy' }, loadComponent: () => import('./features/admin/reporting/pages/occupancy-report.component').then(c => c.OccupancyReportComponent), canActivate: [reportingGuard] }
-        ]
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/admin/reporting/pages/reports.component').then(
+                (c) => c.ReportsComponent,
+              ),
+            canActivate: [reportingGuard],
+          },
+          {
+            path: 'bookings',
+            data: { reportKey: 'bookings' },
+            loadComponent: () =>
+              import('./features/admin/reporting/pages/booking-report.component').then(
+                (c) => c.BookingReportComponent,
+              ),
+            canActivate: [reportingGuard],
+          },
+          {
+            path: 'revenue',
+            data: { reportKey: 'revenue' },
+            loadComponent: () =>
+              import('./features/admin/reporting/pages/revenue-report.component').then(
+                (c) => c.RevenueReportComponent,
+              ),
+            canActivate: [reportingGuard],
+          },
+          {
+            path: 'customers',
+            data: { reportKey: 'customers' },
+            loadComponent: () =>
+              import('./features/admin/reporting/pages/customer-report.component').then(
+                (c) => c.CustomerReportComponent,
+              ),
+            canActivate: [reportingGuard],
+          },
+          {
+            path: 'occupancy',
+            data: { reportKey: 'occupancy' },
+            loadComponent: () =>
+              import('./features/admin/reporting/pages/occupancy-report.component').then(
+                (c) => c.OccupancyReportComponent,
+              ),
+            canActivate: [reportingGuard],
+          },
+        ],
       },
       {
         path: 'booking',
         loadComponent: () =>
-          import('./features/admin/Booking/booking-view/booking-view.component').then((c) => c.BookingViewComponent),
+          import('./features/admin/Booking/booking-view/booking-view.component').then(
+            (c) => c.BookingViewComponent,
+          ),
         canActivate: [authGuard, bookingAdministrationGuard],
       },
       { path: 'bookings', redirectTo: 'booking', pathMatch: 'full' },
+      { path: 'bookings/bookings', redirectTo: 'booking', pathMatch: 'full' },
       {
         path: 'bookings/create',
-        loadComponent: () => import('./features/admin/Booking/create-booking/admin-create-booking.component').then(c=>c.AdminCreateBookingComponent),
-        canActivate: [authGuard,bookingAdministrationGuard,adminBookingCreateGuard],
+        loadComponent: () =>
+          import('./features/admin/Booking/create-booking/admin-create-booking.component').then(
+            (c) => c.AdminCreateBookingComponent,
+          ),
+        canActivate: [
+          authGuard,
+          bookingAdministrationGuard,
+          adminBookingCreateGuard,
+        ],
       },
       {
         path: 'booking/:bookingId/checkout',
-        loadComponent: () => import('./features/admin/Booking/checkout/checkout.component').then(c => c.CheckoutComponent),
+        loadComponent: () =>
+          import('./features/admin/Booking/checkout/checkout.component').then(
+            (c) => c.CheckoutComponent,
+          ),
         canActivate: [authGuard, bookingAdministrationGuard],
       },
       {
         path: 'booking/:bookingId',
         loadComponent: () =>
-          import('./features/admin/Booking/booking-details/booking-details.component').then((c) => c.BookingDetailsComponent),
+          import('./features/admin/Booking/booking-details/booking-details.component').then(
+            (c) => c.BookingDetailsComponent,
+          ),
         canActivate: [authGuard, bookingAdministrationGuard],
       },
 
       {
         path: 'website-settings/pricing',
-        loadComponent: () => import('./features/admin/pricing/pricing-management.component').then(c => c.PricingManagementComponent),
-        canActivate: [authGuard, bookingAdministrationGuard, pricingManagementGuard],
+        loadComponent: () =>
+          import('./features/admin/pricing/pricing-management.component').then(
+            (c) => c.PricingManagementComponent,
+          ),
+        canActivate: [
+          authGuard,
+          bookingAdministrationGuard,
+          pricingManagementGuard,
+        ],
       },
 
       {

@@ -1,3 +1,6 @@
+import { AlertService } from '../../../../core/services/alert.service';
+import { PublicSiteService } from '../../../../core/services/public-site.service';
+import { VoucherIconComponent } from '../../../../shared/components/voucher-icon/voucher-icon.component';
 import { ADMIN_BOOKING_CONTEXT } from '../../../../core/services/admin-booking-context';
 import { AuthService } from '../../../../core/services/auth.service';
 import { TranslationPipe, LocalDatePipe, LanguageService } from '../../../../core/i18n/language';
@@ -94,7 +97,7 @@ interface BookingDraft {
 
   standalone: true,
 
-  imports: [TranslationPipe, LocalDatePipe, CommonModule, FormsModule, RouterLink],
+  imports: [VoucherIconComponent,TranslationPipe, LocalDatePipe, CommonModule, FormsModule, RouterLink],
 
   templateUrl: './booking-page.component.html',
 
@@ -104,6 +107,31 @@ export class BookingPageComponent implements OnInit, OnDestroy {
   private readonly admin = injectLanguage(ADMIN_BOOKING_CONTEXT, { optional: true });
   private readonly auth = injectLanguage(AuthService);
   readonly language = injectLanguage(LanguageService);
+  private readonly alerts = injectLanguage(AlertService);
+  private readonly publicSite = injectLanguage(PublicSiteService);
+  get siteName(): string { return this.publicSite.currentFarmHouseName ?? 'FarmStay'; }
+  get siteLocation(): string { return [this.publicSite.currentSite?.taluka,this.publicSite.currentSite?.district].filter(Boolean).join(' · '); }
+  readonly summaryImage = '/assets/images/about/farmhouse-story.png';
+  get selectedStayDays(): number {
+    return this.checkInDate && this.checkOutDate ? Math.max(0,Math.round((this.parseDateKey(this.checkOutDate).getTime()-this.parseDateKey(this.checkInDate).getTime())/86400000)) : 0;
+  }
+  rateFor(key: string): BookingRate | undefined { return this.bookingRates.find(r => r.pricingKey === key); }
+  get stepHeading(): string { return ['Your Details','Who is joining your stay?','Select Your Stay','Event Details','Review Your Booking','Review & Submit'][this.currentStep-1]; }
+  nextCalendarDays: BookingCalendarDay[] = [];
+  get calendarPanels() { return [
+    { title: this.calendarMonth.toLocaleDateString(this.language.locale,{month:'long',year:'numeric'}), days:this.calendarDays },
+    { title: new Date(this.calendarMonth.getFullYear(),this.calendarMonth.getMonth()+1,1).toLocaleDateString(this.language.locale,{month:'long',year:'numeric'}), days:this.nextCalendarDays }
+  ]; }
+  private getCalendarPair(month: number, year: number) {
+    const next = new Date(year,month,1);
+    return forkJoin([this.bookingCalendarService.getCalendarMonth(month,year),this.bookingCalendarService.getCalendarMonth(next.getMonth()+1,next.getFullYear())]).pipe(map(([first,second]) => {
+      if (!first.success || !first.data || !second.success || !second.data) return { ...first,success:false,message:first.success?second.message:first.message,data:null };
+      if (first.data.month !== month || first.data.year !== year || second.data.month !== next.getMonth()+1 || second.data.year !== next.getFullYear() || first.data.farmHouseId !== second.data.farmHouseId)
+        return { ...first,success:false,message:'Unable to load calendar. Please try again.',data:null };
+      return { ...first,data:{ ...first.data,bookedDates:[...first.data.bookedDates,...second.data.bookedDates],reservedDates:[...first.data.reservedDates,...second.data.reservedDates] } };
+    }));
+  }
+
   readonly bookingTypes = [
     { value: 'NormalEvent', label: 'Normal Event', rateKey: 'NORMAL_EVENT_DAILY' },
     { value: 'DecorationEvent', label: 'Event With Decoration', rateKey: 'DECORATION_EVENT_DAILY' },
@@ -172,6 +200,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
             this.completeBooking(response.data);
           } else {
             this.errorMessage = response.message || 'Could not submit your booking. Please try again.';
+            void this.alerts.error('Booking could not be submitted',this.errorMessage);
           }
         },
         error: (error) => {
@@ -185,6 +214,17 @@ export class BookingPageComponent implements OnInit, OnDestroy {
           this.errorMessage = this.submissionUncertain
             ? 'We could not confirm whether your booking was saved. Check My Bookings before starting another request.'
             : error.error?.message ?? 'Could not submit your booking. Please try again.';
+          const code=error.error?.data?.code;
+          if (code === 'PRICING_CHANGED') void this.alerts.warning('Pricing has changed','Review the updated amounts before submitting your booking again.');
+          else if (code !== 'HOLD_EXPIRED') {
+            if (this.submissionUncertain) {
+              void this.alerts.show({icon:'warning',title:'Check your booking status',text:this.errorMessage,
+                confirmButtonText:'View My Bookings',showCancelButton:true}).then(result=>{
+                  if(result.isConfirmed) void this.router.navigate([this.admin?'/admin/bookings':'/my-bookings']);
+                });
+            } else void this.alerts.error('Booking could not be submitted',this.errorMessage);
+          }
+
         },
       });
   }
@@ -230,12 +270,12 @@ export class BookingPageComponent implements OnInit, OnDestroy {
       showDenyButton: true,
       showCloseButton: true,
       confirmButtonText: this.language.translate('View My Booking'),
-      denyButtonText: 'Copy reference',
+      denyButtonText: this.language.translate('Copy reference'),
       confirmButtonColor: '#2e3b27',
       preDeny: async () => {
         try {
           await navigator.clipboard.writeText(booking.bookingReference);
-          Swal.getDenyButton()!.textContent = 'Copied';
+          Swal.getDenyButton()!.textContent = this.language.translate('Copied');
         } catch {
           Swal.getInput()?.select();
           Swal.showValidationMessage(this.language.translate('Select and copy the booking reference shown above.'));
@@ -474,6 +514,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCustomerDetails();
+    if (this.admin || this.getStoredAccessToken()) this.loadBookingRates();
     if (!this.admin && this.getStoredAccessToken()) {
       this.auth.getProfile().subscribe({
         next: response => {
@@ -493,8 +534,9 @@ export class BookingPageComponent implements OnInit, OnDestroy {
     // Later steps depend on a currently held stay and an event selection.
     this.currentStep = Math.min(this.currentStep, 3);
 
-    // Recover date reservation from backend.
-    this.recoverActiveReservations();
+    // Only an authenticated account can recover its existing hold.
+    if (this.admin || this.getStoredAccessToken()) this.recoverActiveReservations();
+    else this.loadCalendarMonth();
 
     this.startCalendarAutoRefresh();
   }
@@ -585,7 +627,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
     const month = this.calendarMonth.getMonth() + 1;
     const year = this.calendarMonth.getFullYear();
 
-    this.bookingCalendarService.getCalendarMonth(month, year).subscribe({
+    this.getCalendarPair(month, year).subscribe({
       next: (response) => {
         // Ignore response if user has navigated to another month or step.
         const currentMonth = this.calendarMonth.getMonth() + 1;
@@ -678,9 +720,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
 
     const year = this.calendarMonth.getFullYear();
 
-    this.bookingCalendarService
-
-      .getCalendarMonth(month, year)
+    this.getCalendarPair(month, year)
 
       .pipe(finalize(() => (this.loadingCalendar = false)))
 
@@ -951,6 +991,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
 
             this.errorMessage =
               response.message || 'Unable to reserve these dates.';
+            void this.alerts.error('Could not reserve dates',this.errorMessage);
 
             this.checkOutDate = null;
 
@@ -973,6 +1014,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
           this.startReservationCountdown();
 
           this.successMessage = 'Dates temporarily reserved successfully.';
+          this.alerts.toast('Dates reserved for 10 minutes');
 
           // Refresh the calendar so other reservations are reflected.
 
@@ -989,6 +1031,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
           this.errorMessage =
             error?.error?.message ||
             'Reservation failed. Please select your dates again.';
+          void this.alerts.error('Could not reserve dates',this.errorMessage);
 
           this.buildCalendarDays();
 
@@ -1171,6 +1214,8 @@ export class BookingPageComponent implements OnInit, OnDestroy {
   }
 
   private expireReservation(): void {
+    if (this.reservationExpired) return;
+    const hadHold = !!this.selectionId || !!this.reservationExpiresAt;
     this.heldReservationIds.clear();
     this.submittedBookingPayload = null;
     this.stopReservationCountdown();
@@ -1189,6 +1234,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
     this.successMessage = '';
     this.buildCalendarDays();
     this.loadCalendarMonth();
+    if (hadHold) void this.alerts.warning('Reservation Expired','Your selected dates are no longer reserved. Please select your dates again.');
   }
 
   private setHeldReservationIds(dates: string[], ids: number[]): void {
@@ -1215,8 +1261,13 @@ export class BookingPageComponent implements OnInit, OnDestroy {
   }
 
   private buildCalendarDays(): void {
-    const year = this.calendarMonth.getFullYear();
-    const month = this.calendarMonth.getMonth();
+    this.calendarDays = this.daysForMonth(this.calendarMonth);
+    this.nextCalendarDays = this.daysForMonth(new Date(this.calendarMonth.getFullYear(),this.calendarMonth.getMonth()+1,1));
+  }
+
+  private daysForMonth(monthDate: Date): BookingCalendarDay[] {
+    const year = monthDate.getFullYear();
+    const month = monthDate.getMonth();
 
     const firstDay = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -1301,7 +1352,7 @@ export class BookingPageComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.calendarDays = days;
+    return days;
   }
 
   private createEmptyDay(): BookingCalendarDay {

@@ -1,95 +1,18 @@
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { TranslationPipe } from '../../../core/i18n/language';
-import { Component, inject, OnInit } from '@angular/core';
-
 import { AuthService } from '../../../core/services/auth.service';
+import { TokenService } from '../../../core/services/token.service';
 import { Profile } from '../models/profile.model';
-import { Router } from '@angular/router';
-
-@Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [TranslationPipe, FormsModule],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
-})
+@Component({selector:'app-profile',standalone:true,imports:[CommonModule,TranslationPipe,RouterLink],templateUrl:'./profile.component.html',styleUrl:'./profile.component.css'})
 export class ProfileComponent implements OnInit {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
-  // ============================================
-  // Component State
-  // ============================================
-
-  profile: Profile | null = null;
-
-  isLoading = false;
-  emailDraft = '';
-  savingEmail = false;
-  emailMessage = '';
-  emailError = '';
-
-  saveEmail(): void {
-    if (this.savingEmail) return;
-    this.savingEmail = true;
-    this.emailMessage = '';
-    this.emailError = '';
-    this.authService.updateEmail(this.emailDraft.trim() || null).subscribe({
-      next: response => {
-        this.savingEmail = false;
-        this.emailMessage = response.message;
-        this.getProfile();
-      },
-      error: error => { this.savingEmail = false; this.emailError = error.error?.message ?? 'Could not update email.'; }
-    });
-  }
-
-  refreshProfile(): void { this.getProfile(); }
-
-  // ============================================
-  // Initial Load
-  // ============================================
-
-  ngOnInit(): void {
-    this.getProfile();
-  }
-
-  goToChangePassword(): void {
-    this.router.navigate(['/change-password']);
-  }
-  // ============================================
-  // Get Profile
-  // ============================================
-
-  private getProfile(): void {
-    this.isLoading = true;
-
-    this.authService.getProfile().subscribe({
-      // ==========================================
-      // API Success
-      // ==========================================
-
-      next: (response) => {
-        this.isLoading = false;
-
-        if (!response?.success) {
-          console.error('Get Profile Failed:', response?.message);
-          return;
-        }
-
-        this.profile = response.data;
-        this.emailDraft = response.data.email ?? "";
-      },
-
-      // ==========================================
-      // HTTP Error
-      // ==========================================
-
-      error: (error: any) => {
-        this.isLoading = false;
-
-        console.error('Get Profile Error:', error);
-      },
-    });
-  }
+ @Input() embedded = false;
+ private auth=inject(AuthService); private tokens=inject(TokenService);
+ profile:Profile|null=null; isLoading=false; error=''; message=''; sending=false;
+ get initials():string{return (this.profile?.fullName??'').split(/\s+/).filter(Boolean).slice(0,2).map(n=>n[0]).join('').toUpperCase();}
+ ngOnInit():void{this.load();}
+ load():void{this.isLoading=true;this.error='';this.auth.getProfile().pipe(finalize(()=>this.isLoading=false)).subscribe({next:r=>{if(r.success){this.profile=r.data;this.tokens.updateProfileDetails(r.data);}else this.error=r.message;},error:e=>this.error=e.error?.message??'Unable to load profile.'});}
+ verifyEmail():void{if(!this.profile?.email||this.profile.isEmailVerified||this.sending)return;this.sending=true;this.message='';this.auth.updateEmail(this.profile.email).pipe(finalize(()=>this.sending=false)).subscribe({next:r=>this.message=r.message,error:e=>this.error=e.error?.message??'Unable to send verification email.'});}
 }

@@ -1,26 +1,26 @@
-<main class="pricing-page">
-  <header class="d-flex justify-content-between align-items-center gap-3 mb-4">
-    <div><h1>{{ 'Pricing' | t }}</h1><p class="text-muted mb-0">{{ 'Manage daily booking and event rates in INR.' | t }}</p></div>
-    <button *ngIf="canCreate && !draft" class="btn btn-success" type="button" [disabled]="saving" (click)="create()">{{ 'Add pricing' | t }}</button>
+<main class="pricing-page admin-records">
+  <header class="page-header">
+    <div><h1><i class="bi bi-tags admin-page-icon" aria-hidden="true"></i>{{ 'Pricing' | t }}</h1><p class="text-muted mb-0">{{ 'Manage daily booking and event rates in INR.' | t }}</p></div>
+    <button *ngIf="canCreate && !draft" class="btn btn-success" type="button" [disabled]="saving" (click)="create()"><i class="bi bi-plus-lg" aria-hidden="true"></i>{{ 'Add pricing' | t }}</button>
   </header>
   <div *ngIf="error" class="alert alert-danger" role="alert">{{ (error) | t }}</div>
   <div *ngIf="notice" class="alert alert-success" role="status">{{ (notice) | t }}</div>
-  <form *ngIf="draft" #form="ngForm" (ngSubmit)="save()" class="rate-card mb-4">
+  <form *ngIf="draft" #form="ngForm" (ngSubmit)="save()" class="rate-card pricing-form mb-4">
     <h2 class="h5 mb-3">{{ (draft.pricingId ? 'Edit pricing' : 'Create pricing') | t }}</h2>
     <div class="row g-3">
       <div class="col-md-6">
-        <label class="form-label" for="pricing-name">{{ 'Name' | t }}</label>
+        <label class="form-label" for="pricing-name">{{ 'Name' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
         <input id="pricing-name" name="name" class="form-control" required maxlength="150" [(ngModel)]="draft.pricingName" [disabled]="saving">
       </div>
       <div class="col-md-6">
-        <label class="form-label" for="pricing-key">{{ 'Pricing key' | t }}</label>
+        <label class="form-label" for="pricing-key">{{ 'Pricing key' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
         <input id="pricing-key" name="key" class="form-control" list="pricing-keys" required maxlength="50"
           pattern="[A-Z][A-Z0-9_]{0,49}" [(ngModel)]="draft.pricingKey" [disabled]="saving">
         <datalist id="pricing-keys"><option *ngFor="let key of keys" [value]="key"></option></datalist>
         <small class="text-muted">{{ 'Choose a booking key or enter a unique uppercase key.' | t }}</small>
       </div>
       <div class="col-md-6">
-        <label class="form-label" for="pricing-amount">{{ 'Daily amount (INR)' | t }}</label>
+        <label class="form-label" for="pricing-amount">{{ 'Daily amount (INR)' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
         <input id="pricing-amount" name="price" type="number" class="form-control" required
           [min]="draft.pricingKey === 'BOOKING_DAILY' ? 0.01 : 0" max="100000000" step="0.01" [(ngModel)]="draft.price" [disabled]="saving">
       </div>
@@ -28,28 +28,24 @@
         <label class="form-check mt-4"><input class="form-check-input" name="active" type="checkbox" [(ngModel)]="draft.isActive" [disabled]="saving"> {{ 'Active' | t }}</label>
       </div>
     </div>
-    <div class="d-flex justify-content-end gap-2 mt-4">
+    <div class="form-actions justify-content-end">
       <button type="button" class="btn btn-outline-secondary" [disabled]="saving" (click)="draft = null">{{ 'Cancel' | t }}</button>
       <button type="submit" class="btn btn-success" [disabled]="form.invalid || saving || !draft.pricingName.trim()">{{ (saving ? 'Saving…' : draft.pricingId ? 'Update pricing' : 'Create pricing') | t }}</button>
     </div>
   </form>
   <p *ngIf="loading" role="status">{{ 'Loading pricing…' | t }}</p>
-  <div *ngIf="!loading" class="table-responsive bg-white border rounded-3">
-    <table class="table align-middle mb-0">
-      <thead><tr><th>{{ 'Name' | t }}</th><th>{{ 'Pricing key' | t }}</th><th>{{ 'Daily rate' | t }}</th><th>{{ 'Status' | t }}</th><th class="text-end">{{ 'Actions' | t }}</th></tr></thead>
-      <tbody>
-        <tr *ngFor="let entry of entries">
-          <td class="fw-semibold">{{ (entry.pricingName) | t }}</td>
-          <td><code>{{ entry.pricingKey }}</code></td>
-          <td>{{ entry.price | currency:entry.currencyCode }}</td>
-          <td>{{ (entry.isActive ? 'Active' : 'Inactive') | t }}</td>
-          <td class="text-end text-nowrap">
-            <button *ngIf="canEdit" type="button" class="btn btn-sm btn-outline-success me-2" [disabled]="saving" (click)="edit(entry)">{{ 'Edit' | t }}</button>
-            <button *ngIf="canDelete" type="button" class="btn btn-sm btn-outline-danger" [disabled]="saving" (click)="remove(entry)">{{ 'Delete' | t }}</button>
-          </td>
-        </tr>
-        <tr *ngIf="!entries.length"><td colspan="5" class="text-center py-4 text-muted">{{ 'No pricing records. Add pricing to get started.' | t }}</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <section *ngIf="!loading" class="records-panel">
+    <header class="records-heading"><div><h3><i class="bi bi-tags" aria-hidden="true"></i>{{ 'Pricing' | t }}</h3><p>{{ 'Manage daily booking and event rates in INR.' | t }}</p></div><span class="records-count">{{ entries.length }} {{ 'records' | t }}</span></header>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="entries" class="pricing-table">
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>{{ 'Name' | t }}</th><td mat-cell *matCellDef="let entry"><span class="customer-name">{{ entry.pricingName | t }}</span></td></ng-container>
+        <ng-container matColumnDef="key"><th mat-header-cell *matHeaderCellDef>{{ 'Pricing key' | t }}</th><td mat-cell *matCellDef="let entry"><code class="pricing-key">{{ entry.pricingKey }}</code></td></ng-container>
+        <ng-container matColumnDef="rate"><th mat-header-cell *matHeaderCellDef class="amount-cell">{{ 'Daily rate' | t }}</th><td mat-cell *matCellDef="let entry" class="amount-cell">{{ entry.price | currency:entry.currencyCode }}</td></ng-container>
+        <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>{{ 'Status' | t }}</th><td mat-cell *matCellDef="let entry"><span class="record-status" [class.inactive]="!entry.isActive"><i class="bi" [class.bi-check-circle]="entry.isActive" [class.bi-pause-circle]="!entry.isActive" aria-hidden="true"></i>{{ (entry.isActive ? 'Active' : 'Inactive') | t }}</span></td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>{{ 'Actions' | t }}</th><td mat-cell *matCellDef="let entry"><div class="action-buttons"><button *ngIf="canEdit" type="button" class="btn btn-outline-primary" [disabled]="saving" (click)="edit(entry)"><i class="bi bi-pencil-square" aria-hidden="true"></i>{{ 'Edit' | t }}</button><button *ngIf="canDelete" type="button" class="btn btn-outline-danger" [disabled]="saving" (click)="remove(entry)"><i class="bi bi-trash3" aria-hidden="true"></i>{{ 'Delete' | t }}</button></div></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="pricingColumns"></tr><tr mat-row *matRowDef="let row; columns: pricingColumns"></tr>
+        <tr *matNoDataRow><td colspan="5" class="empty-state">{{ 'No pricing records. Add pricing to get started.' | t }}</td></tr>
+      </table>
+    </div>
+  </section>
 </main>

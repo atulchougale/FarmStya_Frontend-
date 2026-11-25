@@ -1,18 +1,18 @@
-<main class="reporting-page">
-  <header class="report-heading"><div><h1>{{ (definition?.title || 'Reports') | t }}</h1><p class="subtitle">{{ definition?.description | t }}</p></div>
+<main class="reporting-page admin-records">
+  <header class="report-heading"><div><h1><i class="bi bi-file-earmark-bar-graph admin-page-icon" aria-hidden="true"></i>{{ (definition?.title || 'Reports') | t }}</h1><p class="subtitle">{{ definition?.description | t }}</p></div>
     <a class="btn btn-outline-secondary" routerLink="/admin/reports">← {{ 'Reports' | t }}</a></header>
   <form class="filter-card" #filterForm="ngForm" (ngSubmit)="submit()">
-    <div class="filters">
+    <h2 class="filter-heading"><i class="bi bi-funnel" aria-hidden="true"></i>{{ 'Report Filters' | t }}</h2><div class="filters">
       <label>{{ 'Period' | t }}<select name="period" [(ngModel)]="filter.period" class="form-select">
         <option value="range">{{ 'Date range' | t }}</option><option value="month">{{ 'Month wise' | t }}</option>
         <option value="year">{{ 'Year wise' | t }}</option><option value="all">{{ 'All' | t }}</option></select></label>
       <ng-container *ngIf="filter.period === 'range'">
-        <label>{{ 'From date' | t }}<input type="date" name="fromDate" required [(ngModel)]="filter.fromDate" class="form-control"></label>
-        <label>{{ 'To date' | t }}<input type="date" name="toDate" required [(ngModel)]="filter.toDate" class="form-control"></label>
+        <label>{{ 'From date' | t }} <span class="required-marker" aria-hidden="true">*</span><input type="date" name="fromDate" required [(ngModel)]="filter.fromDate" class="form-control"></label>
+        <label>{{ 'To date' | t }} <span class="required-marker" aria-hidden="true">*</span><input type="date" name="toDate" required [(ngModel)]="filter.toDate" class="form-control"></label>
       </ng-container>
-      <label *ngIf="filter.period === 'month'">{{ 'Month' | t }}<select name="month" [(ngModel)]="filter.month" required class="form-select">
+      <label *ngIf="filter.period === 'month'">{{ 'Month' | t }} <span class="required-marker" aria-hidden="true">*</span><select name="month" [(ngModel)]="filter.month" required class="form-select">
         <option *ngFor="let month of months; index as i" [ngValue]="i+1">{{ month | t }}</option></select></label>
-      <label *ngIf="filter.period === 'month' || filter.period === 'year'">{{ 'Year' | t }}<input type="number" name="year" required min="1900" max="9998" [(ngModel)]="filter.year" class="form-control"></label>
+      <label *ngIf="filter.period === 'month' || filter.period === 'year'">{{ 'Year' | t }} <span class="required-marker" aria-hidden="true">*</span><input type="number" name="year" required min="1900" max="9998" [(ngModel)]="filter.year" class="form-control"></label>
       <ng-container *ngIf="reportKey === 'bookings'">
         <label>{{ 'Booking type' | t }}<select name="bookingType" [(ngModel)]="filter.bookingType" class="form-select">
           <option value="all">{{ 'All' | t }}</option><option value="normal">{{ 'Normal booking' | t }}</option><option value="event">{{ 'Event booking' | t }}</option></select></label>
@@ -21,9 +21,9 @@
       </ng-container>
     </div>
     <div class="report-actions">
-      <button type="submit" class="btn btn-success" [disabled]="filterForm.invalid || loading">{{ 'Submit' | t }}</button>
+      <button type="submit" class="btn btn-success" [disabled]="filterForm.invalid || loading"><i class="bi bi-funnel" aria-hidden="true"></i>{{ 'Submit' | t }}</button>
       <button *ngIf="definition?.canExport" type="button" class="btn btn-outline-danger" [disabled]="loading || searchPending || !!downloading || !data" (click)="download('pdf')"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> {{ (downloading === 'pdf' ? 'Preparing PDF…' : 'PDF') | t }}</button>
-      <button *ngIf="definition?.canExport" type="button" class="btn btn-outline-success" [disabled]="loading || searchPending || !!downloading || !data" (click)="download('excel')"><i class="bi bi-file-earmark-excel" aria-hidden="true"></i> {{ (downloading === 'excel' ? 'Preparing Excel…' : 'Excel') | t }}</button>
+      <button *ngIf="definition?.canExport" type="button" class="btn btn-outline-success export-excel" [disabled]="loading || searchPending || !!downloading || !data" (click)="download('excel')"><i class="bi bi-file-earmark-excel" aria-hidden="true"></i> {{ (downloading === 'excel' ? 'Preparing Excel…' : 'Excel') | t }}</button>
     </div>
     <p class="filter-note">{{ 'Submit applies filters. Downloads include all matching rows, not just the current page.' | t }}</p>
   </form>
@@ -31,7 +31,7 @@
   <p *ngIf="error" class="alert alert-danger" role="alert">{{ error | t }}</p>
   <p *ngIf="loading || searchPending" class="report-loading" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading report data…' | t }}</p>
   <ng-container *ngIf="data as result">
-    <p class="result-count">{{ result.periodLabel | t }} · {{ result.total | number }} {{ 'records' | t }}</p>
+    <section class="records-panel report-results"><header class="records-heading"><h2>{{ (definition?.title || 'Reports') | t }}</h2><p class="result-count">{{ result.periodLabel | t }} · {{ result.total | number }} {{ 'records' | t }}</p></header>
     <div class="report-table" [attr.aria-busy]="loading">
       <table mat-table [dataSource]="result.rows">
         <ng-container *ngFor="let column of result.columns" [matColumnDef]="column.key">
@@ -39,7 +39,7 @@
           <td mat-cell *matCellDef="let row">
             <ng-container [ngSwitch]="column.kind">
               <span *ngSwitchCase="'date'">{{ $any(row[column.key]) | localDate:'d MMM yyyy' }}</span>
-              <span *ngSwitchCase="'money'">{{ $any(row[column.key]) | currency:'INR' }}</span>
+              <span class="report-amount" *ngSwitchCase="'money'">{{ $any(row[column.key]) | currency:'INR' }}</span>
               <span *ngSwitchCase="'number'">{{ $any(row[column.key]) | number }}</span>
               <span *ngSwitchDefault>{{ (row[column.key] || '—') | t }}</span>
             </ng-container>
@@ -50,5 +50,6 @@
       </table>
     </div>
     <mat-paginator [length]="result.total" [pageIndex]="result.page-1" [pageSize]="result.pageSize" [pageSizeOptions]="[10,25,50,100]" [disabled]="loading" [attr.aria-label]="'Report pages' | t" (page)="page($event)" />
+    </section>
   </ng-container>
 </main>

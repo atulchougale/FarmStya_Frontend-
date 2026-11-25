@@ -1,0 +1,66 @@
+/* Shared global component styling. Existing feature-specific layout rules remain in component CSS. */
+body { background: var(--page-bg); }
+
+.fst-card, .card.fst-card {
+  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+.btn-primary, .fst-btn-primary {
+  color: var(--btn-primary-text) !important;
+  background: var(--btn-primary-bg) !important;
+  border-color: var(--btn-primary-border) !important;
+  font-weight: var(--font-weight-semibold);
+}
+.btn-primary:hover, .fst-btn-primary:hover {
+  color: var(--btn-primary-text) !important;
+  background: var(--btn-primary-bg-hover) !important;
+  border-color: var(--btn-primary-bg-hover) !important;
+}
+.btn-outline-primary, .fst-btn-outline-primary {
+  color: var(--primary-700) !important;
+  background: var(--surface) !important;
+  border-color: var(--primary-500) !important;
+}
+.btn-outline-primary:hover, .fst-btn-outline-primary:hover {
+  color: var(--primary-900) !important;
+  background: var(--primary-50) !important;
+}
+
+a { color: var(--link-color); }
+a:hover { color: var(--link-hover); }
+
+.form-control, .form-select, .fst-input {
+  color: var(--text);
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+}
+.form-control:focus, .form-select:focus, .fst-input:focus {
+  color: var(--text);
+  background-color: var(--input-bg);
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 .2rem var(--focus-ring);
+}
+
+.table { color: var(--text-body); }
+.table thead th { background: var(--table-header-bg); color: var(--text); }
+.table tbody tr:hover > * { background: var(--table-row-hover); }
+
+.fst-header { background: var(--header-bg); border-bottom: 1px solid var(--header-border); }
+.fst-sidebar { color: var(--sidebar-text); background: var(--sidebar-bg); }
+.fst-sidebar .nav-link { color: var(--sidebar-text); }
+.fst-sidebar .nav-link:hover { background: var(--sidebar-item-hover); }
+.fst-sidebar .nav-link.active {
+  color: var(--sidebar-item-active-text);
+  background: var(--sidebar-item-active-bg);
+  box-shadow: var(--sidebar-item-active-shadow);
+}
+
+.fst-badge-primary { color: var(--badge-primary-text); background: var(--badge-primary-bg); }
+.fst-status-success { color: var(--success-700); background: var(--success-100); }
+.fst-status-warning { color: var(--warning-700); background: var(--warning-100); }
+.fst-status-error { color: var(--error-700); background: var(--error-100); }
+.fst-status-info { color: var(--info-700); background: var(--info-100); }

@@ -13,7 +13,7 @@
    ========================================= */
 
 .amenity-page {
-  padding: 1.5rem 0;
+  padding:1.5rem 0;
 }
 
 .page-header {
@@ -36,11 +36,11 @@
 .message-count {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
+  gap:8px;
+  padding:8px 16px;
   border: 1px solid #e4ebe5;
-  border-radius: 12px;
-  background: #ffffff;
+  border-radius:8px;
+  background: var(--surface);
   flex-shrink: 0;
 }
 
@@ -55,10 +55,10 @@
   justify-content: center;
   min-width: 34px;
   height: 34px;
-  padding: 0 8px;
-  border-radius: 9px;
+  padding:0 8px;
+  border-radius:8px;
   background: #e9f4ec;
-  color: #28643b;
+  color: var(--primary-700);
   font-weight: 700;
 }
 
@@ -68,9 +68,9 @@
 
 .message-card {
   width: 100%;
-  background: #ffffff;
+  background: var(--surface);
   border: 1px solid #e7ece8;
-  border-radius: 14px;
+  border-radius:16px;
   overflow: hidden;
   box-shadow: 0 3px 14px rgba(31, 51, 36, 0.04);
 }
@@ -79,9 +79,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 20px 22px;
-  border-bottom: 1px solid #edf0ed;
+  gap:16px;
+  padding:16px 24px;
+  border-bottom: 1px solid var(--border);
 }
 
 .table-title-section {
@@ -89,7 +89,7 @@
 }
 
 .table-heading h5 {
-  color: #29382d;
+  color: var(--text);
   font-size: 1rem;
   font-weight: 700;
 }
@@ -106,14 +106,14 @@
 .search-box {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap:8px;
   width: 100%;
   max-width: 360px;
   min-height: 44px;
-  padding: 0 12px;
+  padding:0 8px;
   border: 1px solid #dce5dd;
-  border-radius: 9px;
-  background: #ffffff;
+  border-radius:8px;
+  background: var(--surface);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -134,11 +134,11 @@
   width: 100%;
   min-width: 0;
   height: 40px;
-  padding: 0;
+  padding:0;
   border: none;
   outline: none;
   background: transparent;
-  color: #29382d;
+  color: var(--text);
   font-family: inherit;
   font-size: 0.85rem;
 }
@@ -154,9 +154,9 @@
   width: 30px;
   height: 30px;
   flex-shrink: 0;
-  padding: 0;
+  padding:0;
   border: none;
-  border-radius: 7px;
+  border-radius:8px;
   background: transparent;
   color: #738077;
   cursor: pointer;
@@ -164,7 +164,7 @@
 
 .clear-search-button:hover {
   background: #edf2ee;
-  color: #29382d;
+  color: var(--text);
 }
 
 /* =========================================
@@ -180,11 +180,11 @@
 .messages-table {
   width: 100%;
   min-width: 680px;
-  background: #ffffff;
+  background: var(--surface);
 }
 
 .messages-table th.mat-mdc-header-cell {
-  padding: 15px 16px;
+  padding:16px 16px;
   background: #f7f9f7;
   color: #5a675e;
   font-size: 0.78rem;
@@ -196,11 +196,11 @@
 }
 
 .messages-table td.mat-mdc-cell {
-  padding: 15px 16px;
+  padding:16px 16px;
   color: #3c4840;
   font-size: 0.88rem;
   vertical-align: middle;
-  border-bottom: 1px solid #edf0ed;
+  border-bottom: 1px solid var(--border);
 }
 
 .messages-table tr.mat-mdc-row {
@@ -223,7 +223,7 @@
 .customer-name {
   display: inline-block;
   min-width: 100px;
-  color: #29382d;
+  color: var(--text);
   font-weight: 600;
   overflow-wrap: anywhere;
 }
@@ -263,7 +263,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap:8px;
 }
 
 .action-buttons button[mat-icon-button] {
@@ -273,9 +273,9 @@
   width: 36px;
   height: 36px;
   min-width: 36px;
-  padding: 0;
+  padding:0;
   border: 1px solid transparent;
-  border-radius: 9px;
+  border-radius:8px;
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -303,7 +303,7 @@
 }
 
 .delete-button {
-  color: #c74747 !important;
+  color: var(--error-500) !important;
   background: #fff1f1 !important;
   border-color: #f7dddd !important;
 }
@@ -328,20 +328,20 @@
 
 .empty-state {
   height: 190px;
-  padding: 25px !important;
+  padding:24px !important;
   color: #7c887f;
   text-align: center;
 }
 
 .empty-state-icon {
   display: block;
-  margin: 0 auto 12px;
+  margin:0 auto 8px;
   color: #a6b3a8;
   font-size: 36px;
 }
 
 .empty-state h6 {
-  margin-bottom: 5px;
+  margin-bottom:4px;
   color: #46554a;
   font-weight: 600;
 }
@@ -356,8 +356,8 @@
 
 .pagination-container {
   width: 100%;
-  border-top: 1px solid #edf0ed;
-  background: #ffffff;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
 }
 
 .pagination-container mat-paginator {
@@ -367,8 +367,8 @@
 }
 
 .table-footer {
-  padding: 12px 22px;
-  border-top: 1px solid #edf0ed;
+  padding:8px 24px;
+  border-top: 1px solid var(--border);
   background: #fcfdfc;
   color: #78837b;
   font-size: 0.82rem;
@@ -385,7 +385,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding:16px;
   background: rgba(20, 31, 23, 0.55);
   overflow-y: auto;
 }
@@ -396,8 +396,8 @@
   width: 100%;
   max-width: 520px;
   max-height: calc(100vh - 32px);
-  border-radius: 14px;
-  background: #ffffff;
+  border-radius:16px;
+  background: var(--surface);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
   overflow: hidden;
 }
@@ -406,13 +406,13 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 15px;
-  padding: 20px 22px;
+  gap:16px;
+  padding:16px 24px;
   border-bottom: 1px solid #e9eee9;
 }
 
 .modal-header-custom h5 {
-  color: #29382d;
+  color: var(--text);
   font-size: 1.1rem;
   font-weight: 700;
 }
@@ -429,9 +429,9 @@
   width: 36px;
   height: 36px;
   flex-shrink: 0;
-  padding: 0;
+  padding:0;
   border: none;
-  border-radius: 8px;
+  border-radius:8px;
   background: #f3f6f3;
   color: #58665b;
   cursor: pointer;
@@ -439,7 +439,7 @@
 }
 
 .modal-close-button i {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .modal-close-button:hover {
@@ -447,21 +447,21 @@
 }
 
 .modal-body-custom {
-  padding: 22px;
+  padding:24px;
   overflow-y: auto;
 }
 
 .detail-group {
-  margin-bottom: 20px;
+  margin-bottom:16px;
 }
 
 .detail-group:last-child {
-  margin-bottom: 0;
+  margin-bottom:0;
 }
 
 .detail-group label {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom:8px;
   color: #78837b;
   font-size: 0.78rem;
   font-weight: 700;
@@ -470,8 +470,8 @@
 }
 
 .detail-group p {
-  margin-bottom: 0;
-  color: #29382d;
+  margin-bottom:0;
+  color: var(--text);
   font-size: 0.94rem;
   overflow-wrap: anywhere;
 }
@@ -486,10 +486,10 @@
 }
 
 .full-message {
-  padding: 14px;
+  padding:16px;
   border: 1px solid #e6ece7;
-  border-radius: 9px;
-  background: #f8faf8;
+  border-radius:8px;
+  background: var(--primary-50);
   color: #3c4840;
   font-size: 0.92rem;
   line-height: 1.7;
@@ -500,15 +500,15 @@
 .modal-footer-custom {
   display: flex;
   justify-content: flex-end;
-  padding: 15px 22px;
+  padding:16px 24px;
   border-top: 1px solid #e9eee9;
   background: #fcfdfc;
 }
 
 .modal-close-action {
   min-width: 90px;
-  padding: 8px 18px;
-  border-radius: 8px;
+  padding:8px 16px;
+  border-radius:8px;
   font-size: 0.88rem;
   font-weight: 600;
 }
@@ -519,7 +519,7 @@
 
 @media (max-width: 767.98px) {
   .amenity-page {
-    padding: 1rem 0;
+    padding:1rem 0;
   }
 
   .page-title {
@@ -532,14 +532,14 @@
 
   .message-count {
     align-self: flex-start;
-    padding: 9px 12px;
+    padding:8px 8px;
   }
 
   .table-heading {
     flex-direction: column;
     align-items: stretch;
-    gap: 15px;
-    padding: 16px;
+    gap:16px;
+    padding:16px;
   }
 
   .search-box {
@@ -548,11 +548,11 @@
 
   .messages-table th.mat-mdc-header-cell,
   .messages-table td.mat-mdc-cell {
-    padding: 13px 12px;
+    padding:16px 8px;
   }
 
   .action-buttons {
-    gap: 6px;
+    gap:4px;
   }
 
   .action-buttons button[mat-icon-button] {
@@ -570,26 +570,26 @@
   }
 
   .table-footer {
-    padding: 12px 16px;
+    padding:8px 16px;
   }
 
   .message-modal-backdrop {
     align-items: center;
-    padding: 12px;
+    padding:8px;
   }
 
   .message-modal {
     max-height: calc(100dvh - 24px);
-    border-radius: 12px;
+    border-radius:8px;
   }
 
   .modal-header-custom,
   .modal-body-custom {
-    padding: 17px;
+    padding:16px;
   }
 
   .modal-footer-custom {
-    padding: 13px 17px;
+    padding:16px 16px;
   }
 }
 
@@ -599,7 +599,7 @@
   }
 
   .message-count {
-    gap: 8px;
+    gap:8px;
   }
 
   .table-heading h5 {

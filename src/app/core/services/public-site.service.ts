@@ -14,7 +14,7 @@ import {
 } from '../../features/public/home/models/home.model';
 import { GalleryResponseDto } from '../../features/public/gallery-public/gallery.model';
 import { AboutUsResponseDto } from '../../features/public/about-us/about-us.model';
-import { ContactUsRequest } from '../../features/public/contact-us/contact-us.model';
+import { ContactUsRequest, ContactUsResponse } from '../../features/public/contact-us/contact-us.model';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -139,8 +139,8 @@ export class PublicSiteService {
 
   saveContactData(
     dto: ContactUsRequest,
-  ): Observable<ApiResponse<ContactUsRequest[]>> {
-    return this.http.post<ApiResponse<ContactUsRequest[]>>(
+  ): Observable<ApiResponse<ContactUsResponse>> {
+    return this.http.post<ApiResponse<ContactUsResponse>>(
       `${environment.apiUrl}/Contact/save-contact`,
       dto,
     );

@@ -1,52 +1,17 @@
-<!-- <app-header></app-header>
-
-<div class="admin-body">
-
-    <app-admin-sidebar></app-admin-sidebar>
-
-    <main class="main-content">
-        <router-outlet></router-outlet>
-    </main>
-
-</div>
-
-<app-footer></app-footer> -->
-
-
 <div class="admin-layout">
-
-    <!-- ================= Header ================= -->
+    <!-- Fixed public/admin header -->
     <header class="admin-header">
         <app-header></app-header>
     </header>
 
-
-    <!-- ================= Admin Body ================= -->
+    <!-- Sidebar and routed page -->
     <div class="admin-body">
+        <app-admin-sidebar class="admin-sidebar-host"></app-admin-sidebar>
 
-        <!-- Sidebar -->
-        <aside class="admin-sidebar">
-            <app-admin-sidebar></app-admin-sidebar>
-        </aside>
-
-
-        <!-- Right Content Area -->
         <div class="admin-content-wrapper">
-
-            <main class="admin-main-content">
+            <main class="admin-main-content admin-ui">
                 <router-outlet></router-outlet>
             </main>
-
-
-
         </div>
-
-
-
     </div>
-    <!-- Footer -->
-    <!-- <footer class="admin-footer">
-        <app-footer></app-footer>
-    </footer> -->
-
 </div>

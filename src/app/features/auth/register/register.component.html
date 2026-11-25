@@ -24,7 +24,7 @@
 
                                 <label for="fullName" class="form-label fw-semibold">
 
-                                    {{ 'Full Name' | t }}</label>
+                                    {{ 'Full Name' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
                                 <input id="fullName" type="text" class="form-control custom-input"
                                     [placeholder]="'Enter full name' | t" formControlName="fullName"
@@ -71,7 +71,7 @@
                             <div class="mb-3">
 
                                 <label for="mobileNumber" class="form-label fw-semibold">
-                                    {{ 'WhatsApp Number' | t }}</label>
+                                    {{ 'WhatsApp Number' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
                                 <input id="mobileNumber" type="text" class="form-control custom-input"
                                     placeholder="9999999999" formControlName="mobileNumber" autocomplete="off"
@@ -98,7 +98,7 @@
 
                                 <label for="password" class="form-label fw-semibold">
 
-                                    {{ 'Password' | t }}</label>
+                                    {{ 'Password' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
                                 <div class="input-group">
 
@@ -138,7 +138,7 @@
 
                                 <label for="confirmPassword" class="form-label fw-semibold">
 
-                                    {{ 'Confirm Password' | t }}</label>
+                                    {{ 'Confirm Password' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
                                 <div class="input-group">
 

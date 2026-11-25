@@ -1,183 +1,22 @@
-
-/* =====================================
-   Booking Details Expanded Section
-===================================== */
-
-.booking-detail-section {
-  background: #f8faf8;
-  border: 1px solid #e3ebe3;
-  border-radius: 12px;
-  padding: 24px;
-  margin-top: 22px;
-}
-
-.detail-heading {
-  color: #28543a;
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #dce7dc;
-}
-
-.booking-detail-section .fw-semibold {
-  color: #34443a;
-  font-size: 14px;
-  word-break: break-word;
-}
-
-.booking-detail-section small {
-  display: block;
-  color: #859087;
-  font-size: 11px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-/* Pricing Section */
-
-.pricing-details {
-  background: #ffffff;
-  border: 1px solid #e5ece5;
-  border-radius: 10px;
-  padding: 18px;
-}
-
-.pricing-details .total-amount {
-  color: #198754;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.pricing-details .advance-amount {
-  color: #28543a;
-  font-weight: 700;
-}
-
-/* Event Dates and Status History Tables */
-
-.booking-detail-section .table-responsive {
-  border-radius: 8px;
-  overflow-x: auto;
-}
-
-.booking-detail-section .table {
-  background: #ffffff;
-  margin-bottom: 0;
-  vertical-align: middle;
-}
-
-.booking-detail-section .table thead th {
-  background: #edf4ee;
-  color: #315c40;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  padding: 13px;
-}
-
-.booking-detail-section .table tbody td {
-  color: #49574d;
-  font-size: 13px;
-  padding: 12px;
-}
-
-/* Reason Messages */
-
-.booking-reason {
-  background: #fff8e8;
-  border-left: 4px solid #e0a52c;
-  border-radius: 7px;
-  padding: 14px 16px;
-  color: #73551b;
-  font-size: 14px;
-  margin-top: 15px;
-}
-
-.cancellation-reason {
-  background: #fff0f0;
-  border-left: 4px solid #dc3545;
-  border-radius: 7px;
-  padding: 14px 16px;
-  color: #a52834;
-  font-size: 14px;
-  margin-top: 15px;
-}
-
-/* Booking Action Buttons */
-
-.booking-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.booking-actions .btn {
-  border-radius: 8px;
-  padding: 9px 16px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-/* Responsive Details */
-
-@media (max-width: 768px) {
-
-  .booking-detail-section {
-    padding: 18px;
-  }
-
-  .detail-heading {
-    font-size: 15px;
-  }
-
-  .pricing-details {
-    padding: 14px;
-  }
-
-  .booking-detail-section .table thead th,
-  .booking-detail-section .table tbody td {
-    padding: 10px;
-    font-size: 12px;
-  }
-
-}
-
-@media (max-width: 480px) {
-
-  .booking-detail-section {
-    padding: 14px;
-  }
-
-  .booking-actions {
-    flex-direction: column;
-  }
-
-  .booking-actions .btn {
-    width: 100%;
-  }
-
-}
-
-.customer-booking-details { max-width: 1100px; }
-.booking-dialog-header { display: flex; gap: 1rem; align-items: center; }
-.booking-dialog-header h2 { margin-bottom: .5rem; }
-.booking-dialog-footer { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .75rem; padding: 1.25rem 0; }
-.identity-step h3 { font-size: 1.1rem; }
-.document-dialog {
-  position: fixed;
-  inset: 0;
-  margin: auto;
-  width: min(900px, calc(100% - 2rem));
-  max-height: calc(100dvh - 2rem);
-  padding: 0;
-  border: 1px solid #dce7dc;
-  border-radius: 12px;
-}
-.document-dialog::backdrop { background: #15251db3; }
-.document-preview { overflow: auto; }
-.document-preview img { display: block; max-width: 100%; max-height: 70dvh; margin: auto; object-fit: contain; }
-.document-preview iframe { display: block; width: 100%; height: 70dvh; border: 0; }
+/* Reference 05: one coherent voucher system; no accumulating override layers. */
+:host{display:block}.voucher-page{position:relative;isolation:isolate;padding:var(--space-3) var(--space-2);background:var(--page-bg);color:var(--text);font-family:var(--font-family-base)}
+.voucher-page::before,.voucher-page::after{content:"";position:absolute;inset:0 auto auto 0;width:240px;height:100%;max-height:760px;background:url('/assets/images/booking/voucher-botanical.svg') left top/240px auto no-repeat;pointer-events:none;z-index:-1;opacity:.7}.voucher-page::after{inset:auto 0 0 auto;transform:rotate(180deg)}
+.voucher-container{width:86%;margin:auto;max-width:1760px}.page-title{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)}.page-title>i{font-size:30px;color:var(--primary-700)}h1{font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.6px;margin:0;white-space:nowrap}.page-title p{margin:0;padding-left:var(--space-3);border-left:1px solid var(--border-strong);font-size:14px;color:var(--text-body)}
+.booking-voucher{border:1px solid var(--primary-500);border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:0 5px 16px #35231012}.voucher-banner{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);background:var(--panel-heading-fill);border-bottom:1px solid var(--primary-300)}.farm-brand{display:flex;align-items:center;gap:var(--space-2);margin-right:auto;min-width:0}.farm-mark{width:64px;height:48px;object-fit:contain}.farm-brand h2{font-size:24px;font-weight:800;line-height:1.2;letter-spacing:-.5px;margin:0}.farm-location{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-top:var(--space-half)}.booking-reference{display:flex;align-items:center;gap:var(--space-2);border-inline:1px solid var(--primary-300);padding-inline:var(--space-3)}.booking-reference>app-voucher-icon{font-size:30px;color:var(--primary-700)}.booking-reference span{display:block;font-size:13px}.booking-reference strong{display:block;font-size:20px;font-weight:800;line-height:1.3}
+.status-badge{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-1);padding:var(--space-1) var(--space-2);border-radius:8px;border:1px solid var(--primary-300);background:var(--primary-100);color:var(--primary-800);font-size:15px;font-weight:750;white-space:nowrap;min-width:152px}.status-badge app-voucher-icon{font-size:20px}.status-badge[data-status="Confirmed"],.status-badge[data-status="CheckedOut"]{background:var(--status-complete-bg);color:var(--status-complete-text);border-color:#148719}.status-badge[data-status="Pending"]{background:var(--warning-100);color:var(--warning-700);border-color:var(--warning-500)}.status-badge[data-status="Approved"]{background:#ede3ff;color:#6b21a8;border-color:#cbb3ed}.status-badge[data-status="CheckedIn"]{background:var(--info-100);color:var(--info-700);border-color:var(--info-500)}.status-badge[data-status="Cancelled"],.status-badge[data-status="Rejected"]{background:var(--error-100);color:var(--error-700);border-color:var(--error-500)}
+.voucher-body{padding:var(--space-2)}.voucher-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2)}.voucher-column{display:flex;flex-direction:column;gap:var(--space-2);min-width:0}.voucher-card{border:1px solid var(--panel-outline);border-radius:12px;background:var(--surface);overflow:hidden;min-width:0}.voucher-card>h2{display:flex;align-items:center;gap:var(--space-2);min-height:40px;padding:var(--space-1) var(--space-2);margin:0;font-size:21px;font-weight:800;letter-spacing:-.5px;line-height:1.2}.voucher-card>h2>app-voucher-icon{color:var(--primary-700);font-size:28px}
+dl{margin:0;padding:0 var(--space-3) var(--space-1)}dl>div{display:grid;grid-template-columns:80px minmax(0,1fr);gap:var(--space-1);padding-block:2px;align-items:baseline}dt{font-size:14px;font-weight:500;color:var(--text-body)}dd{margin:0;min-width:0;font-size:14px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}.customer-data dt::after{content:':';float:right}.customer-data>div:last-child{padding-bottom:var(--space-half)}
+.stay-dates{display:flex;align-items:center;justify-content:space-evenly;gap:var(--space-1);padding:var(--space-1) var(--space-2)}.stay-dates>div{display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:var(--space-1)}.stay-dates>div>i{grid-row:1/3;align-self:center;font-size:27px;color:var(--primary-700)}.stay-dates>i{font-size:24px}.stay-dates span{font-size:13px}.stay-dates strong{font-size:22px;line-height:1.2;font-weight:800;letter-spacing:-.6px}.actual-dates{display:flex;gap:var(--space-2);flex-wrap:wrap;padding:var(--space-1) var(--space-2);margin:0 var(--space-2);border-radius:8px;background:var(--panel-heading-fill)}.actual-dates>div{display:flex;gap:4px;flex-wrap:wrap;align-items:baseline;font-size:12px}.actual-dates>div+div{border-left:1px solid var(--primary-400);padding-left:var(--space-2)}.actual-dates span::after{content:':'}.actual-dates strong{font-size:12px}.stay-extra{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-1) var(--space-2);padding:var(--space-1) var(--space-2);font-size:11px}.stay-extra i{font-size:16px;vertical-align:middle;margin-right:4px}
+.guest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:0 var(--space-3) var(--space-1)}.guest-grid>div{display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:var(--space-1);padding-inline:var(--space-1)}.guest-grid>div+div{border-left:1px solid var(--border-strong)}.guest-grid i,.guest-grid app-voucher-icon{grid-row:1/3;align-self:center;font-size:28px}.guest-grid span{font-size:12px}.guest-grid strong{font-size:23px;font-weight:800;line-height:1.2}
+.event-details{padding:0 var(--space-2) var(--space-1)}.event-inline{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--space-1) var(--space-2);font-size:12px}.event-inline+div{border-top:1px solid var(--border);margin-top:var(--space-1);padding-top:var(--space-1)}.event-inline>span+span{border-left:1px solid var(--border-strong);padding-left:var(--space-2)}.event-inline strong{font-weight:750}
+.payment-data{padding:0 var(--space-2) var(--space-1)}.payment-data>div{grid-template-columns:minmax(0,1fr) auto;gap:var(--space-1);padding:var(--space-1);align-items:center}.payment-data dt{display:flex;align-items:center;gap:var(--space-1);font-size:14px;line-height:1.2}.payment-data dt>app-voucher-icon{font-size:21px}.payment-data dd{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-2);flex-wrap:wrap;font-size:15px;text-align:right;white-space:nowrap}.payment-data .payment-table-heading{padding:4px var(--space-3);background:var(--report-table-heading);border-radius:4px}.payment-table-heading dt,.payment-table-heading dd{font-size:12px;font-weight:600}.payment-data .total-row,.payment-data .paid-row{background:var(--panel-total-fill);border-radius:8px}.total-row dt,.total-row dd,.paid-row dt,.paid-row dd{font-size:17px;font-weight:800}.paid-check{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#518c18;border-radius:50%;color:white}.paid-check app-voucher-icon{font-size:18px}.paid-badge{display:inline-flex;align-items:center;border:1px solid #87c58e;border-radius:4px;background:#e5fae5;color:#17631c;min-height:28px;padding:0 var(--space-1);font-size:13px;font-weight:750}.remaining-row{color:var(--primary-800)}.payment-data dt>app-voucher-icon[name="wallet"]{color:#247c7b}
+.document-actions{padding:0 var(--space-2) var(--space-2);font-size:13px}.identity-step h3{display:none}.identity-summary{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;padding:var(--space-1) var(--space-2)}.identity-summary p{margin:0;font-size:13px}.document-name{font-weight:750}.files-label{display:inline-flex;align-items:center;gap:var(--space-1);padding-left:var(--space-2);border-left:1px solid var(--border-strong);font-size:13px}.identity-summary>button{margin-left:auto}.identity-summary app-voucher-icon{font-size:22px}.identity-step p{margin-bottom:var(--space-1)}.document-actions .btn{min-height:40px;border-radius:8px;font-size:13px;font-weight:700;box-shadow:none}.document-actions .btn-success{background:var(--primary-600);border-color:var(--primary-600);color:white}.document-actions .btn-outline-success{background:var(--primary-50);border-color:var(--primary-600);color:var(--primary-700)}.document-actions .form-control,.document-actions .form-select{font-family:inherit;font-size:14px;background:var(--input-bg);color:var(--text);border-color:var(--input-border)}
+.history-card{display:grid;grid-template-columns:208px minmax(0,1fr);align-items:center;margin-top:var(--space-2);padding-block:var(--space-1)}.history-card>h2{font-size:19px}.booking-journey{display:flex;list-style:none;gap:var(--space-1);margin:0;padding:0 var(--space-2);overflow-x:auto}.booking-journey li{position:relative;display:flex;flex:1;flex-direction:column;align-items:center;text-align:center;gap:2px;min-width:88px;font-size:13px;line-height:1.3}.booking-journey li>i{position:relative;z-index:1;font-size:27px;color:#1a9b25;background:var(--surface)}.booking-journey li:not(:last-child)::after{content:'';position:absolute;left:50%;top:14px;width:calc(100% + 8px);height:1px;background:#a2d7aa}.booking-journey strong{font-weight:800}.booking-journey span{font-size:12px}.history-details{grid-column:1/-1;padding-inline:var(--space-2)}.history-details summary{cursor:pointer;font-size:11px;color:var(--primary-700);padding-top:var(--space-1)}.history-details .table{font-size:12px;--bs-table-bg:var(--surface);--bs-table-color:var(--text);--bs-table-border-color:var(--border)}
+.rate-details{margin-top:var(--space-2)}.rate-details summary{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1) var(--space-2);min-height:44px;background:var(--panel-heading-fill);font-size:16px;font-weight:800;list-style:none;cursor:pointer}.rate-details summary::-webkit-details-marker{display:none}.rate-details summary>app-voucher-icon{font-size:28px;color:var(--primary-700)}.rate-details summary>i{margin-left:auto;font-size:16px}.rate-preview{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;margin-left:auto;font-size:12px;font-weight:500}.rate-preview>span+span{border-left:1px solid var(--border-strong);padding-left:var(--space-2)}.rate-details dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-2);padding:var(--space-2)}.rate-details dl>div{display:block}.rate-details[open] summary>i{transform:rotate(180deg)}
+.voucher-footer{display:flex;align-items:center;justify-content:center;gap:var(--space-3);flex-wrap:wrap;margin-top:var(--space-2)}.voucher-button{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-1);min-height:44px;min-width:248px;padding:var(--space-1) var(--space-3);border:1px solid var(--primary-600);border-radius:10px;font:inherit;font-size:16px;font-weight:750;line-height:1.2;text-decoration:none;cursor:pointer;box-shadow:none}.voucher-button app-voucher-icon{font-size:24px}.primary{background:linear-gradient(110deg,var(--primary-500),var(--primary-600));color:white}.primary:hover{background:var(--primary-700);color:white}.outline{background:var(--surface);color:var(--primary-700)}.outline:hover{background:var(--primary-50);color:var(--primary-800)}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--primary-400);outline-offset:3px}.notice{padding:var(--space-2);border:1px solid var(--primary-300);border-radius:8px;background:var(--primary-50);font-size:14px}.error{color:var(--error-700)}.warning{color:var(--warning-700)}.empty-copy{margin:0;padding:var(--space-1);font-size:13px;color:var(--text-muted)}
+.document-dialog{position:fixed;inset:0;margin:auto;width:min(900px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--primary-300);border-radius:16px;background:var(--surface);color:var(--text)}.document-dialog::backdrop{background:#15202db3}.document-preview{overflow:auto}.document-preview img{display:block;max-width:100%;max-height:70dvh;margin:auto;object-fit:contain}.document-preview iframe{display:block;width:100%;height:70dvh;border:0}
+@media(min-width:1101px) and (max-height:850px){.voucher-page{padding-block:var(--space-1)}.page-title{margin-bottom:var(--space-1)}.voucher-card>h2{font-size:18px;min-height:32px;padding-block:4px}.voucher-banner{padding-block:var(--space-1)}.voucher-column,.voucher-columns{gap:var(--space-1)}.payment-data>div{padding-block:6px}.voucher-body{padding:var(--space-1)}.history-card,.rate-details,.voucher-footer{margin-top:var(--space-1)}}
+@media(max-width:1280px){.voucher-container{width:96%}.farm-brand h2{font-size:20px}.booking-reference{padding-inline:var(--space-2)}.booking-reference strong{font-size:17px}.status-badge{min-width:120px}.actual-dates{display:grid;grid-template-columns:1fr;gap:var(--space-1)}.actual-dates>div+div{border:0;padding:0}.rate-preview{display:none}.history-card{grid-template-columns:168px minmax(0,1fr)}.history-card>h2{font-size:17px}.event-inline{gap:var(--space-1)}.event-inline>span+span{padding-left:var(--space-1)}}
+@media(max-width:1000px){.voucher-container{width:100%}.page-title p{display:none}.voucher-banner{flex-wrap:wrap}.farm-brand{flex-basis:100%;margin-bottom:var(--space-1)}.booking-reference{border-left:0;padding-left:0;margin-right:auto}.history-card{grid-template-columns:1fr}.booking-journey{padding-block:var(--space-1)}.voucher-button{min-width:200px}.identity-summary>button{margin-left:0}.guest-grid{padding-inline:var(--space-1)}}
+@media(max-width:760px){.voucher-page{padding:var(--space-2) var(--space-1)}.voucher-columns{grid-template-columns:1fr}.voucher-page::before,.voucher-page::after{display:none}h1{font-size:25px}.voucher-banner{padding:var(--space-2)}.voucher-body{padding:var(--space-1)}.voucher-card>h2{font-size:19px}.customer-data{padding-inline:var(--space-2)}.voucher-footer{gap:var(--space-1)}.voucher-button{min-width:0;flex:1;min-height:48px;font-size:13px;padding-inline:var(--space-2)}.rate-details dl{grid-template-columns:1fr}.identity-summary{padding-inline:var(--space-1)}.document-actions .btn{min-height:44px}}
+@media(max-width:440px){.farm-brand h2{font-size:19px}.farm-mark{width:48px;height:40px}.booking-reference strong{font-size:16px}.status-badge{min-width:0;font-size:12px}.stay-dates strong{font-size:17px}.stay-dates span{font-size:11px}.stay-dates>div{grid-template-columns:24px minmax(0,1fr)}.stay-dates>div>i{font-size:22px}.guest-grid>div{grid-template-columns:24px minmax(0,1fr);padding-inline:4px}.guest-grid i,.guest-grid app-voucher-icon{font-size:23px}.guest-grid span{font-size:11px}.payment-data dt{font-size:12px}.payment-data dd{font-size:13px}.total-row dt,.total-row dd,.paid-row dt,.paid-row dd{font-size:14px}.files-label{padding-left:0;border:0}.event-inline>span{flex-basis:100%}.event-inline>span+span{padding-left:0;border:0}}

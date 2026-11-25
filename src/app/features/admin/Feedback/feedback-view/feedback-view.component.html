@@ -1,10 +1,10 @@
-<div class="feedback-page">
+<div class="feedback-page admin-records">
 
   <!-- HEADER -->
   <div class="page-header">
 
     <div>
-      <h2>{{ 'Feedback' | t }}</h2>
+      <h2><i class="bi bi-chat-square-heart admin-page-icon" aria-hidden="true"></i>{{ 'Feedback' | t }}</h2>
       <p>{{ 'View and manage guest feedback' | t }}</p>
     </div>
 
@@ -44,6 +44,8 @@
   </div>
 
 
+  <section class="records-panel" *ngIf="!loading && feedbackItems.length > 0">
+    <header class="records-heading"><div><h3><i class="bi bi-chat-left-text" aria-hidden="true"></i>{{ 'Feedback' | t }}</h3><p>{{ 'View and manage guest feedback' | t }}</p></div><span class="records-count">{{ feedbackItems.length }} {{ 'records' | t }}</span></header>
   <!-- TABLE -->
   <div
     class="table-wrapper"
@@ -165,7 +167,7 @@
             (click)="confirmDelete(feedback)"
             [disabled]="deleting">
 
-            {{ '🗑 Delete' | t }}</button>
+            <i class="bi bi-trash3" aria-hidden="true"></i>{{ 'Delete' | t }}</button>
 
         </td>
 
@@ -189,4 +191,5 @@
 
   </div>
 
+  </section>
 </div>

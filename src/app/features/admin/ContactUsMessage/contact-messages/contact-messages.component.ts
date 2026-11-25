@@ -54,6 +54,8 @@ export class ContactMessagesComponent implements OnInit, AfterViewInit {
       return (
         message.fullName.toLowerCase().includes(searchValue) ||
         message.mobileNo.toLowerCase().includes(searchValue) ||
+        (message.email ?? '').toLowerCase().includes(searchValue) ||
+        (message.enquiryType ?? '').toLowerCase().includes(searchValue) ||
         message.message.toLowerCase().includes(searchValue)
       );
     };

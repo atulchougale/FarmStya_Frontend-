@@ -1,0 +1,15 @@
+:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.fst-text-primary { color: var(--primary-700) !important; }
+.fst-bg-page { background: var(--page-bg) !important; }
+.fst-surface { background: var(--surface) !important; }
+.fst-border { border-color: var(--border) !important; }
+.fst-rounded { border-radius: 0.875rem; }
+.fst-shadow { box-shadow: var(--card-shadow); }
+.fst-transition { transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+
+/* 8-point layout utilities shared by public and administration screens. */
+.fst-stack { display:flex; flex-direction:column; gap:var(--space-3); }
+.fst-grid { display:grid; gap:var(--space-3); }
+.fst-section { padding-block:var(--space-8); }
+.fst-panel-padding { padding:var(--space-3); }
+@media(max-width:767px) { .fst-section { padding-block:var(--space-6); } .fst-panel-padding { padding:var(--space-2); } }

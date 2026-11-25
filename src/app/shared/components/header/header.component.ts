@@ -12,10 +12,12 @@ import { isAdministrationRole } from '../../../core/models/administration-role';
 
 import { environment } from '../../../../environments/environment';
 
+import { ThemeSwitcherComponent } from'../../theme-switcher/theme-switcher.component';
+
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [TranslationPipe, CommonModule, RouterLink, RouterLinkActive],
+  imports: [TranslationPipe, CommonModule, RouterLink, RouterLinkActive,ThemeSwitcherComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })

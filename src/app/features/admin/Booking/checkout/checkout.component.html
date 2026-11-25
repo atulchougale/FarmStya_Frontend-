@@ -1,6 +1,6 @@
-<main class="container py-4" style="max-width: 760px">
+<main class="admin-task-page checkout-page">
   <a [routerLink]="['/admin/booking', id]" class="btn btn-outline-secondary mb-3">{{ 'Back to booking' | t }}</a>
-  <h1 class="h3 mb-3">{{ 'Check Out' | t }}</h1>
+  <h1 class="h3 mb-3"><i class="bi bi-wallet2 admin-page-icon" aria-hidden="true"></i>{{ 'Check Out' | t }}</h1>
   <p *ngIf="loading" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading checkout…' | t }}</p>
   <p *ngIf="error" class="alert alert-danger" role="alert">{{ (error) | t }}</p>
   <p *ngIf="notice" class="alert alert-success" role="status">{{ (notice) | t }}</p>
@@ -19,16 +19,16 @@
     <p *ngIf="balance.paymentStatus === 'Pending'">{{ 'Waiting for {p0} through My Bookings.' | t:{p0: (balance.payable | currency:balance.currency)} }}</p>
     <p *ngIf="balance.paymentStatus === 'Success'">{{ 'Payment and check out completed.' | t }}</p>
     <form *ngIf="booking.status === 'CheckedIn' && !balance.paymentStatus" #checkout="ngForm" (ngSubmit)="submit()">
-      <label class="form-label" for="method">{{ 'Payment method' | t }}</label>
+      <label class="form-label" for="method">{{ 'Payment method' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
       <select class="form-select mb-3" id="method" name="method" [(ngModel)]="method">
         <option value="Cash">{{ 'Cash' | t }}</option>
         <option value="Online">{{ 'Online' | t }}</option>
       </select>
       <label class="form-check mb-3"><input class="form-check-input" type="checkbox" name="applyDiscount" [(ngModel)]="applyDiscount"> {{ 'Apply discount' | t }}</label>
       <div *ngIf="applyDiscount" class="mb-3">
-        <label class="form-label" for="discount">{{ 'Discount amount (INR)' | t }}</label>
+        <label class="form-label" for="discount">{{ 'Discount amount (INR)' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
         <input class="form-control mb-2" id="discount" name="discount" type="number" min="0.01" [max]="balance.payable" step="0.01" required [(ngModel)]="discount">
-        <label class="form-label" for="reason">{{ 'Discount reason' | t }}</label>
+        <label class="form-label" for="reason">{{ 'Discount reason' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
         <textarea class="form-control" id="reason" name="reason" maxlength="500" required [(ngModel)]="reason"></textarea>
       </div>
       <p class="fw-semibold">{{ 'Total payable {p0}' | t:{p0: (payable | currency:balance.currency)} }}</p>

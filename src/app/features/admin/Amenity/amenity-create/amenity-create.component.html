@@ -6,7 +6,7 @@
             <!-- Header -->
             <div class="page-header">
                 <div>
-                    <h2 class="mb-1">
+                    <h2 class="mb-1"><i class="bi bi-plus-circle admin-page-icon" aria-hidden="true"></i>
                         {{ (((isEditMode ? 'Edit Amenity' : 'Create Amenity') | t) | t) | t }}
                     </h2>
 
@@ -45,7 +45,7 @@
                     <div class="col-12 col-lg-4">
 
                         <label class="form-label">
-                            {{ (('Image' | t) | t) | t }}<span class="text-danger">*</span>
+                            {{ (('Image' | t) | t) | t }}<span class="text-danger" data-required-marker="true">*</span>
                         </label>
 
                         <div class="media-upload-panel">
@@ -152,7 +152,7 @@
                             <div class="col-12">
 
                                 <label class="form-label">
-                                    {{ (('Title' | t) | t) | t }}<span class="text-danger">*</span>
+                                    {{ (('Title' | t) | t) | t }}<span class="text-danger" data-required-marker="true">*</span>
                                 </label>
 
                                 <input type="text"
@@ -191,7 +191,7 @@
                             <div class="col-12">
 
                                 <label class="form-label">
-                                    {{ (('Description' | t) | t) | t }}<span class="text-danger">*</span>
+                                    {{ (('Description' | t) | t) | t }}<span class="text-danger" data-required-marker="true">*</span>
                                 </label>
 
                                 <textarea class="form-control"
@@ -231,7 +231,7 @@
                             <div class="col-12">
 
                                 <label class="form-label">
-                                    {{ (('Display Type' | t) | t) | t }}<span class="text-danger">*</span>
+                                    {{ (('Display Type' | t) | t) | t }}<span class="text-danger" data-required-marker="true">*</span>
                                 </label>
 
                                 <div class="amenity-type-options">

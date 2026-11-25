@@ -1,119 +1,20 @@
-<!-- Hero Carousel -->
-<section class="hero-section" *ngIf="carouselImages.length > 0">
-
-    <div id="homeHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000"
-        data-bs-pause="hover" data-bs-touch="true">
-
-        <!-- Carousel Indicators -->
-        <div class="carousel-indicators">
-            <button *ngFor="let slide of carouselImages; let i = index" type="button" data-bs-target="#homeHeroCarousel"
-                [attr.data-bs-slide-to]="i" [class.active]="i === 0" [attr.aria-current]="i === 0 ? 'true' : null"
-                [attr.aria-label]="'Slide ' + (i + 1)">
-            </button>
-        </div>
-
-        <!-- Carousel Slides -->
-        <div class="carousel-inner">
-
-            <div *ngFor="let slide of carouselImages; let i = index" class="carousel-item" [class.active]="i === 0">
-
-                <!-- Background Image and Overlay -->
-                <div class="hero-slide" [style.background-image]="
-            'linear-gradient(90deg, rgba(20,29,17,0.78) 0%, rgba(20,29,17,0.48) 48%, rgba(20,29,17,0.12) 100%), url(&quot;'
-            + slide.imageUrl
-            + '&quot;)'
-          ">
-
-                    <!-- Hero Content -->
-                    <div class="app-container hero-container">
-                        <div class="hero-content">
-
-                            <!-- Location Badge -->
-                            <div class="hero-location">
-                                <i class="bi bi-geo-alt" aria-hidden="true"></i>
-                                <span>{{ 'Experience Nature & Comfort' | t }}</span>
-                            </div>
-
-                            <!-- Dynamic Title -->
-                            <h1 class="hero-title">
-                                {{ (slide.title) | t }}
-                            </h1>
-
-                            <!-- Dynamic Description -->
-                            <p class="hero-description">
-                                {{ (slide.description) | t }}
-                            </p>
-
-                            <!-- Action Buttons -->
-                            <div class="hero-actions">
-
-                                <a routerLink="/book-now" class="btn hero-btn-primary">
-                                    <span>{{ 'Book Now' | t }}</span>
-                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                                </a>
-
-                                <a routerLink="/gallery" class="btn hero-btn-outline">
-                                    {{ 'View Gallery' | t }}</a>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Previous Button -->
-        <button class="carousel-control-prev hero-control" type="button" data-bs-target="#homeHeroCarousel"
-            data-bs-slide="prev" [attr.aria-label]="'Previous slide' | t">
-
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-
-        <!-- Next Button -->
-        <button class="carousel-control-next hero-control" type="button" data-bs-target="#homeHeroCarousel"
-            data-bs-slide="next" [attr.aria-label]="'Next slide' | t">
-
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
-
-    </div>
+<main class="home-experience">
+<section class="home-hero" (mouseenter)="heroInteracting = true" (mouseleave)="heroInteracting = false" (focusin)="heroInteracting = true" (focusout)="heroInteracting = false" [attr.aria-label]="'Farmhouse highlights' | t">
+  <img class="hero-photograph" [src]="activeHero.imageUrl" (error)="onImageError($event, 'family-pool-hero')" [alt]="activeHero.title | t" fetchpriority="high" />
+  <div class="hero-shade"></div>
+  <div class="home-container hero-content"><span class="eyebrow"><i class="bi bi-geo-alt" aria-hidden="true"></i> {{ 'Karveer · Kolhapur' | t }}</span><h1>{{ (activeHero.title || 'Less screen time. More sunshine.') | t }}</h1><p>{{ (activeHero.description || 'Swim, play, rest, and make memories together.') | t }}</p><div class="hero-actions"><a href="#availability" (click)="scrollToSection($event, 'availability')" class="home-button primary">{{ 'Check Availability' | t }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a><a href="#experiences" (click)="scrollToSection($event, 'experiences')" class="home-button glass">{{ 'Explore the Farm' | t }}</a></div></div>
+  <div *ngIf="heroSlides.length > 1" class="hero-pagination"><button type="button" class="hero-step" (click)="changeHero(-1)" [attr.aria-label]="'Previous slide' | t"><i class="bi bi-chevron-left" aria-hidden="true"></i></button><button *ngFor="let slide of heroSlides; index as i" type="button" class="hero-dot" [class.active]="currentHeroSlide === i" (click)="showHero(i)" [attr.aria-label]="('Slide {p0}' | t:{p0:i+1})" [attr.aria-current]="currentHeroSlide === i ? 'true' : null"></button><button type="button" class="hero-step" (click)="heroPaused = !heroPaused" [attr.aria-label]="(heroPaused ? 'Play slideshow' : 'Pause slideshow') | t"><i class="bi" [ngClass]="heroPaused ? 'bi-play-fill' : 'bi-pause-fill'" aria-hidden="true"></i></button><button type="button" class="hero-step" (click)="changeHero(1)" [attr.aria-label]="'Next slide' | t"><i class="bi bi-chevron-right" aria-hidden="true"></i></button></div>
 </section>
-
-<!-- Loading State -->
-<section class="hero-loading" *ngIf="isLoading && carouselImages.length === 0">
-
-    <div class="spinner-border text-warning" role="status">
-        <span class="visually-hidden">{{ 'Loading...' | t }}</span>
-    </div>
-
-    <p>{{ 'Loading farmhouse experience...' | t }}</p>
-</section>
-
-<!-- Empty State -->
-<section class="hero-empty" *ngIf="!isLoading && carouselImages.length === 0">
-
-    <div class="app-container text-center">
-        <h2>{{ 'Welcome to Our Farmhouse' | t }}</h2>
-        <p>{{ 'Relax, reconnect with nature, and enjoy your stay.' | t }}</p>
-    </div>
-</section>
-
-
-<!-- =========================================
-    BOOKING CTA SECTION
-========================================= -->
-
-<section class="booking-cta-section mt-5">
+<section class="booking-cta-section" id="availability">
     <div class="app-container booking-cta-container">
 
         <!-- CTA Text -->
         <div class="booking-cta-content">
             <h2 class="booking-cta-title">
-                {{ 'Ready for your getaway?' | t }}</h2>
+                {{ 'Book Your Escape' | t }}</h2>
 
             <p class="booking-cta-description">
-                {{ 'Real-time slot availability — book in just a few minutes.' | t }}</p>
+                {{ 'Plan your farm stay at Green Valley.' | t }}</p>
         </div>
 
         <!-- Custom Booking Calendar -->
@@ -306,6 +207,7 @@
 
             </div>
 
+            <a *ngIf="availabilityData?.isAvailable && !availabilityLoading" routerLink="/booking" class="home-button primary continue-booking">{{ 'Continue to Booking' | t }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
             <!-- Availability Error -->
             <div #availabilityFeedback *ngIf="availabilityError" class="availability-note availability-error"
                 tabindex="-1" role="alert">
@@ -322,87 +224,24 @@
 </section>
 
 
-<!-- =========================================
-     AMENITIES SECTION
-========================================= -->
 
-<section class="amenities-section" id="amenities">
-
-    <div class="app-container">
-
-        <!-- Section Heading -->
-        <div class="amenities-header">
-            <h2 class="amenities-heading">{{ 'Everything you need' | t }}</h2>
-
-            <p class="amenities-subtitle">
-                {{ 'Our farmhouse comes equipped with everything that makes your stay unforgettable.' | t }}</p>
-        </div>
-
-        <!-- Loading State -->
-        <div class="amenities-loading" *ngIf="amenitiesLoading && amenities.length === 0">
-
-            <div class="spinner-border text-warning" role="status">
-                <span class="visually-hidden">{{ 'Loading amenities...' | t }}</span>
-            </div>
-
-            <p>{{ 'Loading farmhouse amenities...' | t }}</p>
-        </div>
-
-        <!-- Amenities Cards -->
-        <div class="amenities-grid" *ngIf="amenities.length > 0">
-
-            <article class="amenity-card" *ngFor="let amenity of amenities">
-
-                <!-- Amenity Image -->
-                <div class="amenity-image-wrapper">
-                    <img class="amenity-image" [src]="amenity.imageUrl" [alt]="amenity.title | t" loading="lazy" />
-                </div>
-
-                <!-- Amenity Details -->
-                <div class="amenity-content">
-
-                    <h3 class="amenity-title">
-                        <i class="bi" [ngClass]="getAmenityIcon(amenity.title)" aria-hidden="true">
-                        </i>
-
-                        <span>{{ (amenity.title) | t }}</span>
-                    </h3>
-
-                    <p class="amenity-description">
-                        {{ (amenity.description) | t }}
-                    </p>
-
-                </div>
-            </article>
-
-        </div>
-
-        <!-- Empty State -->
-        <div class="amenities-empty" *ngIf="!amenitiesLoading && amenities.length === 0">
-
-            <h3>{{ 'Amenities coming soon' | t }}</h3>
-            <p>{{ 'We\'re preparing everything for your comfortable stay.' | t }}</p>
-
-        </div>
-
-    </div>
-
+<section class="home-section home-container" id="experiences">
+  <div class="section-heading"><span class="eyebrow">{{ 'MAKE TIME FOR WHAT MATTERS' | t }}</span><h2>{{ 'One stay. So many ways to enjoy it.' | t }}</h2><span class="heading-rule"></span></div>
+  <div class="experience-grid"><article class="experience-card" *ngFor="let item of experiences"><img [src]="imageRoot + item.image + '.png'" [alt]="item.title | t" loading="lazy" width="400" height="272" /><div class="experience-copy"><i class="bi experience-icon" [ngClass]="item.icon" aria-hidden="true"></i><div><h3>{{ item.title | t }}</h3><p>{{ item.text | t }}</p></div></div></article></div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-<!-- =========================================
-     GUEST FEEDBACK / TESTIMONIALS SECTION
-========================================= -->
-
+<section class="home-container overview-section">
+  <img class="overview-photo" [src]="imageRoot + 'comfortable-bedroom.png'" [alt]="'A comfortable room' | t" loading="lazy" width="720" height="480" />
+  <div class="overview-copy"><span class="eyebrow">{{ 'A LITTLE CLOSER TO NATURE' | t }}</span><h2>{{ 'A relaxing farmhouse stay close to nature.' | t }}</h2><span class="heading-rule"></span><p>{{ 'Leave the everyday rush behind. Make room for slow mornings, fresh air, and time with the people you love at Green Valley Farm Stay, Karveer, Kolhapur.' | t }}</p><a routerLink="/about" class="text-link">{{ 'Get to know the farm' | t }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div>
+</section>
+<section class="amenities-section home-container" id="amenities">
+  <div class="section-heading compact"><h2>{{ 'Thoughtful comforts for your stay' | t }}</h2><p>{{ 'Everything you need to feel at home, a little closer to nature.' | t }}</p></div>
+  <div *ngIf="amenitiesLoading" class="section-state" role="status">{{ 'Loading amenities...' | t }}</div>
+  <div class="amenities-grid" *ngIf="amenities.length"><article class="amenity-card" *ngFor="let amenity of amenities"><img [src]="amenity.imageUrl" (error)="onImageError($event)" [alt]="amenity.title | t" loading="lazy" width="320" height="200" /><div><h3><i class="bi" [ngClass]="getAmenityIcon(amenity.title)" aria-hidden="true"></i>{{ amenity.title | t }}</h3><p>{{ amenity.description | t }}</p></div></article></div>
+  <p class="section-state" *ngIf="!amenitiesLoading && !amenities.length">{{ 'Amenities coming soon' | t }}</p>
+</section>
+<section class="home-section home-container" id="moments"><div class="section-heading"><h2>{{ 'A relaxed day at the farm.' | t }}</h2><span class="heading-rule"></span></div><div class="moments-grid"><article *ngFor="let moment of dayMoments"><img [src]="imageRoot + moment.image + '.png'" [alt]="moment.title | t" loading="lazy" width="400" height="224" /><h3>{{ moment.title | t }}</h3><p>{{ moment.text | t }}</p></article></div></section>
+<section class="gallery-section home-container" id="explore"><div class="gallery-heading"><div class="section-heading"><h2>{{ 'Explore the Farm' | t }}</h2><p>{{ 'A closer look at your next getaway.' | t }}</p><span class="heading-rule"></span></div><a routerLink="/gallery" class="home-button outline">{{ 'View Gallery' | t }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div><div class="home-gallery"><a routerLink="/gallery" *ngFor="let photo of galleryPhotos" [attr.aria-label]="photo.title | t"><img [src]="imageRoot + photo.image + '.png'" [alt]="photo.title | t" loading="lazy" width="256" height="208" /></a></div></section>
+<section class="closing-section"><img [src]="imageRoot + 'farmhouse-evening.png'" [alt]="'Farmhouse in the evening' | t" loading="lazy" /><div class="closing-shade"></div><div class="home-container closing-copy"><h2>{{ 'Give your family a weekend to remember.' | t }}</h2><p>{{ 'Nature, comfort and quality time — all in one place.' | t }}</p><a href="#availability" (click)="scrollToSection($event, 'availability')" class="home-button primary">{{ 'Check Availability' | t }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></div></section>
 <section class="testimonials-section" id="testimonials">
 
     <div class="app-container">
@@ -428,7 +267,7 @@
             <article class="testimonial-card" *ngFor="let feedback of paginatedFeedbacks">
 
                 <!-- Star Rating -->
-                <div class="testimonial-rating" [attr.aria-label]="feedback.rating + ' out of 5 stars'">
+                <div class="testimonial-rating" [attr.aria-label]="'Rating {p0} out of 5' | t:{p0: feedback.rating}">
 
                     <i *ngFor="let star of [1, 2, 3, 4, 5]" class="bi"
                         [ngClass]="star <= feedback.rating ? 'bi-star-fill' : 'bi-star'" aria-hidden="true">
@@ -461,7 +300,7 @@
 
             <button *ngFor="let slide of [].constructor(feedbackSlideCount); let i = index" type="button"
                 class="testimonial-pagination-dot" [class.active]="i === currentFeedbackSlide"
-                [attr.aria-label]="'Go to feedback slide ' + (i + 1)"
+                [attr.aria-label]="'Go to feedback slide {p0}' | t:{p0:i+1}"
                 [attr.aria-current]="i === currentFeedbackSlide ? 'true' : null" (click)="goToFeedbackSlide(i)">
             </button>
 
@@ -478,3 +317,4 @@
     </div>
 
 </section>
+</main>

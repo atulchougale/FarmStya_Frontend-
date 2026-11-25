@@ -72,7 +72,7 @@
                             <!-- Rating -->
                             <div class="feedback-field mb-4">
                                 <label class="form-label" id="rating-label">
-                                    {{ 'Your rating' | t }}</label>
+                                    {{ 'Your rating' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
                                 <div class="rating-stars" role="radiogroup" aria-labelledby="rating-label">
                                     @for (star of getStars(); track star) {
@@ -95,7 +95,7 @@
                             <!-- Review -->
                             <div class="feedback-field mb-4">
                                 <label class="form-label" for="review">
-                                    {{ 'Your review' | t }}</label>
+                                    {{ 'Your review' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
                                 <textarea id="review" rows="5" class="form-control feedback-input"
                                     [placeholder]="'Tell us about your experience...' | t" formControlName="review"

@@ -13,7 +13,7 @@
    ========================================= */
 
 .amenity-page {
-  padding: 1.5rem 0;
+  padding:1.5rem 0;
 }
 
 /* =========================================
@@ -25,16 +25,16 @@
   align-items: center;
   justify-content: space-between;
 
-  padding-bottom: 1rem;
-  margin-bottom: 1.5rem;
+  padding-bottom:1rem;
+  margin-bottom:1.5rem;
 
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--border);
 }
 
 .amenity-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--text);
 }
 
 /* =========================================
@@ -46,13 +46,13 @@
   align-items: center;
   justify-content: flex-end;
 
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap:1rem;
+  margin-bottom:1.5rem;
 }
 
 .create-amenity-btn {
   min-height: 42px;
-  padding: 0.5rem 1rem;
+  padding:0.5rem 1rem;
 
   font-weight: 500;
 }
@@ -77,10 +77,10 @@
 
   overflow: hidden;
 
-  background: #ffffff;
+  background: var(--surface);
 
-  border: 1px solid #e9ecef;
-  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius:0.75rem;
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 
@@ -109,7 +109,7 @@
 
   overflow: hidden;
 
-  background: #f1f3f5;
+  background: var(--primary-50);
 }
 
 .amenity-image {
@@ -145,9 +145,9 @@
   align-items: center;
   justify-content: center;
 
-  background: #f1f3f5;
+  background: var(--primary-50);
 
-  color: #adb5bd;
+  color: var(--input-border);
 }
 
 .amenity-image-empty i {
@@ -166,7 +166,7 @@
 
   display: flex;
 
-  gap: 0.4rem;
+  gap:0.4rem;
 
   z-index: 2;
 }
@@ -214,17 +214,17 @@
   align-items: center;
   justify-content: center;
 
-  padding: 0.55rem 1.1rem;
+  padding:0.55rem 1.1rem;
 
   font-size: 0.875rem;
   font-weight: 500;
 
-  color: #212529;
+  color: var(--text);
 
-  background: #ffffff;
+  background: var(--surface);
 
   border: none;
-  border-radius: 2rem;
+  border-radius:2rem;
 
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 
@@ -249,7 +249,7 @@
 }
 
 .amenity-view-btn:hover {
-  background: #f1f3f5;
+  background: var(--primary-50);
 }
 
 /* =========================================
@@ -263,9 +263,9 @@
   align-items: center;
   justify-content: center;
 
-  gap: 0.75rem;
+  gap:0.75rem;
 
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
 /* =========================================
@@ -283,13 +283,13 @@
 
   text-align: center;
 
-  padding: 2rem;
+  padding:2rem;
 
-  border: 1px dashed #dee2e6;
+  border: 1px dashed var(--input-border);
 
-  border-radius: 0.75rem;
+  border-radius:0.75rem;
 
-  background: #fafafa;
+  background: var(--primary-50);
 }
 
 .empty-icon {
@@ -300,17 +300,17 @@
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 1rem;
+  margin-bottom:1rem;
 
-  border-radius: 50%;
+  border-radius:50%;
 
-  background: #f1f3f5;
+  background: var(--primary-50);
 }
 
 .empty-icon i {
   font-size: 1.75rem;
 
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
 /* =========================================
@@ -326,7 +326,7 @@
   align-items: center;
   justify-content: center;
 
-  padding: 1.5rem;
+  padding:1.5rem;
 
   background: rgba(0, 0, 0, 0.6);
 
@@ -362,9 +362,9 @@
 
   overflow-y: auto;
 
-  background: #ffffff;
+  background: var(--surface);
 
-  border-radius: 1rem;
+  border-radius:1rem;
 
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
 
@@ -405,7 +405,7 @@
 
   border: none;
 
-  border-radius: 50%;
+  border-radius:50%;
 
   background: rgba(255, 255, 255, 0.95);
 
@@ -421,7 +421,7 @@
 }
 
 .amenity-popup-close:hover {
-  background: #f1f3f5;
+  background: var(--primary-50);
 
   transform: scale(1.05);
 }
@@ -442,9 +442,9 @@
 
   overflow: hidden;
 
-  border-radius: 1rem 1rem 0 0;
+  border-radius:1rem 1rem 0 0;
 
-  background: #000;
+  background: var(--text);
 }
 
 .amenity-popup-media img {
@@ -455,7 +455,7 @@
 
   display: block;
 
-  background: #000;
+  background: var(--text);
 }
 
 /* Empty Popup Image */
@@ -468,9 +468,9 @@
   align-items: center;
   justify-content: center;
 
-  color: #adb5bd;
+  color: var(--input-border);
 
-  background: #f1f3f5;
+  background: var(--primary-50);
 }
 
 .amenity-popup-empty i {
@@ -482,7 +482,7 @@
    ========================================= */
 
 .amenity-popup-body {
-  padding: 1.5rem;
+  padding:1.5rem;
 }
 
 .amenity-popup-top {
@@ -491,18 +491,18 @@
   align-items: center;
   justify-content: space-between;
 
-  gap: 1rem;
+  gap:1rem;
 
-  margin-bottom: 0.75rem;
+  margin-bottom:0.75rem;
 }
 
 .amenity-popup-title {
-  margin: 0;
+  margin:0;
 
   font-size: 1.25rem;
   font-weight: 600;
 
-  color: #212529;
+  color: var(--text);
 
   word-break: break-word;
 }
@@ -514,7 +514,7 @@
 .amenity-popup-badges {
   display: flex;
 
-  gap: 0.4rem;
+  gap:0.4rem;
 
   flex-wrap: wrap;
 }
@@ -528,13 +528,13 @@
    ========================================= */
 
 .amenity-popup-description {
-  margin: 0 0 1.25rem;
+  margin:0 0 1.25rem;
 
   font-size: 0.9rem;
 
   line-height: 1.6;
 
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
 /* =========================================
@@ -546,7 +546,7 @@
 
   justify-content: flex-end;
 
-  gap: 0.5rem;
+  gap:0.5rem;
 }
 
 /* =========================================
@@ -583,11 +583,11 @@
 
 @media (max-width: 767.98px) {
   .amenity-page {
-    padding: 1rem 0;
+    padding:1rem 0;
   }
 
   .amenity-header {
-    margin-bottom: 1rem;
+    margin-bottom:1rem;
   }
 
   .amenity-header h2 {
@@ -619,14 +619,14 @@
 
     transform: none;
 
-    padding: 0.45rem 0.9rem;
+    padding:0.45rem 0.9rem;
 
     font-size: 0.8rem;
   }
 
   /* Popup bottom sheet */
   .amenity-popup-backdrop {
-    padding: 0;
+    padding:0;
 
     align-items: flex-end;
   }
@@ -636,7 +636,7 @@
 
     max-height: 92vh;
 
-    border-radius: 1rem 1rem 0 0;
+    border-radius:1rem 1rem 0 0;
 
     animation: popupSlideUp 0.3s ease;
   }
@@ -660,7 +660,7 @@
   }
 
   .amenity-popup-body {
-    padding: 1.1rem;
+    padding:1.1rem;
   }
 
   .amenity-popup-top {
@@ -668,7 +668,7 @@
 
     align-items: flex-start;
 
-    gap: 0.5rem;
+    gap:0.5rem;
   }
 
   .amenity-popup-title {
@@ -684,7 +684,7 @@
   .amenity-card {
     height: 180px;
 
-    border-radius: 0.6rem;
+    border-radius:0.6rem;
   }
 
   .amenity-popup-media {
@@ -692,7 +692,7 @@
   }
 
   .amenity-view-btn {
-    padding: 0.4rem 0.75rem;
+    padding:0.4rem 0.75rem;
 
     font-size: 0.75rem;
   }

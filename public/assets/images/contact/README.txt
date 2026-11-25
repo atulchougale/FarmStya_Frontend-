@@ -1,0 +1,1 @@
+Static veranda image extracted from the selected Contact Us concept #5 (exec-65529318-b3ad-4234-9fac-05fc2c9dbb3b.png). Design-reference imagery at composite resolution, not a full-resolution photograph of the property. Contact information and the map use the existing public site API.

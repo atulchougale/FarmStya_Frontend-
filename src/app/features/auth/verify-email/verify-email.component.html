@@ -205,7 +205,7 @@
 
                                     <label for="otpCode" class="form-label fw-semibold">
 
-                                        {{ 'Enter OTP' | t }}</label>
+                                        {{ 'Enter OTP' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
 
                                     <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">

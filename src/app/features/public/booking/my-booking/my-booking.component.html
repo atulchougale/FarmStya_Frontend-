@@ -1,154 +1,34 @@
-
-<div class="my-bookings-page">
-
-  <div class="container py-5">
-
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 class="fw-bold mb-1">{{ 'My Bookings' | t }}</h2>
-        <p class="text-muted mb-0">
-          {{ 'View your farm stay reservations.' | t }}</p>
+<main class="my-bookings-page">
+  <div class="bookings-container">
+    <header class="page-heading">
+      <div><h1>{{ 'My Bookings' | t }}</h1><p>{{ 'Your next peaceful escape, all in one place.' | t }}</p></div>
+      <div class="heading-actions">
+        <button class="booking-button outline" type="button" (click)="refreshBookings()" [disabled]="loading"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i>{{ 'Refresh' | t }}</button>
+        <a class="booking-button primary" routerLink="/booking"><i class="bi bi-calendar-plus" aria-hidden="true"></i>{{ 'Book a Stay' | t }}</a>
       </div>
-
-      <button
-        class="btn btn-outline-success"
-        (click)="refreshBookings()"
-        [disabled]="loading">
-
-        <i class="bi bi-arrow-clockwise me-2"></i>
-        {{ 'Refresh' | t }}</button>
-    </div>
-
-    <!-- Loading -->
-    <div class="text-center py-5" *ngIf="loading">
-      <div class="spinner-border text-success"></div>
-      <p class="text-muted mt-3">{{ 'Loading your bookings...' | t }}</p>
-    </div>
-
-    <!-- Error -->
-    <div
-      class="alert alert-danger"
-      *ngIf="!loading && errorMessage">
-
-      {{ (errorMessage) | t }}
-    </div>
-
-    <!-- Empty -->
-    <div
-      class="text-center empty-state py-5"
-      *ngIf="!loading && !errorMessage && bookings.length === 0">
-
-      <i class="bi bi-calendar-x empty-icon"></i>
-      <h4 class="mt-3">{{ 'No Bookings Found' | t }}</h4>
-      <p class="text-muted">{{ 'Your bookings will appear here.' | t }}</p>
-    </div>
-
-    <!-- Booking Cards -->
-    <div class="row g-4"
-         *ngIf="!loading && bookings.length > 0">
-
-      <div class="col-12"
-           *ngFor="let booking of bookings">
-
-        <div class="card booking-card shadow-sm" [class.border-success]="booking.bookingReference === selectedReference">
-
-          <div class="card-body p-4">
-
-            <!-- Booking Header -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-              <div>
-                <small class="text-muted">{{ 'Booking Reference' | t }}</small>
-                <h5 class="fw-bold mb-0">
-                  {{ booking.bookingReference }}
-                </h5>
-              </div>
-
-              <span
-                class="booking-status"
-                [ngClass]="getStatusClass(booking.status)">
-
-                {{ (booking.status || 'Unknown') | t }}
-              </span>
-
-            </div>
-
-            <hr>
-
-            <!-- Basic Booking Details -->
-            <div class="row g-3">
-
-              <div class="col-md-4">
-                <small class="text-muted">{{ 'Guest Name' | t }}</small>
-                <div class="fw-semibold">{{ booking.fullName }}</div>
-              </div>
-
-              <div class="col-md-4">
-                <small class="text-muted">{{ 'Mobile Number' | t }}</small>
-                <div class="fw-semibold">
-                  {{ booking.mobileNumber || '-' }}
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <small class="text-muted">{{ 'Total Guests' | t }}</small>
-                <div class="fw-semibold">{{ booking.personCount }}</div>
-              </div>
-
-              <div class="col-md-4">
-                <small class="text-muted">{{ 'Check In' | t }}</small>
-                <div class="fw-semibold">
-                  {{ (booking.checkInDate | localDate:'dd MMM yyyy') | t }}
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <small class="text-muted">{{ 'Check Out' | t }}</small>
-                <div class="fw-semibold">
-                  {{ (booking.checkOutDate | localDate:'dd MMM yyyy') | t }}
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <small class="text-muted">{{ 'Booking Date' | t }}</small>
-                <div class="fw-semibold">
-                  {{ (booking.createdDate | localDate:'dd MMM yyyy') | t }}
-                </div>
-              </div>
-
-            </div>
-
-            <hr>
-
-            <!-- Action Buttons -->
-            <div class="d-flex justify-content-end flex-wrap gap-2">
-
-              <!-- View Details -->
-              <button
-                type="button"
-                class="btn btn-outline-primary"
-                (click)="viewBookingDetails(booking.bookingId)">
-
-                <i class="bi bi-eye me-2"></i>
-
-                {{ 'View Details' | t }}</button>
-              <button *ngIf="booking.status === 'Approved'" type="button" class="btn btn-success"
-                (click)="viewBookingDetails(booking.bookingId)">{{ 'Confirm Booking' | t }}</button>
-
-            </div>
-
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <nav class="d-flex align-items-center justify-content-center gap-3 mt-3" [attr.aria-label]="'My booking pages' | t">
-      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || page === 1" (click)="changePage(-1)">{{ 'Previous' | t }}</button>
-      <span>{{ 'Page {p0}' | t:{p0: (page)} }}</span>
-      <button type="button" class="btn btn-outline-secondary" [disabled]="loading || bookings.length < pageSize" (click)="changePage(1)">{{ 'Next' | t }}</button>
+    </header>
+    <nav class="booking-filters" [attr.aria-label]="'Booking filters' | t">
+      <button type="button" class="booking-button" [class.primary]="activeFilter === 'All'" [class.outline]="activeFilter !== 'All'" [attr.aria-pressed]="activeFilter === 'All'" [disabled]="loading" (click)="selectFilter('All')">{{ 'All Bookings' | t }}</button>
+      <button type="button" class="booking-button" [class.primary]="activeFilter === 'Confirmed'" [class.outline]="activeFilter !== 'Confirmed'" [attr.aria-pressed]="activeFilter === 'Confirmed'" [disabled]="loading" (click)="selectFilter('Confirmed')">{{ 'Upcoming' | t }}</button>
+      <button type="button" class="booking-button" [class.primary]="activeFilter === 'CheckedOut'" [class.outline]="activeFilter !== 'CheckedOut'" [attr.aria-pressed]="activeFilter === 'CheckedOut'" [disabled]="loading" (click)="selectFilter('CheckedOut')">{{ 'Completed' | t }}</button>
     </nav>
+    <div class="page-state" *ngIf="loading" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>{{ 'Loading your bookings...' | t }}</div>
+    <div class="page-state error-state" *ngIf="!loading && errorMessage" role="alert"><p>{{ errorMessage | t }}</p><button class="booking-button outline" type="button" (click)="refreshBookings()">{{ 'Retry' | t }}</button></div>
+    <div class="page-state empty-state" *ngIf="!loading && !errorMessage && !bookings.length"><i class="bi bi-calendar-heart" aria-hidden="true"></i><h2>{{ 'No Bookings Found' | t }}</h2><p>{{ 'Your bookings will appear here.' | t }}</p><a class="booking-button primary" routerLink="/booking">{{ 'Book a Stay' | t }}</a></div>
+    <section class="booking-list" *ngIf="!loading && !errorMessage && bookings.length" [attr.aria-label]="'My Bookings' | t">
+      <article class="stay-card" *ngFor="let booking of bookings; trackBy: trackBooking" [class.selected]="booking.bookingReference === selectedReference" [attr.aria-labelledby]="'booking-' + booking.bookingId">
+        <img class="stay-image" src="/assets/images/about/farmhouse-story.png" alt="" loading="lazy" width="240" height="160">
+        <div class="stay-content">
+          <div class="stay-top">
+            <div class="reference"><span>{{ 'Booking Reference' | t }}</span><h2 [id]="'booking-' + booking.bookingId">{{ booking.bookingReference }}</h2></div>
+            <div class="stay-dates"><div><i class="bi bi-calendar-check" aria-hidden="true"></i><div><span>{{ 'Check In' | t }}</span><strong>{{ booking.checkInDate | localDate:'dd MMM yyyy' }}</strong></div></div><i class="bi bi-arrow-right date-arrow" aria-hidden="true"></i><div><i class="bi bi-calendar-event" aria-hidden="true"></i><div><span>{{ 'Check Out' | t }}</span><strong>{{ booking.checkOutDate | localDate:'dd MMM yyyy' }}</strong></div></div></div>
+            <span class="booking-status" [ngClass]="getStatusClass(booking.status)">{{ statusLabel(booking.status) | t }}</span>
+          </div>
+          <div class="stay-meta"><div class="guest-meta"><i class="bi bi-person" aria-hidden="true"></i><div><strong>{{ booking.fullName }}</strong><span>{{ booking.mobileNumber || '-' }}</span></div></div><div><i class="bi bi-people" aria-hidden="true"></i><div><span>{{ 'Total Guests' | t }}</span><strong>{{ booking.personCount }}</strong></div></div><div><i class="bi bi-calendar3" aria-hidden="true"></i><div><span>{{ 'Booked On' | t }}</span><strong>{{ booking.createdDate | localDate:'dd MMM yyyy' }}</strong></div></div></div>
+        </div>
+        <div class="stay-actions"><button *ngIf="booking.status === 'Approved'" class="booking-button primary" type="button" (click)="viewBookingDetails(booking.bookingId)">{{ 'Confirm Booking' | t }}</button><button class="booking-button outline" type="button" (click)="viewBookingDetails(booking.bookingId)" [attr.aria-label]="('View Details' | t) + ' ' + booking.bookingReference"><i class="bi bi-eye" aria-hidden="true"></i>{{ 'View Details' | t }}</button></div>
+      </article>
+    </section>
+    <nav class="booking-pagination" *ngIf="!loading && !errorMessage && (bookings.length || page > 1)" [attr.aria-label]="'My booking pages' | t"><button class="booking-button outline" type="button" [disabled]="page === 1" (click)="changePage(-1)"><i class="bi bi-chevron-left" aria-hidden="true"></i>{{ 'Previous' | t }}</button><span aria-current="page">{{ 'Page {p0}' | t:{p0:page} }}</span><button class="booking-button outline" type="button" [disabled]="bookings.length < pageSize" (click)="changePage(1)">{{ 'Next' | t }}<i class="bi bi-chevron-right" aria-hidden="true"></i></button></nav>
   </div>
-</div>
+</main>

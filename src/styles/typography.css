@@ -1,0 +1,27 @@
+:root {
+  --font-family-base: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+}
+
+html, body { font-family: var(--font-family-base); color: var(--text); }
+body { font-size: var(--font-size-md); line-height: 1.5; }
+h1, h2, h3, h4, h5, h6 { color: var(--text); font-weight: var(--font-weight-semibold); line-height: 1.25; }
+small, .text-muted { color: var(--text-muted); }
+html[lang="mr"] body { font-family: "Noto Sans Devanagari", "Nirmala UI", "Mangal", "Segoe UI", sans-serif; line-height: 1.65; }
+html[lang="mr"] .nav-link, html[lang="mr"] .btn { white-space: normal; }
+
+/* Use the loaded font weights consistently across native and Material controls. */
+body.mat-typography { font-family:var(--font-family-base); }
+button,input,select,textarea { font-family:inherit; }
+html[lang="mr"] body.mat-typography { font-family:"Noto Sans Devanagari","Nirmala UI","Mangal",sans-serif; }

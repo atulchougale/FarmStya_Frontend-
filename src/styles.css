@@ -1,23 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+
+/* =========================================
+   GLOBAL STYLES & IMPORTS
+========================================= */
+
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
-*{
-    margin: 0px;
+@import './styles/theme.css';
+@import './styles/typography.css';
+@import './styles/utilities.css';
+@import './styles/components.css';
+@import './styles/sweetalert.css';
+@import './styles/admin-ui.css';
+@import './styles/admin-records.css';
+
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
+* {
+  margin: 0;
+}
 
 /* =========================================
    SHARED RESPONSIVE CONTAINER
-   Matches Tailwind's default `container` utility —
-   5 breakpoint steps, same as the reference design.
+   Matches Tailwind's default container
 ========================================= */
 
 .app-container {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: var(--space-6);
+  padding-right: var(--space-6);
 }
 
 @media (min-width: 640px) {
@@ -49,8 +69,41 @@
     max-width: 1536px;
   }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html[lang="mr"] body { font-family: "Nirmala UI", "Mangal", sans-serif; line-height: 1.65; }
-html[lang="mr"] .nav-link, html[lang="mr"] .btn { white-space: normal; }
+/* =========================================
+   HTML & BODY
+========================================= */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+}
+
+/* =========================================
+   MARATHI LANGUAGE SUPPORT
+========================================= */
+
+html[lang="mr"] body {
+  font-family: "Noto Sans Devanagari", "Nirmala UI", "Mangal", sans-serif;
+  line-height: 1.65;
+}
+
+html[lang="mr"] .nav-link,
+html[lang="mr"] .btn {
+  white-space: normal;
+}
+
+@media (max-width: 767px) { .app-container { padding-inline: var(--space-2); } }
+
+/* Required labels remain visibly red in both brand themes. */
+.required-marker, [data-required-marker="true"], label > .required {
+  color: var(--error-700) !important;
+  font-size: 1em !important;
+  font-weight: 800 !important;
+  margin-inline-start: 4px;
+}

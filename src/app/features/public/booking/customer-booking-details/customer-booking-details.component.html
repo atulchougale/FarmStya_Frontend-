@@ -1,246 +1,87 @@
-<main class="container py-4 customer-booking-details">
-  <div class="booking-dialog-header">
-    <div>
-      <h2 id="booking-dialog-title">{{ 'Booking details' | t }}</h2>
-      <p *ngIf="selectedBooking">{{ selectedBooking.bookingReference }} · {{ (selectedBooking.status) | t }}</p>
-    </div>
-  </div>
-  <div class="booking-dialog-content">
-    <!-- Details Loading -->
-    <div
-      class="text-center py-4"
-      *ngIf="
-        detailsLoading
-      ">
-
-      <div class="spinner-border spinner-border-sm text-success"></div>
-      <p class="text-muted mt-2 mb-0">
-        {{ 'Loading booking details...' | t }}</p>
-    </div>
-
-    <!-- Details Error -->
-    <div
-      class="alert alert-danger mt-3"
-      *ngIf="
-        detailsError
-      ">
-
-      {{ (detailsError) | t }}
-    </div>
-
-    <!-- Complete Booking Details -->
-    <div
-      class="booking-detail-section mt-4"
-      *ngIf="
-        selectedBooking &&
-        !detailsLoading
-      ">
-
-      <!-- Customer Information -->
-      <h6 class="detail-heading">{{ 'Customer Information' | t }}</h6>
-
-      <div class="row g-3 mb-4">
-
-        <div class="col-md-4">
-          <small class="text-muted">{{ 'Full Name' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.fullName }}
+<main class="voucher-page">
+  <div class="voucher-container">
+    <header class="page-title"><i class="bi bi-calendar-check" aria-hidden="true"></i><h1>{{ 'Booking details' | t }}</h1><p>{{ 'View your booking, stay, payments and documents in one place.' | t }}</p></header>
+    <p *ngIf="detailsLoading" class="notice" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>{{ 'Loading booking details...' | t }}</p>
+    <p *ngIf="detailsError" class="notice error" role="alert">{{ detailsError | t }}</p>
+    <article class="booking-voucher" *ngIf="selectedBooking && !detailsLoading">
+      <header class="voucher-banner"><div class="farm-brand"><img class="farm-mark" src="/assets/images/booking/farm-voucher-mark.svg" alt="" width="64" height="48"><div><h2>{{ farmHouseName || ('FarmHouse' | t) }}</h2><span class="farm-location">{{ farmHouseLocation }}</span></div></div><div class="booking-reference"><app-voucher-icon name="calendar"></app-voucher-icon><div><span>{{ 'Booking Reference' | t }}</span><strong>{{ selectedBooking.bookingReference }}</strong></div></div><span class="status-badge" [attr.data-status]="selectedBooking.status"><app-voucher-icon name="check" *ngIf="selectedBooking.status === 'Confirmed' || selectedBooking.status === 'CheckedOut'"></app-voucher-icon>{{ statusLabel(selectedBooking.status) | t }}</span></header>
+      <div class="voucher-body">
+        <div class="voucher-columns">
+          <div class="voucher-column">
+            <section class="voucher-card"><h2><app-voucher-icon name="person"></app-voucher-icon>{{ 'Customer Details' | t }}</h2><dl class="customer-data"><div><dt>{{ 'Full Name' | t }}</dt><dd>{{ selectedBooking.fullName }}</dd></div><div><dt>{{ 'Mobile Number' | t }}</dt><dd>{{ selectedBooking.mobileNumber || '-' }}</dd></div><div *ngIf="selectedBooking.email"><dt>{{ 'Email' | t }}</dt><dd>{{ selectedBooking.email }}</dd></div><div><dt>{{ 'Customer Notes' | t }}</dt><dd>{{ selectedBooking.customerNotes || '-' }}</dd></div></dl></section>
+            <section class="voucher-card"><h2><app-voucher-icon name="bed"></app-voucher-icon>{{ 'Stay Details' | t }}</h2><div class="stay-dates"><div><i class="bi bi-calendar-check" aria-hidden="true"></i><span>{{ 'Scheduled check-in' | t }}</span><strong>{{ selectedBooking.checkInDate | localDate:'dd MMM yyyy' }}</strong></div><i class="bi bi-arrow-right" aria-hidden="true"></i><div><i class="bi bi-calendar-event" aria-hidden="true"></i><span>{{ 'Scheduled check-out' | t }}</span><strong>{{ selectedBooking.checkOutDate | localDate:'dd MMM yyyy' }}</strong></div></div><div class="actual-dates" *ngIf="selectedBooking.actualCheckInAt || selectedBooking.actualCheckOutAt"><div *ngIf="selectedBooking.actualCheckInAt"><span>{{ 'Actual check-in' | t }}</span><strong>{{ selectedBooking.actualCheckInAt | localDate:'dd MMM yyyy, h:mm a' }}</strong></div><div *ngIf="selectedBooking.actualCheckOutAt"><span>{{ 'Actual check-out' | t }}</span><strong>{{ selectedBooking.actualCheckOutAt | localDate:'dd MMM yyyy, h:mm a' }}</strong></div></div><div class="stay-extra"><span *ngIf="selectedBooking.checkoutPaidAt"><i class="bi bi-credit-card" aria-hidden="true"></i>{{ 'Checkout payment' | t }}: {{ selectedBooking.checkoutPaidAt | localDate:'dd MMM yyyy, h:mm a' }}</span><span><i class="bi bi-clock" aria-hidden="true"></i>{{ 'Stay Days' | t }}: <strong>{{ selectedBooking.stayDays }}</strong></span><span><i class="bi bi-balloon" aria-hidden="true"></i>{{ 'Booking Type' | t }}: <strong>{{ bookingTypeLabel(selectedBooking.bookingType) | t }}</strong></span></div></section>
+            <section class="voucher-card"><h2><app-voucher-icon name="guests"></app-voucher-icon>{{ 'Guests' | t }}</h2><div class="guest-grid"><div><app-voucher-icon name="person"></app-voucher-icon><span>{{ 'Adults' | t }}</span><strong>{{ selectedBooking.adultCount }}</strong></div><div><i class="bi bi-person-heart" aria-hidden="true"></i><span>{{ 'Children' | t }}</span><strong>{{ selectedBooking.childrenCount }}</strong></div><div><app-voucher-icon name="guests"></app-voucher-icon><span>{{ 'Total Persons' | t }}</span><strong>{{ selectedBooking.personCount }}</strong></div></div></section>
+            <section class="voucher-card"><h2><app-voucher-icon name="party"></app-voucher-icon>{{ 'Event Details' | t }}</h2><div class="event-details"><div class="event-inline" *ngFor="let event of selectedBooking.eventDates"><span>{{ 'Event Date' | t }}: <strong>{{ event.eventDate | localDate:'dd MMM yyyy' }}</strong></span><span>{{ 'Event' | t }}: <strong>{{ bookingTypeLabel(event.eventType) | t }}</strong></span><span>{{ 'Amount' | t }}: <strong>{{ event.dailyRateSnapshot | currency:selectedBooking.currencyCode:'symbol':'1.0-2' }}</strong></span></div><p *ngIf="!selectedBooking.eventDates?.length" class="empty-copy">{{ 'No event dates available.' | t }}</p></div></section>
           </div>
+          <div class="voucher-column">
+            <section class="voucher-card payment-card"><h2><app-voucher-icon name="coins"></app-voucher-icon>{{ 'Payment Details' | t }}</h2><dl class="payment-data"><div class="payment-table-heading"><dt>{{ 'Particulars' | t }}</dt><dd>{{ 'Amount' | t }}</dd></div><div><dt><i class="bi bi-house" aria-hidden="true"></i>{{ 'Stay Charges' | t }}</dt><dd>{{ selectedBooking.baseAmount == null ? '-' : (selectedBooking.baseAmount | currency:selectedBooking.currencyCode) }}</dd></div><div><dt><app-voucher-icon name="party"></app-voucher-icon>{{ 'Event Charges' | t }}</dt><dd>{{ selectedBooking.eventAmount == null ? '-' : (selectedBooking.eventAmount | currency:selectedBooking.currencyCode) }}</dd></div><div class="total-row"><dt>{{ 'Total Booking Amount' | t }}</dt><dd>{{ selectedBooking.totalAmount | currency:selectedBooking.currencyCode }}</dd></div><div><dt><app-voucher-icon name="wallet"></app-voucher-icon>{{ 'Advance paid' | t }}</dt><dd>{{ selectedBooking.advancePaid | currency:selectedBooking.currencyCode }}</dd></div><div *ngIf="selectedBooking.totalPaid > selectedBooking.advancePaid"><dt><app-voucher-icon name="wallet"></app-voucher-icon>{{ 'Final payment' | t }}</dt><dd>{{ (selectedBooking.totalPaid - selectedBooking.advancePaid) | currency:selectedBooking.currencyCode }}</dd></div><div *ngIf="selectedBooking.discountAmount > 0"><dt>{{ 'Discount' | t }}</dt><dd>{{ selectedBooking.discountAmount | currency:selectedBooking.currencyCode }}</dd></div><div class="paid-row"><dt><span class="paid-check"><app-voucher-icon name="check"></app-voucher-icon></span>{{ 'Total paid' | t }}</dt><dd>{{ selectedBooking.totalPaid | currency:selectedBooking.currencyCode }}<span class="paid-badge" *ngIf="selectedBooking.remainingAmount <= 0 && selectedBooking.totalPaid >= selectedBooking.totalAmount - selectedBooking.discountAmount">{{ 'Fully Paid' | t }}</span></dd></div><div *ngIf="selectedBooking.remainingAmount > 0" class="remaining-row"><dt>{{ 'Remaining' | t }}</dt><dd>{{ selectedBooking.remainingAmount | currency:selectedBooking.currencyCode }}</dd></div></dl></section>
+            <section class="voucher-card receipts-card"><h2><app-voucher-icon name="pdf"></app-voucher-icon>{{ 'Receipts' | t }}</h2><app-payment-receipts [bookingId]="selectedBooking.bookingId" [customer]="true" [bookingStatus]="selectedBooking.status" [compact]="true" /></section>
+            <section class="voucher-card documents-card"><h2><app-voucher-icon name="identity"></app-voucher-icon>{{ 'Identity proof' | t }}</h2><div class="document-actions">
+    <section *ngIf="selectedBooking && (identity || identityLoading || identityError || canUploadIdentity)" class="identity-step">
+      <h3>{{ 'ID proof' | t }}</h3>
+      <div *ngIf="identity" class="identity-summary"><p><span>{{ 'Document type' | t }}: </span><span class="document-name">{{ identity.documentType | t }}<span *ngIf="identity.otherDocumentType"> · {{ identity.otherDocumentType }}</span></span></p><span class="files-label"><i class="bi bi-files" aria-hidden="true"></i>{{ 'Files' | t }}: <strong>{{ identity.files.length }}</strong></span><button type="button" class="btn btn-outline-success" [disabled]="uploadingIdentity" (click)="viewDocument()"><app-voucher-icon name="eye"></app-voucher-icon> {{ 'View Document' | t }}</button></div>
+      <p *ngIf="identityLoading" role="status">{{ 'Checking ID proof status…' | t }}</p>
+      <p *ngIf="identityError" role="alert" class="text-danger">{{ (identityError) | t }}</p>
+      <p *ngIf="identity?.status === 'ReuploadRequested'">
+        {{ 'Please upload a replacement ID proof. {p0} Your booking remains confirmed.' | t:{p0: (identity?.reason)} }}</p>
+      <p *ngIf="identity && identity.status !== 'ReuploadRequested' && selectedBooking.status !== 'CheckedOut'">
+        {{ identity.files.length }} {{ 'file(s)' | t }} · {{ (identity.status === 'Verified' ? 'Verified' : 'Uploaded') | t }}
+      </p>
+      <div *ngIf="canUploadIdentity && !identityLoading">
+        <label for="document-type" class="form-label">{{ 'Document type' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+        <select id="document-type" class="form-select mb-3" [(ngModel)]="documentType" [disabled]="uploadingIdentity">
+          <option value="">{{ 'Select document type' | t }}</option>
+          <option *ngFor="let type of documentTypes" [value]="type">{{ type | t }}</option>
+        </select>
+        <div *ngIf="documentType === 'Other'" class="mb-3">
+          <label for="other-document-type" class="form-label">{{ 'Other document type' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+          <input id="other-document-type" class="form-control" maxlength="100" [(ngModel)]="otherDocumentType" [disabled]="uploadingIdentity">
         </div>
-
-        <div class="col-md-4">
-          <small class="text-muted">{{ 'Email' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.email || '-' }}
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <small class="text-muted">{{ 'Mobile Number' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.mobileNumber || '-' }}
-          </div>
-        </div>
-
-        <div class="col-md-12">
-          <small class="text-muted">{{ 'Customer Notes' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.customerNotes || '-' }}
-          </div>
-        </div>
-
+        <label for="booking-id-proof" class="form-label">{{ (identity ? 'Replace ID proof' : 'Upload ID proof') | t }}</label>
+        <input id="booking-id-proof" class="form-control" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple
+          [disabled]="uploadingIdentity || selectedFiles.length >= 2" (change)="selectIdentityFiles($event)">
+        <small class="text-muted">{{ 'One document type, maximum two files (front and back). Up to 5 MB per file.' | t }}</small>
+        <ul class="list-unstyled mt-2">
+          <li *ngFor="let file of selectedFiles; let i = index" class="d-flex align-items-center gap-2 mb-2">
+            <span>{{ (i === 0 ? 'Front / first file' : 'Back / second file') | t }} · {{ file.name }}</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="uploadingIdentity"
+              (click)="selectedFiles.splice(i, 1)">{{ 'Remove' | t }}</button>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-success" (click)="uploadIdentity()"
+          [disabled]="uploadingIdentity || !documentType || !selectedFiles.length || (documentType === 'Other' && !otherDocumentType.trim())">
+          {{ 'Upload documents' | t }}
+        </button>
+        <p *ngIf="uploadingIdentity" role="status">{{ 'Uploading…' | t }}</p>
       </div>
-
-      <!-- Stay Information -->
-      <h6 class="detail-heading">{{ 'Stay Information' | t }}</h6>
-
-      <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-          <small class="text-muted">{{ 'Scheduled check-in' | t }}</small>
-          <div class="fw-semibold">
-            {{ (selectedBooking.checkInDate | localDate:'dd MMM yyyy') | t }}
-          </div>
-          <div *ngIf="selectedBooking.actualCheckInAt" class="mt-2">
-            <small class="text-muted">{{ 'Actual check-in' | t }}</small>
-            <div class="fw-semibold">{{ (selectedBooking.actualCheckInAt | localDate:'dd MMM yyyy, h:mm a') | t }}</div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <small class="text-muted">{{ 'Scheduled check-out' | t }}</small>
-          <div class="fw-semibold">
-            {{ (selectedBooking.checkOutDate | localDate:'dd MMM yyyy') | t }}
-          </div>
-          <div *ngIf="selectedBooking.actualCheckOutAt" class="mt-2">
-            <small class="text-muted">{{ 'Actual check-out' | t }}</small>
-            <div class="fw-semibold">{{ (selectedBooking.actualCheckOutAt | localDate:'dd MMM yyyy, h:mm a') | t }}</div>
-          </div>
-          <div *ngIf="selectedBooking.checkoutPaidAt" class="mt-2">
-            <small class="text-muted">{{ 'Checkout payment' | t }}</small>
-            <div class="fw-semibold">{{ (selectedBooking.checkoutPaidAt | localDate:'dd MMM yyyy, h:mm a') | t }}</div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <small class="text-muted">{{ 'Stay Days' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.stayDays ?? '-' }}
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <small class="text-muted">{{ 'Booking Type' | t }}</small>
-          <div class="fw-semibold">
-            {{ (selectedBooking.bookingType || '-') | t }}
-          </div>
-        </div>
-
+      <div *ngIf="confirmView && selectedBooking.status === 'Approved' && identity?.status === 'Uploaded'">
+        <p class="mt-3 mb-1">{{ 'Advance {p0}' | t:{p0: (selectedBooking.advanceAmount | currency:selectedBooking.currencyCode)} }}</p>
+        <button type="button" class="btn btn-success" (click)="payAdvance()"
+          [disabled]="openingCheckout || verifyingAdvance || uploadingIdentity || selectedFiles.length > 0 || paymentReceived || !canUploadIdentity">
+          {{ (openingCheckout ? 'Opening checkout…' : 'Pay Now') | t }}
+        </button>
+        <small class="d-block mt-1">{{ 'Razorpay Test Mode' | t }}</small>
+        <button type="button" class="btn btn-outline-success mt-2" (click)="verifyAdvance()"
+          [disabled]="openingCheckout || verifyingAdvance || uploadingIdentity">
+          {{ (verifyingAdvance ? 'Verifying…' : 'Verify Existing Payment') | t }}
+        </button>
       </div>
+      <p *ngIf="paymentMessage" class="mt-2" role="status">{{ (paymentMessage) | t }}</p>
+      <p *ngIf="paymentError" class="mt-2 text-danger" role="alert">{{ (paymentError) | t }}</p>
 
-      <!-- Guest Information -->
-      <h6 class="detail-heading">{{ 'Guest Information' | t }}</h6>
+      <p *ngIf="identity && selectedBooking.status !== 'CheckedOut'" class="mt-2 mb-0">{{ 'Bring the original ID documents you uploaded when checking in.' | t }}</p>
+    </section>
+  <section *ngIf="checkoutBalance?.paymentStatus === 'Pending'" class="p-3">
+    <p>{{ 'Checkout amount {p0}' | t:{p0: (checkoutBalance?.payable | currency:checkoutBalance?.currency)} }}</p>
+    <button class="btn btn-success me-2" type="button" [disabled]="openingCheckout" (click)="payCheckout()">{{ 'Pay and Check Out' | t }}</button>
+    <button class="btn btn-outline-secondary" type="button" [disabled]="openingCheckout" (click)="payCheckout(true)">{{ 'Check payment status' | t }}</button>
+  </section>
+  <p *ngIf="checkoutNotice" class="px-3 pt-2" role="status">{{ (checkoutNotice) | t }}</p>
 
-      <div class="row g-3 mb-4">
-
-        <div class="col-md-4">
-          <small class="text-muted">{{ 'Adults' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.adultCount }}
+            </div></section>
           </div>
         </div>
-
-        <div class="col-md-4">
-          <small class="text-muted">{{ 'Children' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.childrenCount }}
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <small class="text-muted">{{ 'Total Persons' | t }}</small>
-          <div class="fw-semibold">
-            {{ selectedBooking.personCount }}
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Pricing Information -->
-      <h6 class="detail-heading">{{ 'Pricing Information' | t }}</h6>
-      <app-payment-receipts [bookingId]="selectedBooking.bookingId" [customer]="true" [bookingStatus]="selectedBooking.status" />
-
-      <div class="table-responsive mb-4">
-        <table class="table table-bordered align-middle">
-
-          <tbody>
-            <tr>
-              <th>{{ 'Base Amount' | t }}</th>
-              <td>{{ selectedBooking.baseAmount ?? '-' }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ 'Event Amount' | t }}</th>
-              <td>{{ selectedBooking.eventAmount ?? '-' }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ 'Booking Daily Rate' | t }}</th>
-              <td>{{ selectedBooking.bookingDailyRateSnapshot ?? '-' }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ 'Event Daily Rate' | t }}</th>
-              <td>{{ selectedBooking.eventDailyRateSnapshot ?? '-' }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ 'Advance Daily Rate' | t }}</th>
-              <td>{{ selectedBooking.advanceDailyRateSnapshot ?? '-' }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ 'Advance paid' | t }}</th>
-              <td>{{ selectedBooking.advancePaid | currency:selectedBooking.currencyCode }}</td>
-            </tr>
-
-            <tr *ngIf="selectedBooking.discountAmount > 0">
-              <th>{{ 'Discount' | t }}</th>
-              <td>{{ selectedBooking.discountAmount | currency:selectedBooking.currencyCode }}</td>
-            </tr>
-            <tr>
-              <th>{{ 'Total paid' | t }}</th>
-              <td>{{ selectedBooking.totalPaid | currency:selectedBooking.currencyCode }}</td>
-            </tr>
-            <tr *ngIf="selectedBooking.remainingAmount > 0">
-              <th>{{ 'Remaining' | t }}</th>
-              <td>{{ selectedBooking.remainingAmount | currency:selectedBooking.currencyCode }}</td>
-            </tr>
-            <tr class="table-success">
-              <th>{{ 'Total Amount' | t }}</th>
-              <td class="fw-bold">
-                {{ selectedBooking.totalAmount | currency:selectedBooking.currencyCode }}
-              </td>
-            </tr>
-          </tbody>
-
-        </table>
-      </div>
-
-      <!-- Event Dates -->
-      <h6 class="detail-heading">{{ 'Event Dates' | t }}</h6>
-
-      <div class="table-responsive mb-4">
-        <table class="table table-bordered">
-
-          <thead>
-            <tr>
-              <th>{{ 'Event Date' | t }}</th>
-              <th>{{ 'Event Type' | t }}</th>
-              <th>{{ 'Daily Rate' | t }}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            <tr *ngFor="let event of selectedBooking.eventDates">
-              <td>{{ (event.eventDate | localDate:'dd MMM yyyy') | t }}</td>
-              <td>{{ (event.eventType) | t }}</td>
-              <td>{{ event.dailyRateSnapshot }}</td>
-            </tr>
-
-            <tr *ngIf="!selectedBooking.eventDates?.length">
-              <td colspan="3" class="text-center text-muted">
-                {{ 'No event dates available.' | t }}</td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Status History -->
-      <h6 class="detail-heading">{{ 'Booking Status History' | t }}</h6>
-
+        <section class="voucher-card history-card"><h2><app-voucher-icon name="history"></app-voucher-icon>{{ 'Booking History' | t }}</h2><ol class="booking-journey" *ngIf="bookingJourney.length"><li *ngFor="let entry of bookingJourney"><i class="bi" [ngClass]="entry.newStatus === 'Rejected' || entry.newStatus === 'Cancelled' ? 'bi-x-circle-fill' : 'bi-check-circle-fill'" aria-hidden="true"></i><strong>{{ statusLabel(entry.newStatus) | t }}</strong><span>{{ entry.createdDate | localDate:'dd MMM yyyy' }}</span></li></ol><p *ngIf="!bookingJourney.length" class="empty-copy">{{ 'No status history available.' | t }}</p><details *ngIf="bookingJourney.length" class="history-details"><summary>{{ 'View full status history' | t }}</summary>
       <div class="table-responsive mb-4">
         <table class="table table-bordered">
 
@@ -275,97 +116,13 @@
         </table>
       </div>
 
-      <!-- Rejection Reason -->
-      <div
-        class="alert alert-warning"
-        *ngIf="selectedBooking.rejectionReason">
 
-        <strong>{{ 'Rejection Reason:' | t }}</strong>
-        {{ selectedBooking.rejectionReason }}
+        </details></section>
+        <details class="voucher-card rate-details"><summary><app-voucher-icon name="layers"></app-voucher-icon>{{ 'Rate Details' | t }}<span class="rate-preview"><span>{{ 'Booking Daily Rate' | t }}: <strong>{{ selectedBooking.bookingDailyRateSnapshot == null ? '-' : (selectedBooking.bookingDailyRateSnapshot | currency:selectedBooking.currencyCode) }}</strong></span><span>{{ 'Event Daily Rate' | t }}: <strong>{{ selectedBooking.eventDailyRateSnapshot == null ? '-' : (selectedBooking.eventDailyRateSnapshot | currency:selectedBooking.currencyCode) }}</strong></span><span>{{ 'Advance Daily Rate' | t }}: <strong>{{ selectedBooking.advanceDailyRateSnapshot == null ? '-' : (selectedBooking.advanceDailyRateSnapshot | currency:selectedBooking.currencyCode) }}</strong></span></span><i class="bi bi-chevron-down" aria-hidden="true"></i></summary><dl><div><dt>{{ 'Booking Daily Rate' | t }}</dt><dd>{{ selectedBooking.bookingDailyRateSnapshot == null ? '-' : (selectedBooking.bookingDailyRateSnapshot | currency:selectedBooking.currencyCode) }}</dd></div><div><dt>{{ 'Event Daily Rate' | t }}</dt><dd>{{ selectedBooking.eventDailyRateSnapshot == null ? '-' : (selectedBooking.eventDailyRateSnapshot | currency:selectedBooking.currencyCode) }}</dd></div><div><dt>{{ 'Advance Daily Rate' | t }}</dt><dd>{{ selectedBooking.advanceDailyRateSnapshot == null ? '-' : (selectedBooking.advanceDailyRateSnapshot | currency:selectedBooking.currencyCode) }}</dd></div></dl></details>
+        <p *ngIf="selectedBooking.rejectionReason" class="notice warning"><strong>{{ 'Rejection Reason:' | t }}</strong> {{ selectedBooking.rejectionReason }}</p><p *ngIf="selectedBooking.cancellationReason" class="notice error"><strong>{{ 'Cancellation Reason:' | t }}</strong> {{ selectedBooking.cancellationReason }}</p>
+        <footer class="voucher-footer"><button type="button" class="voucher-button outline" (click)="closeDetails()"><app-voucher-icon name="arrow"></app-voucher-icon>{{ 'Back to My Bookings' | t }}</button><a *ngIf="selectedBooking.status === 'CheckedOut'" class="voucher-button primary" routerLink="/feedback" [queryParams]="{bookingId:selectedBooking.bookingId}"><app-voucher-icon name="feedback"></app-voucher-icon>{{ 'Give Feedback' | t }}</a><button *ngIf="selectedBooking.status === 'Approved' && !confirmView" class="voucher-button primary" type="button" (click)="viewBookingDetails(selectedBookingId!, true)"><i class="bi bi-check-circle" aria-hidden="true"></i>{{ 'Confirm Booking' | t }}</button></footer>
       </div>
-
-      <!-- Cancellation Reason -->
-      <div
-        class="alert alert-danger"
-        *ngIf="selectedBooking.cancellationReason">
-
-        <strong>{{ 'Cancellation Reason:' | t }}</strong>
-        {{ selectedBooking.cancellationReason }}
-      </div>
-
-    </div>
-
-  </div>
-  <section *ngIf="selectedBooking && !detailsLoading" class="booking-detail-section">
-    <h2 class="detail-heading">{{ 'Documents and payments' | t }}</h2>
-    <section *ngIf="selectedBooking && (identity || identityLoading || identityError || canUploadIdentity)" class="identity-step">
-      <h3>{{ 'ID proof' | t }}</h3>
-      <p *ngIf="identity" class="fw-semibold">{{ identity.documentType | t }}<span *ngIf="identity.otherDocumentType"> · {{ identity.otherDocumentType }}</span></p>
-      <p *ngIf="identityLoading" role="status">{{ 'Checking ID proof status…' | t }}</p>
-      <p *ngIf="identityError" role="alert" class="text-danger">{{ (identityError) | t }}</p>
-      <p *ngIf="identity?.status === 'ReuploadRequested'">
-        {{ 'Please upload a replacement ID proof. {p0} Your booking remains confirmed.' | t:{p0: (identity?.reason)} }}</p>
-      <p *ngIf="identity && identity.status !== 'ReuploadRequested' && selectedBooking.status !== 'CheckedOut'">
-        {{ identity.files.length }} {{ 'file(s)' | t }} · {{ (identity.status === 'Verified' ? 'Verified' : 'Uploaded') | t }}
-      </p>
-      <div *ngIf="canUploadIdentity && !identityLoading">
-        <label for="document-type" class="form-label">{{ 'Document type' | t }}</label>
-        <select id="document-type" class="form-select mb-3" [(ngModel)]="documentType" [disabled]="uploadingIdentity">
-          <option value="">{{ 'Select document type' | t }}</option>
-          <option *ngFor="let type of documentTypes" [value]="type">{{ type | t }}</option>
-        </select>
-        <div *ngIf="documentType === 'Other'" class="mb-3">
-          <label for="other-document-type" class="form-label">{{ 'Other document type' | t }}</label>
-          <input id="other-document-type" class="form-control" maxlength="100" [(ngModel)]="otherDocumentType" [disabled]="uploadingIdentity">
-        </div>
-        <label for="booking-id-proof" class="form-label">{{ (identity ? 'Replace ID proof' : 'Upload ID proof') | t }}</label>
-        <input id="booking-id-proof" class="form-control" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple
-          [disabled]="uploadingIdentity || selectedFiles.length >= 2" (change)="selectIdentityFiles($event)">
-        <small class="text-muted">{{ 'One document type, maximum two files (front and back). Up to 5 MB per file.' | t }}</small>
-        <ul class="list-unstyled mt-2">
-          <li *ngFor="let file of selectedFiles; let i = index" class="d-flex align-items-center gap-2 mb-2">
-            <span>{{ (i === 0 ? 'Front / first file' : 'Back / second file') | t }} · {{ file.name }}</span>
-            <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="uploadingIdentity"
-              (click)="selectedFiles.splice(i, 1)">{{ 'Remove' | t }}</button>
-          </li>
-        </ul>
-        <button type="button" class="btn btn-success" (click)="uploadIdentity()"
-          [disabled]="uploadingIdentity || !documentType || !selectedFiles.length || (documentType === 'Other' && !otherDocumentType.trim())">
-          {{ 'Upload documents' | t }}
-        </button>
-        <p *ngIf="uploadingIdentity" role="status">{{ 'Uploading…' | t }}</p>
-      </div>
-      <div *ngIf="confirmView && selectedBooking.status === 'Approved' && identity?.status === 'Uploaded'">
-        <p class="mt-3 mb-1">{{ 'Advance {p0}' | t:{p0: (selectedBooking.advanceAmount | currency:selectedBooking.currencyCode)} }}</p>
-        <button type="button" class="btn btn-success" (click)="payAdvance()"
-          [disabled]="openingCheckout || verifyingAdvance || uploadingIdentity || selectedFiles.length > 0 || paymentReceived || !canUploadIdentity">
-          {{ (openingCheckout ? 'Opening checkout…' : 'Pay Now') | t }}
-        </button>
-        <small class="d-block mt-1">{{ 'Razorpay Test Mode' | t }}</small>
-        <button type="button" class="btn btn-outline-success mt-2" (click)="verifyAdvance()"
-          [disabled]="openingCheckout || verifyingAdvance || uploadingIdentity">
-          {{ (verifyingAdvance ? 'Verifying…' : 'Verify Existing Payment') | t }}
-        </button>
-      </div>
-      <p *ngIf="paymentMessage" class="mt-2" role="status">{{ (paymentMessage) | t }}</p>
-      <p *ngIf="paymentError" class="mt-2 text-danger" role="alert">{{ (paymentError) | t }}</p>
-      <button *ngIf="identity" type="button" class="btn btn-outline-success mt-2"
-        [disabled]="uploadingIdentity" (click)="viewDocument()">{{ 'View Document' | t }}</button>
-      <p *ngIf="identity && selectedBooking.status !== 'CheckedOut'" class="mt-2 mb-0">{{ 'Bring the original ID documents you uploaded when checking in.' | t }}</p>
-    </section>
-  <section *ngIf="checkoutBalance?.paymentStatus === 'Pending'" class="p-3">
-    <p>{{ 'Checkout amount {p0}' | t:{p0: (checkoutBalance?.payable | currency:checkoutBalance?.currency)} }}</p>
-    <button class="btn btn-success me-2" type="button" [disabled]="openingCheckout" (click)="payCheckout()">{{ 'Pay and Check Out' | t }}</button>
-    <button class="btn btn-outline-secondary" type="button" [disabled]="openingCheckout" (click)="payCheckout(true)">{{ 'Check payment status' | t }}</button>
-  </section>
-  <p *ngIf="checkoutNotice" class="px-3 pt-2" role="status">{{ (checkoutNotice) | t }}</p>
-  </section>
-  <div class="booking-dialog-footer">
-    <a *ngIf="selectedBooking?.status === 'CheckedOut'" class="btn btn-success"
-      routerLink="/feedback" [queryParams]="{ bookingId: selectedBooking?.bookingId }">{{ 'Give Feedback' | t }}</a>
-    <button type="button" class="btn btn-outline-secondary" (click)="closeDetails()">{{ 'Back' | t }}</button>
-    <button *ngIf="selectedBooking?.status === 'Approved' && !confirmView" type="button" class="btn btn-success"
-      (click)="viewBookingDetails(selectedBookingId!, true)">{{ 'Confirm Booking' | t }}</button>
+    </article>
   </div>
 </main>
 <dialog #documentDialog class="document-dialog" aria-labelledby="document-title" (close)="clearPreview()">

@@ -1,5 +1,6 @@
 import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
 import { inject as injectLanguage } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -18,13 +19,33 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-contact-us',
   standalone: true,
-  imports: [TranslationPipe, CommonModule, ReactiveFormsModule],
+  imports: [TranslationPipe, CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css',
 })
 export class ContactUsComponent implements OnInit, OnDestroy {
   readonly language = injectLanguage(LanguageService);
   contactForm: FormGroup;
+  readonly enquiryTypes = ['Stay enquiry', 'Event enquiry', 'General question', 'Other'];
+  readonly heroImage = '/assets/images/contact/farmhouse-veranda.png';
+  get fullAddress(): string {
+    const parts: string[] = [];
+    for (const part of [this.contactInfo?.address, this.contactInfo?.village, this.contactInfo?.taluka, this.contactInfo?.district, this.contactInfo?.state, this.contactInfo?.pincode]) {
+      const text = part?.trim();
+      if (text && !parts.join(', ').toLowerCase().includes(text.toLowerCase())) parts.push(text);
+    }
+    return parts.join(', ');
+  }
+  get locationLabel(): string { return [...new Set([this.contactInfo?.taluka, this.contactInfo?.district, this.contactInfo?.state].filter(Boolean))].join(', '); }
+  private get locationQuery(): string {
+    const lat = this.contactInfo?.latitude, lng = this.contactInfo?.longitude;
+    return typeof lat === 'number' && typeof lng === 'number' && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180
+      ? `${lat},${lng}` : [this.contactInfo?.farmHouseName, this.fullAddress].filter(Boolean).join(', ');
+  }
+  get mapsUrl(): string { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(this.locationQuery); }
+  get directionsUrl(): string { return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(this.locationQuery); }
+  readonly messageLimit = 1000;
+
 
   submitting = false;
   contactInfo: PublicSite | null = null;
@@ -41,10 +62,13 @@ export class ContactUsComponent implements OnInit, OnDestroy {
     private readonly sanitizer: DomSanitizer,
   ) {
     this.contactForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.maxLength(100)]],
+      fullName: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(100)]],
       mobileNo: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      message: ['', [Validators.required, Validators.maxLength(1000)]],
+      email: ['', [Validators.email, Validators.maxLength(254)]],
+      enquiryType: ['', Validators.required],
+      message: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(1000)]],
     });
+
   }
 
   // Form Controls
@@ -54,7 +78,8 @@ export class ContactUsComponent implements OnInit, OnDestroy {
 
   // WhatsApp number: keep only digits
   get whatsappNumber(): string {
-    return (this.contactInfo?.mobileNumber ?? '').replace(/\D/g, '');
+    const digits = (this.contactInfo?.mobileNumber ?? '').replace(/\D/g, '');
+    return digits.length === 10 ? '91' + digits : digits;
   }
 
   // Component Initialization
@@ -64,7 +89,11 @@ export class ContactUsComponent implements OnInit, OnDestroy {
 
   // Submit Contact Form
   onSubmit(): void {
-    if (this.contactForm.invalid || this.submitting) {
+    if (this.submitting) return;
+    if ((this.contactForm.value.message?.trim()?.length ?? 0) > this.messageLimit) {
+      this.contactForm.get('message')?.setErrors({ maxlength: true });
+    }
+    if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
       return;
     }
@@ -87,7 +116,11 @@ export class ContactUsComponent implements OnInit, OnDestroy {
     const dto = {
       ContactId: 0,
       FarmHouseId: farmHouseId,
-      ...this.contactForm.value,
+      FullName: this.contactForm.value.fullName.trim(),
+      MobileNo: this.contactForm.value.mobileNo.trim(),
+      Email: this.contactForm.value.email?.trim() || null,
+      EnquiryType: this.contactForm.value.enquiryType,
+      Message: this.contactForm.value.message.trim(),
     };
 
     this.publicSiteService
@@ -159,7 +192,7 @@ export class ContactUsComponent implements OnInit, OnDestroy {
 
           this.loading = false;
 
-          console.log('Contact Information API Response:', response);
+
         },
         error: (error) => {
           console.error('Error loading contact information:', error);
@@ -172,32 +205,6 @@ export class ContactUsComponent implements OnInit, OnDestroy {
         },
       });
   }
-
-  // Validate Google Maps URL before trusting it for iframe usage
-  // private setMapUrl(url?: string | null): void {
-  //   this.mapSafeUrl = null;
-
-  //   if (!url?.trim()) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const parsedUrl = new URL(url);
-
-  //     const isGoogleMapsEmbedUrl =
-  //       parsedUrl.protocol === 'https:' &&
-  //       parsedUrl.hostname === 'www.google.com' &&
-  //       parsedUrl.pathname.startsWith('/maps/embed');
-
-  //     if (isGoogleMapsEmbedUrl) {
-  //       this.mapSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  //     } else {
-  //       console.warn('Google Maps URL is not a supported embed URL.');
-  //     }
-  //   } catch {
-  //     console.warn('Invalid Google Maps URL provided.');
-  //   }
-  // }
 
   private setMapUrl(url?: string | null): void {
     this.mapSafeUrl = null;

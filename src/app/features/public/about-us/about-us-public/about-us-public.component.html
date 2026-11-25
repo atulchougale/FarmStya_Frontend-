@@ -1,106 +1,97 @@
-<div class="about-page">
+<main class="about-page">
+  <div class="about-container">
+    <section class="about-hero" aria-labelledby="about-title">
+      <div class="hero-copy">
+        <p class="eyebrow">{{ 'ABOUT GREEN VALLEY' | t }} <span aria-hidden="true"></span></p>
+        <h1 id="about-title">{{ 'A place to slow down. A stay to remember.' | t }}</h1>
+        <p class="hero-introduction">{{ (aboutUs?.heroSubtitle || 'Green Valley Farm Stay in Karveer, Kolhapur is a
+          peaceful countryside escape where you can rest, reconnect with nature, and enjoy meaningful time with your
+          loved ones.') | t }}</p>
+        <div class="about-actions"><a routerLink="/booking" class="about-button primary">{{ 'Check Availability' | t }}
+            <i class="bi bi-arrow-right" aria-hidden="true"></i></a><a routerLink="/gallery"
+            class="about-button outline">{{ 'Explore Gallery' | t }} <i class="bi bi-arrow-right"
+              aria-hidden="true"></i></a></div>
+      </div>
+      <div class="hero-arch"><img [src]="imageRoot + 'veranda-hero.png'"
+          [alt]="'A welcoming veranda surrounded by greenery' | t" width="1028" height="716" fetchpriority="high" />
+      </div>
+      <i class="hero-leaf bi bi-leaf" aria-hidden="true"></i>
+    </section>
 
-    <!-- Loading -->
-    <div class="about-state" *ngIf="loading">
+    <section class="story-section" aria-labelledby="story-title">
+      <img class="story-photo" [src]="imageRoot + 'farmhouse-story.png'"
+        [alt]="'Farmhouse nestled in a green garden' | t" width="960" height="474" loading="lazy" />
+      <div class="story-copy">
+        <h2 id="story-title">{{ (aboutUs?.storyTitle || 'Our Story') | t }}</h2>
+        <p *ngIf="aboutUs?.storyDescription; else designStory" class="story-description">{{ aboutUs?.storyDescription |
+          t }}</p>
+        <ng-template #designStory>
+          <p>{{ 'Green Valley Farm Stay is a welcoming countryside retreat in Karveer, Kolhapur, created for people who
+            wish to step away from the everyday rush and spend time in a calm, natural setting.' | t }}</p>
+          <p>{{ 'Set amidst lush greenery, the farm stay brings together the comfort of a homely stay and the simple joy
+            of farm life — open spaces, fresh air, good food, and a relaxed rural charm that helps you truly unwind.' |
+            t }}</p>
+        </ng-template>
+        <details *ngIf="aboutUs?.features?.length" class="stay-highlights">
+          <summary>{{ 'More about your stay' | t }}</summary>
+          <ul>
+            <li *ngFor="let feature of aboutUs?.features; trackBy:trackByFeatureId"><strong>{{ feature.title | t
+                }}</strong><span>{{ feature.description | t }}</span></li>
+          </ul>
+        </details>
+        <p *ngIf="loading" class="content-status" role="status">{{ 'Loading About Us...' | t }}</p>
+        <div *ngIf="!loading && errorMessage" class="content-status"><span>{{ 'Showing our introduction. More
+            information is currently unavailable.' | t }}</span><button type="button" (click)="loadAboutUs()">{{ 'Try
+            Again' | t }}</button></div>
+      </div>
+    </section>
 
-        <div class="loading-spinner"></div>
+    <section class="hospitality-section" aria-labelledby="hospitality-title">
+      <div class="hospitality-heading">
+        <h2 id="hospitality-title">{{ 'Our Approach to Hospitality' | t }}</h2>
+        <p>{{ 'At Green Valley, we keep things warm, simple and genuine — thoughtful care, a relaxed atmosphere and a
+          stay that feels close to home.' | t }}</p>
+      </div>
+      <div class="hospitality-grid">
+        <article class="hospitality-card" *ngFor="let feature of hospitalityFeatures; trackBy:trackByFeatureId"><i
+            [class]="feature.icon" aria-hidden="true"></i>
+          <div>
+            <h3>{{ feature.title | t }}</h3>
+            <p>{{ feature.description | t }}</p>
+          </div>
+        </article>
+      </div>
+    </section>
 
-        <p>
-            {{ 'Loading About Us...' | t }}</p>
+    <section class="details-section" aria-labelledby="details-title">
+      <div class="details-copy">
+        <h2 id="details-title">{{ 'Little details. A warmer welcome.' | t }}</h2><span class="accent-rule"
+          aria-hidden="true"></span>
+        <p>{{ 'Comfortable spaces, refreshing outdoor experiences and homestyle food come together here to create a
+          relaxed and fulfilling farm stay experience.' | t }}</p>
+      </div>
+      <div class="details-mosaic"><a routerLink="/gallery" *ngFor="let photo of details"
+          [attr.aria-label]="photo.title | t"><img [src]="imageRoot + photo.file + '.png'" [alt]="photo.title | t"
+            width="640" height="320" loading="lazy" /></a></div>
+    </section>
 
+    <section class="location-strip" [attr.aria-label]="'Our location' | t">
+      <h2><i class="bi bi-geo-alt-fill" aria-hidden="true"></i>{{ 'Location: Karveer · Kolhapur' | t }}</h2>
+      <p>{{ 'A peaceful countryside setting in Karveer, Kolhapur, with nature, local culture and a warm welcome at the
+        heart of your stay.' | t }}</p><img [src]="imageRoot + 'location-landscape.png'" alt="" aria-hidden="true"
+        width="350" height="68" loading="lazy" />
+    </section>
+  </div>
+
+  <section class="about-closing"><img class="closing-image" [src]="imageRoot + 'sunset-farmhouse.png'"
+      [alt]="'A peaceful farmhouse evening at sunset' | t" width="930" height="400" loading="lazy" />
+    <div class="closing-overlay"></div>
+    <div class="about-container closing-copy">
+      <h2>{{ 'Your next peaceful break starts here.' | t }}</h2>
+      <div class="about-actions"><a routerLink="/booking" class="about-button primary">{{ 'Check Availability' | t }} <i
+            class="bi bi-arrow-right" aria-hidden="true"></i></a><a routerLink="/gallery"
+          class="about-button closing-outline">{{ 'Explore Gallery' | t }} <i class="bi bi-arrow-right"
+            aria-hidden="true"></i></a></div>
     </div>
-
-    <!-- Error -->
-    <div class="about-state error-state" *ngIf="!loading && errorMessage">
-
-        <h3>
-            {{ 'About Us' | t }}</h3>
-
-        <p>
-            {{ (errorMessage) | t }}
-        </p>
-
-        <button class="retry-button" (click)="loadAboutUs()">
-
-            {{ 'Try Again' | t }}</button>
-
-    </div>
-
-    <ng-container *ngIf="!loading && aboutUs as about">
-
-        <!-- Hero Section -->
-        <section class="about-hero d-flex align-items-end" [style.background-image]="
-                'linear-gradient(90deg, rgba(0,0,0,0.68), rgba(0,0,0,0.20)), url('
-                + about.heroImageUrl + ')'
-            ">
-
-            <div class="container app-container hero-container">
-
-                <div class="hero-content">
-
-                    <h1>
-                        {{ (about.heroTitle) | t }}
-                    </h1>
-
-                    <p>
-                        {{ (about.heroSubtitle) | t }}
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Our Story and Features -->
-        <section class="about-content">
-
-            <div class="container app-container story-section d-grid align-items-center">
-
-                <!-- Story -->
-                <div class="story-content">
-
-                    <h2>
-                        {{ (about.storyTitle) | t }}
-                    </h2>
-
-                    <p class="story-description">
-                        {{ (about.storyDescription) | t }}
-                    </p>
-
-                </div>
-
-                <!-- Feature Cards -->
-                <div class="features-grid">
-
-                    <article class="feature-card text-center" *ngFor="
-                            let feature of about.features;
-                            trackBy: trackByFeatureId
-                        ">
-
-                        <div class="feature-icon mx-auto">
-
-                            <i [class]="feature.icon" aria-hidden="true">
-                            </i>
-
-                        </div>
-
-                        <h3 class="mb-2">
-                            {{ (feature.title) | t }}
-                        </h3>
-
-                        <p class="mb-0">
-                            {{ (feature.description) | t }}
-                        </p>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </ng-container>
-
-</div>
+  </section>
+</main>

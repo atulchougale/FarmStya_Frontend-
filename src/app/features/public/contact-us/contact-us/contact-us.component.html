@@ -1,186 +1,40 @@
 <main class="contact-page">
-  <section class="contact-section">
-    <div class="app-container">
-
-      <!-- Heading -->
-      <div class="contact-header mx-auto text-center">
-        <h1 class="contact-title">{{ 'Contact us' | t }}</h1>
-        <p class="contact-subtitle">
-          {{ 'Have a question? We respond fastest on WhatsApp.' | t }}</p>
-      </div>
-
-      <div class="contact-grid">
-
-        <!-- ================================= -->
-        <!-- Left: Contact Form -->
-        <!-- ================================= -->
-        <div class="contact-card">
-          <h2 class="contact-card-title">{{ 'Send a message' | t }}</h2>
-
-          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" autocomplete="off">
-
-            <!-- Full Name -->
-            <div class="mb-3">
-              <label class="form-label" for="name">{{ 'Full name' | t }}</label>
-
-              <input type="text" id="name" class="form-control contact-input" [placeholder]="'Your name' | t"
-                formControlName="fullName" [class.is-invalid]="f['fullName'].touched && f['fullName'].invalid" />
-
-              @if (f['fullName'].touched && f['fullName'].errors?.['required']) {
-              <small class="text-danger">{{ 'Full name is required' | t }}</small>
-              }
-            </div>
-
-            <!-- Mobile -->
-            <div class="mb-3">
-              <label class="form-label" for="mobile">{{ 'Mobile (WhatsApp)' | t }}</label>
-
-              <input type="tel" id="mobile" inputmode="numeric" maxlength="10" class="form-control contact-input"
-                placeholder="99999 99999" formControlName="mobileNo"
-                [class.is-invalid]="f['mobileNo'].touched && f['mobileNo'].invalid" />
-
-              @if (f['mobileNo'].touched && f['mobileNo'].errors?.['required']) {
-              <small class="text-danger">{{ 'Mobile number is required' | t }}</small>
-              }
-
-              @if (f['mobileNo'].touched && f['mobileNo'].errors?.['pattern']) {
-              <small class="text-danger">{{ 'Enter a valid 10 digit mobile number' | t }}</small>
-              }
-            </div>
-
-            <!-- Message -->
-            <div class="mb-4">
-              <label class="form-label" for="message">{{ 'Message' | t }}</label>
-
-              <textarea id="message" rows="4" class="form-control contact-input" [placeholder]="'How can we help?' | t"
-                formControlName="message" [class.is-invalid]="f['message'].touched && f['message'].invalid"></textarea>
-
-              @if (f['message'].touched && f['message'].errors?.['required']) {
-              <small class="text-danger">{{ 'Message is required' | t }}</small>
-              }
-            </div>
-
-            <!-- Submit -->
-            <button type="submit" class="btn contact-submit-btn w-100" [disabled]="submitting">
-              @if (submitting) {
-              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-              {{ 'Sending...' | t }}} @else {
-              {{ 'Send message' | t }}}
-            </button>
-
-          </form>
-        </div>
-
-        <!-- ================================= -->
-        <!-- Right: Contact Info + Map -->
-        <!-- ================================= -->
-        <div class="contact-info-col">
-          <div class="contact-card">
-
-            <!-- Loading -->
-            @if (loading) {
-            <div class="contact-info-text">
-              {{ 'Loading contact information...' | t }}</div>
-            }
-
-            <!-- Error -->
-            @else if (errorMessage) {
-            <div class="contact-info-text text-danger">
-              {{ (errorMessage) | t }}
-            </div>
-            }
-
-            <!-- Dynamic Contact Information -->
-            @else if (contactInfo) {
-
-            <!-- Address -->
-            <div class="contact-info-row">
-              <i class="bi bi-geo-alt-fill contact-info-icon" aria-hidden="true"></i>
-
-              <div>
-                <div class="contact-info-label">{{ 'Address' | t }}</div>
-
-                <p class="contact-info-text">
-                  {{ contactInfo.address }}
-                  @if (contactInfo.village) {
-                  , {{ contactInfo.village }}
-                  }
-                  , {{ contactInfo.taluka }},
-                  {{ contactInfo.district }},
-                  {{ contactInfo.state }}
-                  @if (contactInfo.pincode) {
-                  - {{ contactInfo.pincode }}
-                  }
-                </p>
-              </div>
-            </div>
-
-            <!-- Phone -->
-            <div class="contact-info-row">
-              <i class="bi bi-telephone-fill contact-info-icon" aria-hidden="true"></i>
-
-              <div>
-                <div class="contact-info-label">{{ 'Phone' | t }}</div>
-
-                <a [href]="'tel:' + contactInfo.mobileNumber" class="contact-info-link">
-                  {{ contactInfo.mobileNumber }}
-                </a>
-              </div>
-            </div>
-
-            <!-- Alternate Phone -->
-            @if (contactInfo.alternateMobileNumber) {
-            <div class="contact-info-row">
-              <i class="bi bi-telephone contact-info-icon" aria-hidden="true"></i>
-
-              <div>
-                <div class="contact-info-label">{{ 'Alternate Phone' | t }}</div>
-
-                <a [href]="'tel:' + contactInfo.alternateMobileNumber" class="contact-info-link">
-                  {{ contactInfo.alternateMobileNumber }}
-                </a>
-              </div>
-            </div>
-            }
-
-            <!-- WhatsApp -->
-            <div class="contact-info-row">
-              <i class="bi bi-whatsapp contact-info-icon" aria-hidden="true"></i>
-
-              <div>
-                <div class="contact-info-label">{{ 'WhatsApp' | t }}</div>
-
-                <a [href]="'https://wa.me/' + contactInfo.mobileNumber.replace('+', '').replace(' ', '')"
-                  target="_blank" rel="noopener noreferrer" class="contact-info-link">
-                  {{ 'Chat with us' | t }}</a>
-              </div>
-            </div>
-
-            <!-- Email -->
-            <div class="contact-info-row contact-info-row-last">
-              <i class="bi bi-envelope-fill contact-info-icon" aria-hidden="true"></i>
-
-              <div>
-                <div class="contact-info-label">{{ 'Email' | t }}</div>
-
-                <a [href]="'mailto:' + contactInfo.email" class="contact-info-link">
-                  {{ contactInfo.email }}
-                </a>
-              </div>
-            </div>
-
-            }
-          </div>
-
-          <!-- Map -->
-          <div class="contact-map-wrapper" *ngIf="mapSafeUrl">
-            <iframe [title]="(contactInfo?.farmHouseName || 'Farmhouse') + ' location' | t" [src]="mapSafeUrl" width="100%"
-              height="280" loading="lazy" style="border: 0">
-            </iframe>
-          </div>
-
-        </div>
-      </div>
-    </div>
+  <section class="contact-hero" aria-labelledby="contact-title">
+    <img class="contact-hero-image" [src]="heroImage" [alt]="'A welcoming farmhouse veranda' | t" width="1736" height="458" fetchpriority="high" />
+    <div class="hero-overlay"></div>
+    <div class="contact-container hero-copy"><h1 id="contact-title">{{ 'Your next getaway starts with a hello.' | t }}</h1><div class="hero-actions"><a *ngIf="contactInfo?.mobileNumber" [href]="'tel:' + contactInfo?.mobileNumber" class="contact-button primary"><i class="bi bi-telephone-fill" aria-hidden="true"></i>{{ 'Call Us' | t }}</a><a *ngIf="whatsappNumber" [href]="'https://wa.me/' + whatsappNumber" target="_blank" rel="noopener noreferrer" class="contact-button glass"><i class="bi bi-whatsapp" aria-hidden="true"></i>{{ 'WhatsApp' | t }}</a><a *ngIf="!contactInfo?.mobileNumber" routerLink="/booking" class="contact-button primary">{{ 'Check Availability' | t }}</a></div></div>
   </section>
+
+  <div class="contact-container contact-content">
+    <div class="contact-status" *ngIf="loading" role="status"><span class="spinner-border spinner-border-sm"></span>{{ 'Loading contact information...' | t }}</div>
+    <div class="contact-status contact-error" *ngIf="!loading && errorMessage" role="alert"><p>{{ errorMessage | t }}</p><button type="button" class="contact-button outline" (click)="loadContactInfo()">{{ 'Try Again' | t }}</button></div>
+    <section class="quick-contact-grid" *ngIf="contactInfo as info" [attr.aria-label]="'Ways to contact us' | t">
+      <article class="quick-card"><span class="quick-icon"><i class="bi bi-telephone-fill" aria-hidden="true"></i></span><div class="quick-copy"><h2>{{ 'Call Us' | t }}</h2><a class="phone-number" *ngIf="info.mobileNumber" [href]="'tel:' + info.mobileNumber">{{ info.mobileNumber }}</a><p>{{ 'Talk to us for any enquiry.' | t }}</p></div><a *ngIf="info.mobileNumber" [href]="'tel:' + info.mobileNumber" class="contact-button primary small"><i class="bi bi-telephone-fill" aria-hidden="true"></i>{{ 'Call Now' | t }}</a></article>
+      <article class="quick-card"><span class="quick-icon"><i class="bi bi-whatsapp" aria-hidden="true"></i></span><div class="quick-copy"><h2>{{ 'Chat on WhatsApp' | t }}</h2><p>{{ 'Quick and easy enquiry on WhatsApp.' | t }}</p></div><a *ngIf="whatsappNumber" [href]="'https://wa.me/' + whatsappNumber" target="_blank" rel="noopener noreferrer" class="contact-button primary small">{{ 'Chat on WhatsApp' | t }}</a></article>
+      <article class="quick-card"><span class="quick-icon"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span><div class="quick-copy"><h2>{{ 'Find Us' | t }}</h2><p>{{ locationLabel | t }}</p></div><a [href]="directionsUrl" target="_blank" rel="noopener noreferrer" class="contact-button primary small"><i class="bi bi-cursor-fill" aria-hidden="true"></i>{{ 'Get Directions' | t }}</a></article>
+    </section>
+
+    <div class="contact-main-grid">
+      <section class="contact-panel enquiry-panel" aria-labelledby="enquiry-title">
+        <header class="panel-heading"><span><i class="bi bi-envelope-fill" aria-hidden="true"></i></span><div><h2 id="enquiry-title">{{ 'Send Us an Enquiry' | t }}</h2><p>{{ 'Have a question or want to know more about your stay? Drop us a message — we are happy to help.' | t }}</p></div></header>
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting">
+          <fieldset class="enquiry-fields" [disabled]="submitting">
+            <div class="form-field"><label for="contact-name">{{ 'Full Name' | t }} <span class="required" aria-hidden="true" data-required-marker="true">*</span></label><div class="input-wrap"><i class="bi bi-person" aria-hidden="true"></i><input id="contact-name" type="text" formControlName="fullName" autocomplete="name" maxlength="100" [placeholder]="'Enter your full name' | t" required [attr.aria-invalid]="f['fullName'].touched && f['fullName'].invalid" aria-describedby="name-error" /></div><small id="name-error" class="field-error" *ngIf="f['fullName'].touched && f['fullName'].invalid">{{ 'Enter your full name, up to 100 characters.' | t }}</small></div>
+            <div class="form-field"><label for="contact-mobile">{{ 'Mobile Number' | t }} <span class="required" aria-hidden="true" data-required-marker="true">*</span></label><div class="input-wrap"><i class="bi bi-telephone-fill" aria-hidden="true"></i><input id="contact-mobile" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" formControlName="mobileNo" [placeholder]="'Enter your mobile number' | t" required [attr.aria-invalid]="f['mobileNo'].touched && f['mobileNo'].invalid" aria-describedby="mobile-error" /></div><small id="mobile-error" class="field-error" *ngIf="f['mobileNo'].touched && f['mobileNo'].invalid">{{ 'Enter a valid 10 digit mobile number' | t }}</small></div>
+            <div class="form-field"><label for="contact-email">{{ 'Email' | t }} <span class="optional">({{ 'Optional' | t }})</span></label><div class="input-wrap"><i class="bi bi-envelope" aria-hidden="true"></i><input id="contact-email" type="email" autocomplete="email" maxlength="254" formControlName="email" [placeholder]="'Enter your email (optional)' | t" [attr.aria-invalid]="f['email'].touched && f['email'].invalid" aria-describedby="email-error" /></div><small id="email-error" class="field-error" *ngIf="f['email'].touched && f['email'].invalid">{{ 'Enter a valid email address.' | t }}</small></div>
+            <div class="form-field"><label for="contact-type">{{ 'Enquiry Type' | t }} <span class="required" aria-hidden="true" data-required-marker="true">*</span></label><div class="input-wrap"><i class="bi bi-list-ul" aria-hidden="true"></i><select id="contact-type" formControlName="enquiryType" required [attr.aria-invalid]="f['enquiryType'].touched && f['enquiryType'].invalid" aria-describedby="type-error"><option value="">{{ 'Select enquiry type' | t }}</option><option *ngFor="let type of enquiryTypes" [value]="type">{{ type | t }}</option></select></div><small id="type-error" class="field-error" *ngIf="f['enquiryType'].touched && f['enquiryType'].invalid">{{ 'Select an enquiry type.' | t }}</small></div>
+            <div class="form-field message-field"><label for="contact-message">{{ 'Message' | t }} <span class="required" aria-hidden="true" data-required-marker="true">*</span></label><div class="input-wrap textarea-wrap"><i class="bi bi-chat-left-text" aria-hidden="true"></i><textarea id="contact-message" rows="4" formControlName="message" [attr.maxlength]="messageLimit" [placeholder]="'Type your message here...' | t" required [attr.aria-invalid]="f['message'].touched && f['message'].invalid" aria-describedby="message-error message-counter"></textarea></div><div class="message-meta"><small id="message-error" class="field-error" *ngIf="f['message'].touched && f['message'].invalid">{{ 'Enter a message within the character limit.' | t }}</small><small id="message-counter">{{ (f['message'].value || '').length }} / {{ messageLimit }}</small></div></div>
+            <div class="submit-row"><button type="submit" class="contact-button primary" [disabled]="submitting || loading"><span *ngIf="submitting" class="spinner-border spinner-border-sm" aria-hidden="true"></span><i *ngIf="!submitting" class="bi bi-send-fill" aria-hidden="true"></i>{{ (submitting ? 'Sending...' : 'Send Enquiry') | t }}</button></div>
+          </fieldset>
+        </form>
+      </section>
+
+      <section class="contact-panel location-panel" aria-labelledby="location-title">
+        <header class="panel-heading"><span><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span><div><h2 id="location-title">{{ 'Our Location' | t }}</h2></div></header>
+        <ng-container *ngIf="contactInfo as info"><h3>{{ info.farmHouseName }}</h3><p class="address">{{ fullAddress | t }}</p><div class="location-map"><iframe *ngIf="mapSafeUrl; else mapPlaceholder" [src]="mapSafeUrl" [title]="'Farmhouse location map' | t" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><ng-template #mapPlaceholder><div class="map-placeholder"><i class="bi bi-geo-alt" aria-hidden="true"></i><p>{{ 'View our location in Google Maps.' | t }}</p></div></ng-template></div><div class="map-actions"><a [href]="mapsUrl" target="_blank" rel="noopener noreferrer" class="contact-button outline"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i>{{ 'Open in Google Maps' | t }}</a><a [href]="directionsUrl" target="_blank" rel="noopener noreferrer" class="contact-button primary"><i class="bi bi-cursor-fill" aria-hidden="true"></i>{{ 'Get Directions' | t }}</a></div><div class="additional-contact"><a *ngIf="info.email" [href]="'mailto:' + info.email"><i class="bi bi-envelope" aria-hidden="true"></i>{{ info.email }}</a><a *ngIf="info.alternateMobileNumber" [href]="'tel:' + info.alternateMobileNumber"><i class="bi bi-telephone" aria-hidden="true"></i>{{ 'Alternate Phone' | t }}: {{ info.alternateMobileNumber }}</a></div></ng-container>
+        <p *ngIf="!contactInfo" class="location-state">{{ (loading ? 'Loading contact information...' : 'Contact information is unavailable.') | t }}</p>
+      </section>
+    </div>
+    <aside class="availability-strip"><i class="bi bi-calendar3" aria-hidden="true"></i><p>{{ 'For date availability, use our booking calendar.' | t }}</p><a routerLink="/booking">{{ 'Check Availability' | t }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a></aside>
+  </div>
 </main>

@@ -2,6 +2,7 @@ import { TranslationPipe, LanguageService } from '../../../core/i18n/language';
 import { inject as injectLanguage } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -10,12 +11,13 @@ import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   standalone: true,
-  imports: [TranslationPipe, CommonModule, FormsModule],
+  imports: [TranslationPipe, CommonModule, FormsModule, MatTableModule],
   templateUrl: './pricing-management.component.html',
   styleUrl: './pricing-management.component.css'
 })
 export class PricingManagementComponent implements OnInit {
   readonly language = injectLanguage(LanguageService);
+  readonly pricingColumns = ['name', 'key', 'rate', 'status', 'actions'];
   entries: PricingEntry[] = [];
   draft: PricingEntry | null = null;
   loading = false;

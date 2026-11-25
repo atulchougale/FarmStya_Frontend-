@@ -1,131 +1,125 @@
-<aside class="admin-sidebar bg-white border-end d-flex flex-column">
-    <p *ngIf="loading" class="p-3" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'Loading menu…' | t }}</p>
-
-    <!-- ========================================= -->
-    <!-- FarmHouse / Admin Brand -->
-    <!-- ========================================= -->
-
-    <!--
-    <div class="sidebar-brand p-3 border-bottom">
-        <div class="d-flex align-items-center gap-2">
-            <div class="brand-icon rounded-2 d-flex align-items-center justify-content-center flex-shrink-0">
-                C
-            </div>
-
-            <div class="overflow-hidden">
-                <h6 class="mb-0 text-truncate">
-                    Chougale Farms
-                </h6>
-
-                <small class="text-muted">
-                    ADMIN PANEL
-                </small>
-            </div>
+<aside class="admin-sidebar d-flex flex-column" aria-label="Administration sidebar">
+    <!-- Design 5 bottom landscape artwork -->
+    <img
+        class="sidebar-art"
+        src="farmstay-sidebar-landscape.jpg"
+        alt=""
+        aria-hidden="true"
+    />
+    @if (loading) {
+        <div class="sidebar-loading px-3 py-3" role="status">
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            {{ 'Loading menu…' | t }}
         </div>
-    </div>
-    -->
+    }
 
-
-    <!-- ========================================= -->
-    <!-- Menu -->
-    <!-- ========================================= -->
-
-    <nav class="sidebar-menu grow p-2">
-
-        <div class="small text-uppercase text-muted fw-semibold px-2 mb-2">
-            {{ 'Administration' | t }}</div>
+    <!-- Administration navigation -->
+    <nav class="sidebar-menu flex-grow-1" aria-label="Admin navigation">
+        <div class="sidebar-section-label">
+            {{ 'Administration' | t }}
+        </div>
 
         @for (item of menuItems; track item.moduleId) {
 
-        @if (item.moduleName === 'Reports') {
-        <a routerLink="/admin/reports" routerLinkActive="active" class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
-            <i [class]="item.icon"></i><span>{{ 'Reports' | t }}</span>
-        </a>
-        } @else if (item.subMenus?.length) {
+            @if (item.moduleName === 'Dashboard') {
+                <a
+                    routerLink="/admin/dashboard"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    class="sidebar-menu-item"
+                >
+                    <i class="bi bi-grid sidebar-menu-icon" aria-hidden="true"></i>
+                    <span>{{ 'Dashboard' | t }}</span>
+                </a>
 
-        <!-- Module with Sub Menu -->
-        <a href="javascript:void(0)" (click)="toggleModule(item.moduleId)"
-            class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
+            } @else if (item.moduleName === 'Accounts') {
+                <a routerLink="/admin/accounts/overview" routerLinkActive="active" class="sidebar-menu-item"><i class="bi bi-wallet2 sidebar-menu-icon" aria-hidden="true"></i><span>{{ 'Accounts / Finance' | t }}</span></a>
 
-            <i [class]="item.icon"></i>
+            } @else if (item.moduleName === 'Reports') {
+                <a
+                    routerLink="/admin/reports"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    class="sidebar-menu-item"
+                >
+                    <i [class]="item.icon + ' sidebar-menu-icon'" aria-hidden="true"></i>
+                    <span>{{ 'Reports' | t }}</span>
+                </a>
 
-            <span>
-                {{ (item.displayName) | t }}
-            </span>
+            } @else if (item.subMenus?.length) {
+                <div class="sidebar-menu-group">
+                    <a
+                        href="javascript:void(0)"
+                        (click)="toggleModule(item.moduleId)"
+                        [class.expanded]="isModuleExpanded(item.moduleId)"
+                        [attr.aria-expanded]="isModuleExpanded(item.moduleId)"
+                        class="sidebar-menu-item sidebar-menu-parent"
+                    >
+                        <i [class]="item.icon + ' sidebar-menu-icon'" aria-hidden="true"></i>
 
-            <i class="bi ms-auto" [class.bi-chevron-down]="!isModuleExpanded(item.moduleId)"
-                [class.bi-chevron-up]="isModuleExpanded(item.moduleId)"></i>
+                        <span class="sidebar-menu-text">
+                            {{ (item.displayName) | t }}
+                        </span>
 
-        </a>
+                        <i
+                            class="bi sidebar-chevron"
+                            [class.bi-chevron-down]="!isModuleExpanded(item.moduleId)"
+                            [class.bi-chevron-up]="isModuleExpanded(item.moduleId)"
+                            aria-hidden="true"
+                        ></i>
+                    </a>
 
-        <!-- Sub Menu -->
-        @if (isModuleExpanded(item.moduleId)) {
+                    @if (isModuleExpanded(item.moduleId)) {
+                        <div class="sidebar-submenu">
+                            @if (item.moduleName === 'Bookings' && canCreateBooking) {
+                                <a
+                                    routerLink="/admin/bookings/create"
+                                    routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{ exact: true }"
+                                    class="sidebar-submenu-item"
+                                >
+                                    <span class="sidebar-submenu-marker" aria-hidden="true"></span>
+                                    <i class="bi bi-plus-circle sidebar-submenu-icon" aria-hidden="true"></i>
+                                    <span>{{ 'Create customer booking' | t }}</span>
+                                </a>
+                            }
 
-        @if (item.moduleName === 'Bookings' && canCreateBooking) {
-        <a routerLink="/admin/bookings/create" routerLinkActive="active" class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
-            <i class="bi bi-plus-circle"></i><span>{{ 'Create customer booking' | t }}</span>
-        </a>
+                            @for (subMenu of item.subMenus; track subMenu.name) {
+                                <a
+                                    [routerLink]="getAdminRoute(subMenu.route)"
+                                    routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{ exact: true }"
+                                    class="sidebar-submenu-item"
+                                >
+                                    <span class="sidebar-submenu-marker" aria-hidden="true"></span>
+                                    <i [class]="item.icon + ' sidebar-submenu-icon'" aria-hidden="true"></i>
+                                    <span>{{ (subMenu.name) | t }}</span>
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+
+            } @else {
+                @if (item.route) {
+                    <a
+                        [routerLink]="getAdminRoute(item.route)"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        class="sidebar-menu-item"
+                    >
+                        <i [class]="item.icon + ' sidebar-menu-icon'" aria-hidden="true"></i>
+                        <span>{{ (item.displayName) | t }}</span>
+                    </a>
+                }
+            }
         }
-        @for (subMenu of item.subMenus; track subMenu.name) {
-
-        <a [routerLink]="getAdminRoute(subMenu.route)" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
-
-            <i [class]="item.icon"></i>
-
-            <span>
-                {{ (subMenu.name) | t }}
-            </span>
-
-        </a>
-
-        }
-
-        }
-
-        } @else {
-
-        <!-- Normal Module -->
-        @if (item.route) {
-
-        <a [routerLink]="getAdminRoute(item.route)" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="sidebar-menu-item d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2 mb-1">
-
-            <i [class]="item.icon"></i>
-
-            <span>
-                {{ (item.displayName) | t }}
-            </span>
-
-        </a>
-
-        }
-
-        }
-
-        }
-
+        <!-- Back to public website: flows directly after the menu items -->
+        <div class="sidebar-footer">
+            <a routerLink="/home" class="sidebar-menu-item back-to-site">
+                <i class="bi bi-box-arrow-up-right sidebar-menu-icon" aria-hidden="true"></i>
+                <span>{{ 'Back to Site' | t }}</span>
+            </a>
+        </div>
     </nav>
-
-
-    <!-- ========================================= -->
-    <!-- Bottom -->
-    <!-- ========================================= -->
-
-    <div class="sidebar-footer border-top p-2">
-
-        <a routerLink="/home"
-            class="sidebar-menu-item back-to-site d-flex align-items-center gap-3 text-decoration-none rounded-2 px-3 py-2">
-
-            <i class="bi bi-house"></i>
-
-            <span>
-                {{ 'Back to Site' | t }}</span>
-
-        </a>
-
-    </div>
-
 </aside>

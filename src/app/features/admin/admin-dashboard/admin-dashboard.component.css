@@ -1,404 +1,1855 @@
+/* FarmStay Admin Dashboard — Design 4
+   Uses global theme tokens. Header and sidebar are owned by the parent admin layout. */
 :host {
-    display: block;
-    width: 100%;
+  display: block;
+  min-width: 0;
 }
-
 .admin-dashboard {
-    width: 100%;
-    min-height: calc(100vh - 140px);
-    /* background: #f8f9fa; */
+  --dash-page: var(--page-bg, var(--page, var(--primary-50)));
+  --dash-surface: var(--surface, var(--surface));
+  --dash-soft: var(--surface-soft, var(--primary-50, var(--primary-50)));
+  --dash-border: var(--border, var(--primary-200, #ffd3b9));
+  --dash-text: var(--text-heading, var(--text, #17212d));
+  --dash-muted: var(--text-muted, var(--muted, #64717e));
+  --dash-orange: var(--primary-500, var(--primary-600));
+  --dash-orange-dark: var(--primary-700, var(--primary-700));
+  --dash-orange-soft: var(--primary-100, var(--primary-100));
+  --dash-green: var(--success-500, var(--success-500));
+  --dash-green-soft: var(--success-50, #e7f7eb);
+  --dash-red: var(--error-500, #e3343b);
+  color: var(--dash-text);
+  width: 100%;
+  max-width: 1600px;
+  margin:0 auto;
+  /* padding:clamp(16px, 1.35vw, 24px); */
+  font-family: inherit;
 }
-
-
-/* =========================================
-   Header
-========================================= */
-
-.dashboard-title {
-    color: #212529;
+.admin-dashboard * {
+  box-sizing: border-box;
 }
-
-.dashboard-subtitle {
-    font-size: 0.95rem;
+.dashboard-hero {
+  min-height: 86px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap:16px;
+  padding:8px 16px;
+  margin-bottom:8px;
+  /* border: 1px solid var(--dash-border);
+  border-radius:16px;
+  background: linear-gradient(
+    100deg,
+    var(--dash-soft),
+    var(--dash-surface) 62%,
+    var(--dash-soft)
+  ); */
 }
-
+.hero-icon,
+.card-heading-icon,
+.quick-action-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  color: var(--dash-orange-dark);
+  background: var(--dash-orange-soft);
+}
+.hero-icon {
+  width: 54px;
+  height: 54px;
+  border-radius:16px;
+  font-size: 29px;
+}
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+.hero-copy h1 {
+  margin:0 0 4px;
+  font-size: clamp(25px, 2.15vw, 32px);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  color: var(--dash-text);
+}
+.hero-copy p {
+  margin:0;
+  color: var(--dash-muted);
+  font-size: 14px;
+}
+.hero-photo {
+  position: absolute;
+  z-index: -1;
+  right: 11%;
+  top: 0;
+  width: 43%;
+  height: 100%;
+  background-image:
+    linear-gradient(
+      90deg,
+      var(--dash-soft) 0%,
+      rgba(255, 250, 246, 0.08) 36%,
+      transparent 60%
+    ),
+    url("/farmstay-dashboard-banner.png");
+  background-size: cover;
+  background-position: center 52%;
+  -webkit-clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.95;
+}
+.hero-actions {
+  position: relative;
+  z-index: 2;
+  margin-left:auto;
+  display: flex;
+  align-items: center;
+  gap:8px;
+  white-space: nowrap;
+}
 .dashboard-date {
-    background: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 9px 14px;
-    font-size: 0.85rem;
-    color: #6c757d;
-    white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dash-text);
 }
-
-
-/* =========================================
-   Statistics Cards
-========================================= */
-
+.dashboard-button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap:8px;
+  padding:8px 16px;
+  border: 1px solid var(--dash-orange);
+  border-radius:8px;
+  background: var(--dash-surface);
+  color: var(--dash-orange-dark);
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+.dashboard-button:hover:not(:disabled) {
+  background: var(--dash-orange);
+  color: var(--surface);
+  transform: translateY(-1px);
+}
+.dashboard-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.refresh-button {
+  min-width: 98px;
+}
+.dashboard-alert {
+  padding:8px 16px;
+  border-radius:8px;
+  margin:0 0 8px;
+  font-size: 14px;
+}
+.error-alert {
+  background: var(--error-100);
+  border: 1px solid #f2bcbc;
+  color: #a12e2e;
+}
+.dashboard-loading {
+  color: var(--dash-muted);
+  font-size: 14px;
+  margin:0 0 8px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:8px;
+  margin-bottom:8px;
+}
 .stat-card {
-    border-radius: 14px;
-    transition: transform 0.2s ease,
-                box-shadow 0.2s ease;
+  min-width: 0;
+  min-height: 122px;
+  display: flex;
+  align-items: flex-start;
+  gap:16px;
+  padding:16px 16px;
+  border: 1px solid var(--dash-border);
+  border-radius:16px;
+  background: linear-gradient(135deg, var(--dash-surface), var(--dash-soft));
+  box-shadow: 0 3px 12px rgba(102, 62, 32, 0.035);
 }
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+.stat-card.revenue-stat {
+  background: linear-gradient(
+    135deg,
+    var(--dash-green-soft),
+    var(--dash-surface)
+  );
+  border-color: var(--success-200, #ccebd4);
 }
-
-.stat-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.7px;
-    color: #6c757d;
-}
-
-.stat-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #212529;
-}
-
 .stat-icon {
-    width: 48px;
-    height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 12px;
-
-    background: #f1f3f5;
-    color: #495057;
-
-    font-size: 1.25rem;
+  width: 60px;
+  height: 60px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius:16px;
+  background: var(--dash-orange-soft);
+  color: var(--dash-orange-dark);
+  font-size: 29px;
 }
-
-
-/* =========================================
-   Dashboard Cards
-========================================= */
-
+.revenue-stat .stat-icon {
+  background: var(--dash-green-soft);
+  color: var(--dash-green);
+}
+.stat-content {
+  min-width: 0;
+}
+.stat-content h2 {
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 750;
+  color: var(--dash-text);
+  margin:0px 0 4px;
+}
+.stat-content strong {
+  display: block;
+  font-size: clamp(23px, 1.85vw, 30px);
+  line-height: 1.12;
+  letter-spacing: -0.55px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+.stat-content p {
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--dash-muted);
+  margin:4px 0 0;
+}
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1.18fr 1.08fr 1.08fr;
+  gap:8px;
+  margin-bottom:8px;
+}
 .dashboard-card {
-    border-radius: 14px;
-    overflow: hidden;
+  min-width: 0;
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius:16px;
+  box-shadow: 0 3px 12px rgba(102, 62, 32, 0.035);
+  overflow: hidden;
 }
-
-
-/* =========================================
-   Empty Booking State
-========================================= */
-
-.empty-state {
-    min-height: 240px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.chart-card {
+  min-height: 214px;
 }
-
-.empty-icon {
-    width: 64px;
-    height: 64px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #f1f3f5;
-    color: #6c757d;
-
-    font-size: 1.5rem;
+.card-heading {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap:8px;
+  padding:8px 16px;
+  background: linear-gradient(
+    90deg,
+    var(--dash-soft),
+    rgba(255, 255, 255, 0.72)
+  );
 }
-
-
-/* =========================================
-   Calendar
-========================================= */
-
-.calendar-nav {
-    width: 34px;
-    height: 34px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid #e9ecef;
+.card-heading-icon {
+  width: 34px;
+  height: 34px;
+  border-radius:8px;
+  font-size: 20px;
 }
-
+.card-heading h2 {
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--dash-orange-dark);
+  margin:0;
+}
+.card-heading p {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--dash-muted);
+  margin:4px 0 0;
+}
+.revenue-highlight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:8px;
+  padding:8px 16px 0px;
+}
+.revenue-highlight span {
+  font-size: 12px;
+  color: var(--dash-muted);
+}
+.revenue-highlight strong {
+  font-size: 18px;
+  font-weight: 850;
+  color: var(--dash-orange-dark);
+}
+.chart-empty-state,
+.source-empty-state {
+  min-height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:8px;
+  margin:8px 16px 16px;
+  padding:16px;
+  border: 1px dashed var(--dash-border);
+  border-radius:16px;
+  background: var(--dash-soft);
+  color: var(--dash-muted);
+  text-align: center;
+  font-size: 12px;
+}
+.chart-empty-state i {
+  font-size: 24px;
+  color: var(--dash-orange);
+}
+.occupancy-content {
+  min-height: 153px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap:8px;
+  padding:8px 16px;
+}
+.donut-wrap {
+  width: 138px;
+  height: 138px;
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+.occupancy-donut {
+  width: 138px;
+  height: 138px;
+  border-radius:50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.donut-hole {
+  width: 96px;
+  height: 96px;
+  border-radius:50%;
+  background: var(--dash-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.donut-hole strong {
+  font-size: 22px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+.donut-hole span {
+  font-size: 12px;
+  color: var(--dash-muted);
+}
+.occupancy-legend {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap:16px;
+}
+.legend-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap:8px;
+  font-size: 12px;
+}
+.legend-row strong {
+  font-weight: 700;
+  min-width: 0;
+}
+.legend-row b {
+  font-weight: 750;
+  white-space: nowrap;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius:50%;
+}
+.confirmed-dot {
+  background: var(--dash-green);
+}
+.available-dot {
+  background: var(--dash-orange-soft);
+  border: 1px solid var(--dash-orange);
+}
+.occupancy-note {
+  padding:8px 8px;
+  border-radius:8px;
+  background: var(--dash-orange-soft);
+  color: var(--dash-orange-dark);
+  font-size: 12px;
+  font-weight: 750;
+  text-align: center;
+}
+.source-empty-state {
+  margin-top:16px;
+  min-height: 145px;
+  flex-direction: column;
+  gap:4px;
+}
+.source-empty-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius:50%;
+  background: var(--dash-orange-soft);
+  color: var(--dash-orange);
+  font-size: 25px;
+}
+.source-empty-state strong {
+  font-size: 12px;
+  color: var(--dash-text);
+}
+.source-empty-state p {
+  max-width: 260px;
+  margin:0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.activity-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  gap:8px;
+  margin-bottom:8px;
+}
+.latest-bookings-card,
+.calendar-card {
+  min-height: 270px;
+}
+.section-heading {
+  min-height: 58px;
+}
+.section-heading .heading-copy {
+  flex: 1;
+  min-width: 0;
+}
+.view-all-button {
+  margin-left:auto;
+  min-height: 34px;
+  padding:4px 16px;
+}
+.bookings-table-wrap {
+  padding:0 16px 8px;
+}
+.bookings-table {
+  width: 100%;
+  margin:0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.bookings-table thead th {
+  padding:8px 8px;
+  background: var(--dash-soft);
+  color: var(--dash-text);
+  font-size: 12px;
+  font-weight: 800;
+  border: 0;
+}
+.bookings-table thead th:first-child {
+  border-radius:8px 0 0 8px;
+}
+.bookings-table thead th:last-child {
+  border-radius:0 8px 8px 0;
+}
+.bookings-table tbody td {
+  padding:8px;
+  border-bottom: 1px solid var(--dash-border);
+  vertical-align: middle;
+  color: var(--dash-text);
+}
+.bookings-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.bookings-table td a {
+  color: var(--success-700, var(--success-500));
+  font-weight: 800;
+  text-decoration: underline;
+}
+.bookings-table td strong,
+.bookings-table td small {
+  display: block;
+}
+.bookings-table td strong {
+  font-size: 12px;
+  font-weight: 800;
+}
+.bookings-table td small {
+  margin-top:0px;
+  color: var(--dash-muted);
+  font-size: 12px;
+}
+.booking-status {
+  display: inline-flex;
+  align-items: center;
+  gap:4px;
+  white-space: nowrap;
+  padding:4px 8px;
+  border-radius:16px;
+  font-size: 12px;
+  font-weight: 750;
+  border: 1px solid var(--border, #d8dfe5);
+  background: var(--border);
+  color: #42515e;
+}
+.status-pending {
+  background: #fff4d9;
+  color: #865b00;
+  border-color: #f0cc78;
+}
+.status-approved {
+  background: #eeeaff;
+  color: #5b459c;
+  border-color: #c9bdf4;
+}
+.status-confirmed {
+  background: #e5f7e9;
+  color: var(--success-500);
+  border-color: #a9dfb7;
+}
+.status-checkedin {
+  background: #e4f2ff;
+  color: #1765a0;
+  border-color: #a9d3f4;
+}
+.status-checkedout,
+.status-completed {
+  background: var(--border);
+  color: var(--text-muted);
+  border-color: #cbd4dc;
+}
+.status-rejected,
+.status-cancelled {
+  background: var(--error-100);
+  color: #b52e32;
+  border-color: #f1b8bb;
+}
+.calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap:16px;
+  padding:8px 16px 16px;
+}
+.calendar-main {
+  min-width: 0;
+}
+.calendar-navigation {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap:8px;
+  margin:0 0 8px;
+  text-align: center;
+}
+.calendar-navigation strong {
+  font-size: 14px;
+  font-weight: 850;
+}
+.calendar-nav-button {
+  width: 34px;
+  height: 32px;
+  border: 0;
+  border-radius:8px;
+  background: var(--dash-soft);
+  color: var(--dash-orange-dark);
+  font-size: 24px;
+  line-height: 1;
+}
+.calendar-nav-button:hover {
+  background: var(--dash-orange-soft);
+}
 .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap:4px;
+  text-align: center;
 }
-
-.calendar-week span {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #868e96;
+.calendar-week {
+  margin-bottom:4px;
+  color: var(--dash-muted);
+  font-size: 12px;
+  font-weight: 700;
 }
-
-.calendar-days {
-    row-gap: 7px;
+.calendar-day {
+  min-width: 0;
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius:8px;
+  background: var(--dash-soft);
+  color: var(--dash-muted);
+  font-size: 12px;
+  padding:0;
 }
-
-.calendar-days span {
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-    align-items: center;
+.calendar-day:disabled {
+  cursor: default;
+}
+.calendar-day.muted {
+  opacity: 0.32;
+}
+.calendar-day.has-booking {
+  font-weight: 850;
+  cursor: pointer;
+}
+.calendar-day.today {
+  outline: 1px dashed var(--dash-orange-dark);
+  outline-offset: 1px;
+}
+.calendar-day.selected {
+  box-shadow: 0 0 0 2px var(--success-500, var(--success-500));
+}
+.calendar-day.has-booking.status-pending {
+  background: #fff1ce;
+  color: #865b00;
+}
+.calendar-day.has-booking.status-approved {
+  background: #e9e5ff;
+  color: #5b459c;
+}
+.calendar-day.has-booking.status-confirmed {
+  background: #e1f4e6;
+  color: var(--success-500);
+}
+.calendar-day.has-booking.status-checkedin {
+  background: #e2f1ff;
+  color: #1765a0;
+}
+.calendar-day.has-booking.status-checkedout {
+  background: var(--border);
+  color: var(--text-muted);
+}
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap:4px;
+  margin-top:8px;
+}
+.calendar-legend .booking-status {
+  font-size: 9px;
+  padding:4px 4px;
+}
+.calendar-status-panel {
+  align-self: start;
+  border: 1px solid var(--dash-border);
+  border-radius:8px;
+  overflow: hidden;
+  padding:0 8px 8px;
+}
+.calendar-status-panel h3 {
+  display: flex;
+  align-items: center;
+  gap:4px;
+  padding:8px 0;
+  margin:0 0 8px;
+  border-bottom: 1px solid var(--dash-border);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--dash-orange-dark);
+}
+.calendar-status-panel .card-heading-icon {
+  width: 25px;
+  height: 25px;
+  font-size: 14px;
+  border-radius:8px;
+}
+.calendar-status-panel > .booking-status {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  margin:4px 0;
+  font-size: 12px;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius:50%;
+  background: currentColor;
+}
+.selected-bookings {
+  border-top: 1px solid var(--dash-border);
+  margin-top:8px;
+  padding-top:8px;
+}
+.selected-bookings h3 {
+  font-size: 12px;
+  font-weight: 850;
+  margin:0 0 4px;
+}
+.selected-bookings a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap:4px;
+  padding:8px 0;
+  color: var(--dash-text);
+  text-decoration: none;
+  font-size: 12px;
+}
+.selected-bookings a strong {
+  color: var(--success-700, var(--success-500));
+}
+.selected-bookings > p {
+  font-size: 12px;
+  color: var(--dash-muted);
+  margin:4px 0;
+}
+.calendar-message {
+  font-size: 12px;
+  color: var(--dash-muted);
+  margin:0 0 4px;
+}
+.empty-state {
+  padding:24px;
+  text-align: center;
+  color: var(--dash-muted);
+  font-size: 14px;
+}
+.quick-actions-card {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  gap:16px;
+  padding:8px 16px;
+  border: 1px solid var(--dash-border);
+  border-radius:16px;
+  background: linear-gradient(100deg, var(--dash-surface), var(--dash-soft));
+  box-shadow: 0 3px 12px rgba(102, 62, 32, 0.035);
+}
+.quick-actions-title {
+  display: flex;
+  align-items: center;
+  gap:8px;
+  flex: none;
+}
+.quick-action-icon {
+  width: 44px;
+  height: 44px;
+  border-radius:50%;
+  font-size: 24px;
+}
+.quick-actions-title h2 {
+  margin:0;
+  color: var(--dash-orange-dark);
+  font-size: 18px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.quick-actions-divider {
+  width: 1px;
+  height: 34px;
+  background: var(--dash-orange);
+  opacity: 0.65;
+}
+.quick-actions-list {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:8px;
+}
+.quick-actions-list a {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:8px;
+  padding:8px 8px;
+  border: 1px solid var(--dash-orange);
+  border-radius:8px;
+  color: var(--dash-orange-dark);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+.quick-actions-list a i {
+  font-size: 18px;
+}
+.quick-actions-list a:hover {
+  background: var(--dash-orange);
+  color: var(--surface);
+}
+@media (max-width: 1250px) {
+  .analytics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .source-card {
+    grid-column: 1/-1;
+  }
+  .source-empty-state {
+    min-height: 100px;
+  }
+  .activity-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 850px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hero-photo {
+    right: 0;
+    width: 45%;
+    opacity: 0.42;
+  }
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr) 125px;
+  }
+  .quick-actions-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .quick-actions-divider {
+    display: none;
+  }
+  .quick-actions-list {
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .admin-dashboard {
+    /* padding:8px; */
+  }
+  .dashboard-hero {
+    min-height: unset;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding:16px;
+    gap:8px;
+  }
+  .hero-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+  .hero-copy {
+    flex: 1;
+  }
+  .hero-copy h1 {
+    font-size: 25px;
+  }
+  .hero-copy p {
+    font-size: 12px;
+  }
+  .hero-photo {
+    display: none;
+  }
+  .hero-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin:4px 0 0;
+    padding-left:56px;
+  }
+  .stats-grid,
+  .analytics-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .source-card {
+    grid-column: auto;
+  }
+  .stat-card {
+    min-height: 100px;
+    padding:16px;
+  }
+  .stat-icon {
+    width: 49px;
+    height: 49px;
+    font-size: 24px;
+  }
+  .stat-content strong {
+    font-size: 24px;
+  }
+  .chart-card {
+    min-height: unset;
+  }
+  .occupancy-content {
     justify-content: center;
-
-    margin: auto;
-
-    border-radius: 50%;
-
-    font-size: 0.8rem;
-    color: #343a40;
-}
-
-.calendar-days .muted {
-    color: #adb5bd;
-}
-
-.calendar-days .today {
-    background: #212529;
-    color: #ffffff;
-    font-weight: 600;
-}
-
-
-/* =========================================
-   Selected Date
-========================================= */
-
-.selected-date {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-}
-
-
-/* =========================================
-   Quick Actions
-========================================= */
-
-.quick-action {
+  }
+  .activity-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .calendar-status-panel {
     display: flex;
     align-items: center;
-    gap: 12px;
-
+    flex-wrap: wrap;
+    gap:4px;
+    padding:8px;
+  }
+  .calendar-status-panel h3 {
     width: 100%;
-
-    padding: 14px 16px;
-
-    text-decoration: none;
-
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-
-    color: #343a40;
-    background: #ffffff;
-
-    transition: all 0.2s ease;
-}
-
-.quick-action > i:first-child {
-    font-size: 1.15rem;
-    color: #495057;
-}
-
-.quick-action span {
-    font-size: 0.88rem;
-    font-weight: 500;
-}
-
-.quick-action > i:last-child {
-    font-size: 0.75rem;
-    color: #adb5bd;
-}
-
-.quick-action:hover {
-    background: #f8f9fa;
-    border-color: #ced4da;
-    color: #212529;
-}
-
-
-/* =========================================
-   Responsive
-========================================= */
-
-@media (max-width: 767.98px) {
-
-    .admin-dashboard {
-        min-height: calc(100vh - 120px);
-    }
-
-    .dashboard-date {
-        width: fit-content;
-    }
-
-    .stat-value {
-        font-size: 1.5rem;
-    }
-
-    .dashboard-card .card-body {
-        padding: 1.25rem !important;
-    }
-
-}
-
-@media (max-width: 575.98px) {
-
-    .admin-dashboard {
-        padding-top: 1rem !important;
-    }
-
-    .calendar-days span {
-        width: 29px;
-        height: 29px;
-        font-size: 0.75rem;
-    }
-
-    /* =========================================
-   Latest Bookings Table
-========================================= */
-
-.latest-bookings {
+    margin:0;
+    padding:0 0 8px;
+  }
+  .calendar-status-panel > .booking-status {
+    margin:0;
+  }
+  .bookings-table {
+    min-width: 610px;
+  }
+  .quick-actions-card {
+    padding:16px;
+  }
+  .quick-actions-title {
     width: 100%;
-    overflow: hidden;
+  }
+  .quick-actions-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:8px;
+  }
+  .quick-actions-list a {
+    font-size: 12px;
+    white-space: normal;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-button,
+  .quick-actions-list a {
+    transition: none;
+  }
 }
 
-.latest-bookings .table-responsive {
-    width: 100%;
+/* =========================================================
+   DASHBOARD HERO — Banner and Date Alignment Fix
+   Theme-aware: Orange / Blue
+   ========================================================= */
+
+.dashboard-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--dash-page);
 }
 
-.latest-bookings table {
-    width: 100%;
-    min-width: 700px;
-    margin-bottom: 0;
+/* Keep the banner inside its reserved area.
+   Date and Refresh area remains clear on the right. */
+.dashboard-hero .hero-photo {
+  position: absolute;
+  z-index: -1;
+
+  top: 0;
+  right: clamp(220px, 13vw, 300px);
+
+  width: min(33%, 720px);
+  height: 87%;
+
+  background-color: var(--dash-page);
+  background-image:
+    linear-gradient(
+      270deg,
+      var(--dash-page) 1%,
+      color-mix(in srgb, var(--dash-page) 8%, transparent) 29%,
+      transparent 75%
+    ),
+    url("/farmstay-dashboard-banner.png");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center 52%;
+
+  -webkit-clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.98;
 }
 
-.latest-bookings thead th {
-    background: #f8f9fa;
-    color: #495057;
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 14px 10px;
-    white-space: nowrap;
-    border-bottom: 1px solid #e9ecef;
+/* Date and Refresh must remain above the banner */
+.dashboard-hero .hero-actions {
+  position: relative;
+  z-index: 3;
+  flex: none;
+  margin-left:auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap:8px;
+  white-space: nowrap;
 }
 
-.latest-bookings tbody td {
-    font-size: 0.82rem;
-    color: #343a40;
-    padding: 14px 10px;
-    vertical-align: middle;
-    white-space: nowrap;
+.dashboard-hero .dashboard-date {
+  position: relative;
+  z-index: 3;
+  flex: none;
+  white-space: nowrap;
 }
 
-.latest-bookings tbody tr:hover {
-    background: #f8f9fa;
+/* Tablet */
+@media (max-width: 850px) {
+  .dashboard-hero .hero-photo {
+    right: 210px;
+    width: 45%;
+    opacity: 0.35;
+  }
 }
 
-.latest-bookings .badge {
-    font-size: 0.72rem;
-    font-weight: 500;
-    padding: 6px 10px;
-    border-radius: 6px;
+/* Mobile */
+@media (max-width: 600px) {
+  .dashboard-hero .hero-photo {
+    display: none;
+  }
+
+  .dashboard-hero .hero-actions {
+    position: relative;
+    z-index: 3;
+  }
 }
 
-/* Loading Spinner */
+/* =====================================================
+   DESIGN 4 — CALENDAR & LATEST BOOKINGS MATCH
+   Reference: FarmStay_Admin_Dashboard_Design4_Single
+   ===================================================== */
 
-.latest-bookings + .spinner-border {
-    color: #198754;
+/* ---------- Latest Bookings ---------- */
+
+.activity-grid {
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+}
+
+.bookings-table-wrap {
+  padding:0 16px 8px;
+}
+
+.bookings-table {
+  width: 100%;
+  margin:0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.bookings-table thead th {
+  background: #fff0e5;
+  padding:8px 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #34404a;
+  font-weight: 700;
+}
+
+.bookings-table tbody td {
+  padding:8px 8px;
+  line-height: 1.25;
+  border-bottom: 1px solid #e9edef;
+  vertical-align: middle;
+}
+
+.bookings-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.bookings-table td strong {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.bookings-table td small {
+  font-size: 12px;
+  line-height: 1.25;
+  margin-top:4px;
+  color: var(--dash-muted);
+}
+
+/* ---------- Booking Calendar ---------- */
+
+.calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap:16px;
+  padding:4px 8px 8px;
+}
+
+.calendar-navigation {
+  height: 32px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap:8px;
+  margin:0 0 4px;
+  text-align: center;
+}
+
+.calendar-navigation strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.calendar-nav-button {
+  width: 34px;
+  height: 30px;
+  border: 0;
+  border-radius:8px;
+  background: var(--primary-50, var(--primary-50));
+  color: var(--primary-700, var(--primary-700));
+  font-size: 22px;
+}
+
+/* Weekday labels */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap:4px;
+  text-align: center;
+}
+
+.calendar-week {
+  margin-bottom:0;
+  color: #596570;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.calendar-week > span {
+  padding:4px 0;
+}
+
+/* Date boxes — exact compact reference sizing */
+.calendar-grid:not(.calendar-week) {
+  gap:4px;
+}
+
+.calendar-day {
+  width: 100%;
+  height: 28px;
+  min-height: 28px;
+  aspect-ratio: auto;
+  padding:0;
+  border: 0;
+  border-radius:8px;
+  background: #f7f8f8;
+  color: #53606b;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+/* Booked date colors */
+.calendar-day.has-booking.status-confirmed {
+  background: #dff4e3;
+  color: var(--success-500);
+  font-weight: 800;
+}
+
+.calendar-day.has-booking.status-checkedin {
+  background: #e5edf5;
+  color: #243c55;
+  font-weight: 800;
+}
+
+.calendar-day.has-booking.status-checkedout {
+  background: var(--border);
+  color: var(--text-muted);
+  font-weight: 800;
+}
+
+.calendar-day.today {
+  border: 1.5px solid var(--success-500, var(--success-500));
+  outline: none;
+  background: #f1fff3;
+  color: var(--success-500);
+  font-weight: 800;
+}
+
+.calendar-day.selected {
+  box-shadow: 0 0 0 1px var(--success-500, var(--success-500));
+}
+
+/* Booking status panel */
+.calendar-status-panel {
+  width: 100%;
+  align-self: start;
+  border: 1px solid var(--primary-100, var(--primary-100));
+  border-radius:8px;
+  padding:8px;
+}
+
+.calendar-status-panel h3 {
+  font-size: 14px;
+  color: var(--primary-700, var(--primary-700));
+  margin:0 0 8px;
+  padding:0 0 8px;
+}
+
+.calendar-status-panel > .booking-status {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin:4px 0;
+  padding:4px 8px;
+  font-size: 12px;
+  border: 0;
+  background: var(--primary-50);
+  color: var(--dash-text);
 }
 
 /* Responsive */
+@media (max-width: 600px) {
+  .activity-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-@media (max-width: 767.98px) {
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-    .latest-bookings table {
-        min-width: 700px;
-    }
+  .calendar-status-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap:4px;
+  }
 
-    .latest-bookings thead th,
-    .latest-bookings tbody td {
-        font-size: 0.75rem;
-        padding: 12px 8px;
-    }
+  .calendar-status-panel h3 {
+    width: 100%;
+  }
 
+  .calendar-status-panel > .booking-status {
+    width: auto;
+  }
 }
 
-/* =========================================
-   DASHBOARD CALENDAR
-========================================= */
+/* =========================================================
+   FINAL RESPONSIVE LAYOUT
+   Keep the existing status palette and Angular bindings intact.
+   These rules intentionally come last to resolve older overrides.
+   ========================================================= */
+
+/* Prevent grid/flex children from forcing the dashboard wider than its parent. */
+:host,
+.admin-dashboard,
+.dashboard-card,
+.activity-grid,
+.analytics-grid,
+.stats-grid,
+.calendar-card,
+.latest-bookings-card,
+.calendar-main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-dashboard {
+  width: 100%;
+  overflow-x: clip;
+}
+
+/* Desktop: keep the two activity panels side by side when there is room. */
+.activity-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.latest-bookings-card,
+.calendar-card {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Table scrolls inside its own panel instead of stretching the whole page. */
+.bookings-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bookings-table {
+  min-width: 590px;
+  width: 100%;
+}
+
+/* Calendar sizing: preserve compact reference proportions without clipping. */
+.calendar-layout {
+  grid-template-columns: minmax(0, 1fr) 160px;
+  align-items: start;
+}
+
+.calendar-main {
+  width: 100%;
+}
 
 .calendar-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-day {
+  width: 100%;
+  min-width: 0;
+  height: clamp(28px, 2.5vw, 34px);
+  min-height: 28px;
+  aspect-ratio: auto;
+  line-height: 1;
+}
+
+/* Keep status labels neutral in the legend panel, while preserving the
+   original colored status pills in the bookings table and selected list. */
+.calendar-status-panel > .booking-status {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  gap:8px;
+  margin:4px 0;
+  padding:4px 8px;
+  border: 0;
+  border-radius:999px;
+  background: var(--primary-50);
+  color: var(--dash-text);
+  white-space: nowrap;
+}
+
+.calendar-status-panel .status-dot {
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border-radius:50%;
+  background: #89939c;
+}
+
+/* Status dot palette matches the existing status classes; status pills untouched. */
+.calendar-status-panel .status-pending .status-dot {
+  background: #f0ad00;
+}
+.calendar-status-panel .status-approved .status-dot {
+  background: #9b83e8;
+}
+.calendar-status-panel .status-confirmed .status-dot {
+  background: var(--success-500);
+}
+.calendar-status-panel .status-checkedin .status-dot {
+  background: #2788dc;
+}
+.calendar-status-panel .status-checkedout .status-dot,
+.calendar-status-panel .status-completed .status-dot {
+  background: #89939c;
+}
+.calendar-status-panel .status-rejected .status-dot,
+.calendar-status-panel .status-cancelled .status-dot {
+  background: #df4b50;
+}
+
+/* Large tablet / compact desktop: stack Latest Bookings and Calendar.
+   This is the reference layout breakpoint and is deliberately last. */
+@media (max-width: 1250px) {
+  .activity-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .latest-bookings-card,
+  .calendar-card {
+    width: 100%;
+  }
+
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr) 160px;
+  }
+}
+
+/* Tablet: KPI and analytics grids become two columns.
+   Calendar status panel moves below the dates to preserve usable date width. */
+@media (max-width: 850px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .source-card {
+    grid-column: 1 / -1;
+  }
+
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap:8px;
+  }
+
+  .calendar-status-panel {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    gap: 5px;
-}
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    gap:4px;
+    padding:8px;
+  }
 
-.calendar-week span {
+  .calendar-status-panel h3 {
+    grid-column: 1 / -1;
+    margin:0;
+    padding:0 0 8px;
+  }
+
+  .calendar-status-panel > .booking-status {
+    justify-content: flex-start;
+    width: 100%;
+    margin:0;
     font-size: 12px;
-    font-weight: 600;
-    color: #6c757d;
-    padding: 8px 0;
+  }
+
+  .quick-actions-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .quick-actions-divider {
+    display: none;
+  }
+
+  .quick-actions-list {
+    flex-basis: 100%;
+  }
 }
 
-.calendar-days span {
-    display: flex;
-    align-items: center;
+/* Mobile: single-column content, readable calendar and contained table scroll. */
+@media (max-width: 600px) {
+  .dashboard-hero {
+    min-height: 0;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap:8px;
+    padding:16px;
+  }
+
+  .hero-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+
+  .hero-copy {
+    flex: 1 1 calc(100% - 60px);
+  }
+
+  .hero-copy h1 {
+    font-size: 24px;
+  }
+
+  .hero-copy p {
+    font-size: 12px;
+  }
+
+  .hero-photo {
+    display: none;
+  }
+
+  .hero-actions {
+    width: 100%;
+    margin:4px 0 0;
+    justify-content: space-between;
+    gap:8px;
+  }
+
+  .dashboard-date {
+    font-size: 12px;
+  }
+
+  .stats-grid,
+  .analytics-grid,
+  .activity-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .source-card {
+    grid-column: auto;
+  }
+
+  .stat-card {
+    min-height: 96px;
+    padding:16px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .stat-content strong {
+    font-size: 24px;
+  }
+
+  .chart-card {
+    min-height: 0;
+  }
+
+  .occupancy-content {
     justify-content: center;
-    min-height: 38px;
-    font-size: 13px;
-    color: #343a40;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.2s ease;
+    flex-wrap: wrap;
+  }
+
+  .activity-grid {
+    gap:8px;
+  }
+
+  .section-heading {
+    gap:8px;
+    padding:8px 8px;
+  }
+
+  .section-heading .heading-copy h2 {
+    font-size: 16px;
+  }
+
+  .section-heading .heading-copy p {
+    font-size: 12px;
+  }
+
+  .view-all-button {
+    min-height: 32px;
+    padding:4px 8px;
+    font-size: 12px;
+  }
+
+  .bookings-table-wrap {
+    padding:0 8px 8px;
+  }
+
+  .bookings-table {
+    min-width: 570px;
+    font-size: 12px;
+  }
+
+  .bookings-table thead th,
+  .bookings-table tbody td {
+    padding:8px 8px;
+  }
+
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr);
+    padding:8px 8px 8px;
+  }
+
+  .calendar-navigation {
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    gap:4px;
+  }
+
+  .calendar-navigation strong {
+    font-size: 16px;
+  }
+
+  .calendar-grid {
+    gap:4px;
+  }
+
+  .calendar-week {
+    font-size: 12px;
+  }
+
+  .calendar-week > span {
+    padding:4px 0;
+  }
+
+  .calendar-day {
+    height: clamp(30px, 8vw, 36px);
+    min-height: 30px;
+    border-radius:8px;
+    font-size: 12px;
+  }
+
+  .calendar-status-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:4px;
+  }
+
+  .calendar-status-panel h3 {
+    grid-column: 1 / -1;
+  }
+
+  .calendar-status-panel > .booking-status {
+    font-size: 12px;
+    padding:4px 8px;
+  }
+
+  .selected-bookings a {
+    gap:4px;
+  }
+
+  .quick-actions-card {
+    padding:8px;
+    gap:8px;
+  }
+
+  .quick-actions-title {
+    width: 100%;
+  }
+
+  .quick-actions-title h2 {
+    font-size: 18px;
+  }
+
+  .quick-actions-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:8px;
+  }
+
+  .quick-actions-list a {
+    min-width: 0;
+    min-height: 42px;
+    padding:8px 4px;
+    gap:4px;
+    font-size: 12px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .quick-actions-list a i {
+    font-size: 16px;
+  }
 }
 
-.calendar-days span:hover {
-    background: #e9f5ed;
+/* Very narrow phones. */
+@media (max-width: 380px) {
+  .calendar-layout {
+    padding-inline:8px;
+  }
+
+  .calendar-grid {
+    gap:4px;
+  }
+
+  .calendar-day {
+    height: 29px;
+    min-height: 29px;
+    font-size: 12px;
+  }
+
+  .calendar-status-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .calendar-status-panel h3 {
+    grid-column: auto;
+  }
+
+  .quick-actions-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .view-all-button {
+    padding-inline:8px;
+  }
 }
 
-.calendar-days span.muted {
-    color: #adb5bd;
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-button,
+  .quick-actions-list a {
+    transition: none;
+  }
 }
 
-.calendar-days span.today {
-    border: 1px solid #198754;
-    color: #198754;
-    font-weight: 600;
+/* Live analytics; inherit the selected Orange/Blue theme. */
+.revenue-plot {
+  padding:8px 8px 4px;
+  min-height: 190px;
+}
+.revenue-plot svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.revenue-grid-line {
+  stroke: var(--dash-border);
+  stroke-width: 0.65;
+  opacity: 0.65;
+}
+.revenue-axis {
+  fill: var(--dash-muted);
+  font-family: inherit;
+  font-size: 12px;
+}
+.revenue-value {
+  fill: var(--dash-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+.revenue-bar {
+  fill: var(--primary-200, #ffcdab);
+  transition: fill 0.15s;
+}
+.revenue-bar.current,
+.revenue-bar:hover {
+  fill: var(--dash-orange);
+}
+.analytics-zero-note {
+  margin:8px 0;
+  color: var(--dash-muted);
+  font-size: 12px;
+  text-align: center;
+}
+.source-chart-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:16px;
+  padding:16px 16px;
+  min-height: 210px;
+}
+.source-donut {
+  width: 166px;
+  aspect-ratio: 1;
+  flex: none;
+  border-radius:50%;
+  display: grid;
+  place-items: center;
+}
+.source-donut-hole {
+  width: 122px;
+  aspect-ratio: 1;
+  border-radius:50%;
+  background: var(--dash-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.source-donut-hole strong {
+  font-size: 29px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+.source-donut-hole span {
+  font-size: 12px;
+  color: var(--dash-muted);
+}
+.source-chart-legend {
+  display: grid;
+  gap:16px;
+  flex: 1;
+  min-width: 0;
+}
+.source-chart-row {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  align-items: center;
+  gap:8px;
+  font-size: 12px;
+}
+.source-chart-row > span:last-child {
+  white-space: nowrap;
+  font-size: 12px;
+}
+.source-chart-row strong {
+  font-weight: 700;
+}
+.source-chart-row .legend-dot {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--dash-border);
+}
+@media (max-width: 1450px) and (min-width: 1100px) {
+  .source-chart-content {
+    gap:8px;
+    padding:16px 8px;
+  }
+  .source-donut {
+    width: 130px;
+  }
+  .source-donut-hole {
+    width: 94px;
+  }
+  .source-chart-row {
+    font-size: 12px;
+    gap:4px;
+  }
+  .source-chart-row > span:last-child {
+    font-size: 12px;
+  }
+}
+@media (max-width: 420px) {
+  .source-chart-content {
+    flex-direction: column;
+  }
+  .source-chart-legend {
+    width: 100%;
+  }
+  .source-donut {
+    width: 154px;
+  }
+  .source-donut-hole {
+    width: 112px;
+  }
 }
 
-.calendar-days span.selected {
-    background: #198754;
-    color: #ffffff;
-    font-weight: 600;
+/* Keep the analytics row compact without stretching the chart with card width. */
+.analytics-grid > .chart-card {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.analytics-grid .revenue-highlight {
+  padding:8px 16px 0;
+}
+.analytics-grid .revenue-plot {
+  min-height: 0;
+  padding:0px 8px 8px;
+}
+.analytics-grid .revenue-plot svg {
+  height: 160px;
+}
+.analytics-grid .occupancy-content,
+.analytics-grid .source-chart-content {
+  flex: 1;
+  min-height: 0;
+  padding:16px;
+  gap:8px;
+}
+.analytics-grid .source-donut {
+  width: 138px;
+}
+.analytics-grid .source-donut-hole {
+  width: 100px;
+}
+.analytics-grid .source-donut-hole strong {
+  font-size: 25px;
+}
+.analytics-grid .source-chart-legend {
+  gap:16px;
+}
+@media (max-width: 420px) {
+  .analytics-grid .source-chart-content {
+    flex-direction: column;
+  }
 }
 
-.calendar-nav {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Match both ring charts and their legends to the booking channel palette. */
+.analytics-grid .donut-wrap,
+.analytics-grid .occupancy-donut {
+  width: 138px;
+  height: 138px;
 }
-
-.selected-date {
-    background: #f8f9fa;
+.analytics-grid .donut-hole {
+  width: 100px;
+  height: 100px;
 }
-
-
+.analytics-grid .donut-hole strong {
+  font-size: 25px;
+}
+.analytics-grid .confirmed-dot {
+  background: var(--primary-500, #ff7814);
+}
+.analytics-grid .available-dot {
+  background: var(--primary-100, var(--primary-100));
+  border-color: var(--primary-100, var(--primary-100));
 }

@@ -52,3 +52,6 @@ Thumbs.db
 *.pfx
 *.p12
 *.pem
+
+# Generated design exports
+/output/

@@ -1,0 +1,1 @@
+These static design-reference photo regions were extracted from the selected About Us concept #4 (exec-af3b234f-8b3e-40d4-b810-33ede8c78a00.png). They are concept imagery at the resolution available in the composite, not full-resolution photographs of the actual property. Used by the About page only.

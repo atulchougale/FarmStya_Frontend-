@@ -1,296 +1,602 @@
-/* ===========================
-   Header
-   position/z-index Bootstrap's position-sticky + top-0
-   utilities (in HTML) already handle; kept here too as a
-   safety net against ancestor overflow/transform breaking
-   sticky (see the scroll-fix note below).
-=========================== */
-
+/* =========================================================
+   FARMSTAY — TWO-LEVEL RESPONSIVE HEADER
+   Theme-aware: Orange (default) / Blue (switchable)
+   Uses FarmStay semantic CSS variables from styles/theme.css
+========================================================= */
 
 :host {
   display: block;
   width: 100%;
+  position: relative;
+  z-index: 1100;
 }
 
-.main-header {
+/* =========================================================
+   OUTER HEADER
+   Both utility bar and main navigation remain together.
+========================================================= */
+
+.farmstay-header {
   position: sticky;
   top: 0;
-  z-index: 1050;
-
-  /* Bootstrap has no color/blur utilities for this exact
-     translucent-glass effect, so it stays custom */
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid #e2ded4;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  width: 100%;
+  z-index: 1100;
+  background: var(--surface, #ffffff);
+  box-shadow: 0 3px 14px rgba(21, 26, 35, 0.07);
 }
 
-/* ===========================
-   Navbar height
-   Bootstrap's navbar has no fixed-height utility, only padding
-=========================== */
+/* =========================================================
+   TOP UTILITY HEADER
+   Compact, subtle and right-aligned.
+========================================================= */
 
-.navbar {
-  min-height: 64px;
+.top-header {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--surface-muted, #fffaf6);
+  border-bottom: 1px solid var(--border, #f1e5dd);
 }
 
-/* ===========================
-   Container width
-   Bootstrap's own .container breakpoints (max 1320px at xxl)
-   don't include our custom 1400px step at 1600px+, which we
-   set on Home to keep every section in sync. So the max-width
-   itself stays custom; horizontal padding now comes from
-   Bootstrap's .container.
-=========================== */
-
-.header-container {
-  max-width: 1320px;
+.top-header-inner {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 28px;
 }
 
-@media (min-width: 1600px) {
-  .header-container {
-    max-width: 1400px;
-  }
+.top-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  min-width: 0;
 }
 
-/* ===========================
-   Logo
-   Brand gradient/colors are project-specific, not in Bootstrap
-=========================== */
+.top-header-theme {
+  display: inline-flex;
+  align-items: center;
+}
 
-.logo-box {
-  width: 36px;
-  height: 36px;
+/* Top bar notification */
 
-  background: linear-gradient(110deg, #bd3e25 0%, #d94c20 50%, #f15b16 100%);
+.top-header .notification-indicator {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  color: var(--text-body, #30343b);
+  font-size: 17px;
+  cursor: pointer;
+}
 
+.top-header .notification-indicator:hover {
+  color: var(--primary-700, #c94a08);
+}
+
+.top-header .notification-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--surface-muted, #fffaf6);
+  border-radius: 50%;
+  background: var(--error-500, #de3b3b);
+}
+
+/* Top bar language toggle */
+
+.top-header .language-toggle {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 3px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--border, #f1e5dd);
+  border-radius: 9px;
+  background: var(--surface, #ffffff);
+}
+
+.top-header .language-toggle button {
+  border: 0;
+  border-radius: 6px;
+  padding: 5px 9px;
+  background: transparent;
+  color: var(--text-muted, #62666d);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.top-header .language-toggle button:hover {
+  background: var(--primary-50, #fff0e6);
+  color: var(--primary-700, #c94a08);
+}
+
+.top-header .language-toggle button.selected {
+  background: var(--primary-500, #f47716);
+  color: #ffffff;
+}
+
+.top-header .language-toggle button:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary-500, #f47716));
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   MAIN HEADER
+   Visually dominant navigation row.
+========================================================= */
+
+.main-header {
+  position: relative;
+  width: 100%;
+  min-height: 76px;
+  background: var(--surface, #ffffff);
+  border-bottom: 1px solid var(--border, #f1e5dd);
+}
+
+.main-header .navbar {
+  min-height: 76px;
+  padding: 0;
+  background: transparent;
+}
+
+.main-header .container-fluid {
+  width: 100%;
+  min-height: 76px;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+/* =========================================================
+   BRAND / LOGO
+========================================================= */
+
+.main-header .navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 11px !important;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.main-header .logo-box,
+.main-header .header-logo-image {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: 10px;
+}
+
+.main-header .logo-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    110deg,
+    var(--primary-700, #c94a08) 0%,
+    var(--primary-600, #e85d08) 52%,
+    var(--primary-500, #f47716) 100%
+  );
   color: #ffffff;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
 }
 
-.header-logo-image {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
+.main-header .header-logo-image {
   display: block;
-  flex-shrink: 0;
+  object-fit: contain;
 }
 
-/* ===========================
-   Title
-   Bootstrap's fs-* utilities only cover heading-scale sizes
-   (fs-6 = 1rem/16px and up), nothing at 16px serif / 10px caps,
-   so the exact typography stays custom.
-=========================== */
+.main-header .logo-title {
+  color: var(--text-heading, #151a23);
+  font-family: inherit;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.35px;
+  white-space: nowrap;
+}
 
-.logo-title {
-  color: #171717;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 16px;
+.main-header .logo-subtitle {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted, #62666d);
+  font-size: 10px;
   font-weight: 600;
   line-height: 1.2;
+  letter-spacing: 0.9px;
+  white-space: nowrap;
 }
 
-.logo-subtitle {
-  color: #68645c;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 1px;
+/* =========================================================
+   MAIN NAVIGATION
+========================================================= */
+
+.main-header .navbar-collapse {
+  min-width: 0;
 }
 
-/* ===========================
-   Navigation
-   Layout/spacing/radius now come from Bootstrap utility
-   classes in the HTML (gap-1, rounded-2, px-3, py-2); only
-   the brand color and hover/active tint stay custom.
-=========================== */
+.main-header .navbar-nav {
+  min-height: 76px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-.nav-link {
-  color: rgba(23, 23, 23, 0.75);
+.main-header .navbar-nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 11px 13px !important;
+  border-radius: 9px !important;
+  color: var(--text-body, #30343b);
+  font-family: inherit;
   font-size: 14px;
-  font-weight: 500;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.nav-link:hover {
-  background: rgba(198, 64, 36, 0.08);
-  color: #c64024;
+.main-header .navbar-nav .nav-link:hover {
+  background: var(--primary-50, #fff0e6);
+  color: var(--primary-700, #c94a08);
 }
 
-.nav-link.active {
-  background: rgba(198, 64, 36, 0.1);
-  color: #c64024;
+.main-header .navbar-nav .nav-link.active {
+  background: var(--primary-100, #ffe3d1);
+  color: var(--primary-700, #c94a08);
+  font-weight: 700;
 }
 
-/* ===========================
-   Actions (right side)
-=========================== */
+/* =========================================================
+   MAIN HEADER RIGHT ACTIONS
+========================================================= */
 
-.header-actions {
-  margin-left: 8px;
+.main-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  margin-left: 16px;
 }
 
-/* ===========================
-   Login
-=========================== */
+.main-header .header-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+}
 
-.login-link {
-  color: rgba(23, 23, 23, 0.75);
+/* Login */
+
+.main-header .login-link {
+  color: var(--text-body, #30343b);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 
-.login-link:hover {
-  color: #c64024;
+.main-header .login-link:hover {
+  color: var(--primary-700, #c94a08);
 }
 
-/* ===========================
-   Register
-   Height/padding/font-size are brand-specific pixel values
-   that don't map onto Bootstrap's spacing/font scale
-=========================== */
+/* Register */
 
-.register-btn {
-  height: 36px;
-  padding: 0 18px;
-
-  background: #c64024;
+.main-header .register-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 39px;
+  padding: 0 19px;
+  border: 1px solid var(--primary-500, #f47716);
+  border-radius: 9px !important;
+  background: var(--primary-500, #f47716);
   color: #ffffff;
-  border: none;
-
   font-size: 13px;
-  font-weight: 500;
-
-  transition: background-color 0.2s ease;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.register-btn:hover {
-  background: #a9321b;
+.main-header .register-btn:hover {
+  border-color: var(--primary-700, #c94a08);
+  background: var(--primary-700, #c94a08);
   color: #ffffff;
 }
 
-/* ===========================
-   Profile
-=========================== */
+/* Logged-in profile */
 
-.profile-btn {
-  height: 36px;
-  padding: 0 14px;
-
-  background: #ffffff;
-  color: #171717;
-  border: 1px solid #e2ded4;
-
-  font-size: 13px;
-  font-weight: 500;
-
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+.main-header .profile-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  height: auto;
+  gap: 9px;
+  padding: 3px 10px 3px 5px;
+  border: 1px solid transparent;
+  border-radius: 10px !important;
+  background: transparent;
+  color: var(--text-heading, #151a23);
+  box-shadow: none !important;
+  text-align: left;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.profile-btn:hover {
-  background: rgba(198, 64, 36, 0.06);
-  border-color: #d6cfc1;
-  color: #171717;
+.main-header .profile-btn:hover,
+.main-header .profile-btn[aria-expanded="true"] {
+  border-color: var(--border, #f1e5dd);
+  background: var(--primary-50, #fff0e6);
+  color: var(--text-heading, #151a23);
 }
 
-.profile-name {
-  max-width: min(11rem, 55vw);
+.main-header .profile-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 50%;
+  background: var(--primary-100, #ffe3d1);
+  color: var(--primary-700, #c94a08);
+  font-size: 20px;
+}
+
+.main-header .profile-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 145px;
+  line-height: 1.2;
+}
+
+.main-header .profile-name {
+  display: block;
+  max-width: 145px;
   overflow: hidden;
+  color: var(--text-heading, #151a23);
+  font-size: 13px;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* ===========================
-   Dropdown
-   min-width/margin-top and hover tint are brand-specific;
-   radius/padding/shadow now come from Bootstrap utilities
-   (rounded-3, p-1, shadow-sm) in the HTML.
-=========================== */
-
-.header-actions > .dropdown-menu {
-  position: absolute;
-  inset-inline-start: auto;
-  inset-inline-end: 0;
-  width: min(210px, calc(100vw - 2rem));
-  min-width: 0;
-  margin-top: 8px;
-  border: 1px solid #e2ded4;
-}
-
-.dropdown-menu:not(.show) {
-  display: none;
-}
-
-.dropdown-item {
-  color: rgba(23, 23, 23, 0.8);
-  font-size: 14px;
+.main-header .profile-role {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted, #62666d);
+  font-size: 11px;
   font-weight: 500;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  white-space: nowrap;
 }
 
-.dropdown-item:hover {
-  background: rgba(198, 64, 36, 0.08);
-  color: #c64024;
+.main-header .profile-chevron {
+  margin-left: 2px;
+  color: var(--text-muted, #62666d);
+  font-size: 11px;
 }
 
-/* ===========================
-   Mobile
-=========================== */
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+.main-header .header-actions > .dropdown-menu {
+  position: absolute;
+  inset-inline: auto 0;
+  width: min(220px, calc(100vw - 2rem));
+  min-width: 0;
+  margin-top: 9px;
+  border: 1px solid var(--border, #f1e5dd);
+  border-radius: 11px;
+  background: var(--surface, #ffffff);
+  box-shadow: 0 10px 28px rgba(21, 26, 35, 0.12);
+}
+
+.main-header .dropdown-item {
+  border-radius: 7px;
+  color: var(--text-body, #30343b);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.main-header .dropdown-item:hover,
+.main-header .dropdown-item:focus {
+  background: var(--primary-50, #fff0e6);
+  color: var(--primary-700, #c94a08);
+}
+
+.main-header .dropdown-divider {
+  border-color: var(--border, #f1e5dd);
+}
+
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+========================================================= */
+
+.main-header a:focus-visible,
+.main-header button:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary-500, #f47716));
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
 
 @media (max-width: 991.98px) {
-  .navbar {
-    min-height: 60px;
+  .top-header-inner {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
-  .navbar-collapse {
-    margin-top: 12px;
-    padding-bottom: 16px;
+  .top-header-actions {
+    gap: 9px;
   }
 
-  .navbar-nav {
-    text-align: center;
+  .main-header,
+  .main-header .navbar,
+  .main-header .container-fluid {
+    min-height: 64px;
   }
 
-  .nav-link {
-    display: block;
+  .main-header .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+    flex-wrap: wrap;
   }
 
-  .header-actions {
-    justify-content: center;
-    margin-top: 12px;
-    margin-left: 0;
+  .main-header .navbar-brand {
+    max-width: calc(100% - 55px);
   }
 
-  .logo-box,
-  .header-logo-image {
-    width: 32px;
-    height: 32px;
+  .main-header .logo-box,
+  .main-header .header-logo-image {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
   }
 
-  .logo-box {
-    font-size: 16px;
+  .main-header .logo-title {
+    max-width: min(260px, 55vw);
+    overflow: hidden;
+    font-size: 17px;
+    text-overflow: ellipsis;
   }
 
-  .logo-title {
+  .main-header .logo-subtitle {
+    font-size: 9px;
+  }
+
+  .main-header .navbar-toggler {
+    color: var(--primary-700, #c94a08);
+    font-size: 27px;
+  }
+
+  .main-header .navbar-collapse {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - 102px);
+    overflow-y: auto;
+    padding: 12px 15px 17px;
+    border-top: 1px solid var(--border, #f1e5dd);
+    background: var(--surface, #ffffff);
+    box-shadow: 0 12px 22px rgba(21, 26, 35, 0.10);
+  }
+
+  .main-header .navbar-nav {
+    min-height: 0;
+    align-items: stretch;
+    gap: 3px !important;
+  }
+
+  .main-header .navbar-nav .nav-link {
+    display: flex;
+    justify-content: flex-start;
+    min-height: 42px;
+    padding: 10px 13px !important;
+  }
+
+  .main-header-actions {
+    justify-content: flex-start;
+    margin: 10px 0 0;
+  }
+
+  .main-header .header-actions {
+    margin: 0;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 575.98px) {
+  .top-header {
+    min-height: 36px;
+  }
+
+  .top-header-inner {
+    min-height: 36px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .top-header-actions {
+    gap: 7px;
+  }
+
+  .top-header .language-toggle button {
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  .main-header .container-fluid {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .main-header .logo-title {
+    max-width: 55vw;
     font-size: 15px;
   }
 
-  .logo-subtitle {
-    font-size: 9px;
+  .main-header .logo-subtitle {
+    max-width: 55vw;
+    overflow: hidden;
+    font-size: 8px;
+    letter-spacing: 0.6px;
+    text-overflow: ellipsis;
+  }
+
+  .main-header .navbar-collapse {
+    top: 64px;
+  }
+
+  .main-header .profile-copy {
+    max-width: 115px;
+  }
+
+  .main-header .profile-name {
+    max-width: 115px;
   }
 }
 
-.language-toggle { display: inline-flex; flex-shrink: 0; gap: 2px; padding: 3px; margin: 0 12px; border: 1px solid #cddbd1; border-radius: 9px; background: #f4f7f4; }
-.language-toggle button { border: 0; border-radius: 6px; padding: 7px 10px; background: transparent; color: #304b3b; font: inherit; font-size: .85rem; cursor: pointer; }
-.language-toggle button.selected { color: white; background: #246344; }
-.language-toggle button:focus-visible { outline: 2px solid #246344; outline-offset: 2px; }
-@media (max-width: 991px) { .language-toggle { margin: 8px 0 16px; } }
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .main-header *,
+  .top-header * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

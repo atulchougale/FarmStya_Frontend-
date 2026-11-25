@@ -1,280 +1,51 @@
+<main class="booking-page">
+  <header class="page-heading">
+    <div class="heading-icon"><i class="bi bi-calendar" aria-hidden="true"></i></div>
+    <div class="heading-copy"><h1>{{ 'Bookings' | t }}</h1><p>{{ 'Manage all farmhouse bookings, check-ins and check-outs' | t }}</p></div>
+    <a *ngIf="canCreateBooking" routerLink="/admin/bookings/create" class="button primary"><i class="bi bi-plus-lg" aria-hidden="true"></i>{{ 'Add Booking' | t }}</a>
+  </header>
 
-<div class="booking-page"><div class="d-flex justify-content-end mb-3"><a *ngIf="canCreateBooking" routerLink="/admin/bookings/create" class="btn btn-success">{{ 'Create customer booking' | t }}</a></div>
+  <section class="summary-grid" [attr.aria-label]="'Booking summary' | t">
+    <article *ngFor="let card of cards" class="summary-card" [ngClass]="card.tone">
+      <span class="summary-icon"><i class="bi" [ngClass]="card.icon" aria-hidden="true"></i></span>
+      <div><h2>{{ card.label | t }}</h2><strong>{{ card.value | number }}</strong>
+        <p *ngIf="card.tone === 'brand'">{{ card.note | t }}</p>
+        <p *ngIf="card.tone !== 'brand'">{{ (summary.total ? card.value * 100 / summary.total : 0) | number:'1.2-2' }}% {{ card.note | t }}</p>
+      </div>
+    </article>
+  </section>
 
-  <!-- HEADER -->
-  <div class="page-header">
+  <form class="filter-panel" (ngSubmit)="apply()">
+    <label class="search-field">{{ 'Search' | t }}<span class="input-wrap"><i class="bi bi-search" aria-hidden="true"></i><input name="search" [(ngModel)]="search" maxlength="150" [placeholder]="'Guest name, booking ID, phone...' | t" /></span></label>
+    <label>{{ 'Booking Status' | t }}<select name="status" [(ngModel)]="status"><option value="">{{ 'All Status' | t }}</option><option *ngFor="let state of statuses" [value]="state">{{ statusLabel(state) | t }}</option></select></label>
+    <fieldset class="date-filter"><legend>{{ 'Stay Date' | t }}</legend><div class="date-inputs"><input type="date" name="from" [(ngModel)]="from" [max]="to" [attr.aria-label]="'From date' | t" /><span aria-hidden="true">–</span><input type="date" name="to" [(ngModel)]="to" [min]="from" [attr.aria-label]="'To date' | t" /></div></fieldset>
+    <label>{{ 'Source' | t }}<select name="source" [(ngModel)]="source"><option value="">{{ 'All Sources' | t }}</option><option value="Online">{{ 'Online' | t }}</option><option value="Phone">{{ 'Phone enquiry' | t }}</option><option value="WalkIn">{{ 'Walk-in' | t }}</option></select></label>
+    <div class="filter-actions"><button type="submit" class="button primary" [disabled]="loading"><i class="bi bi-funnel-fill" aria-hidden="true"></i>{{ 'Apply Filters' | t }}</button><button type="button" class="button secondary" (click)="reset()" [disabled]="loading"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>{{ 'Reset' | t }}</button></div>
+  </form>
+  <p *ngIf="error" class="error-message" role="alert">{{ error | t }}</p>
 
-    <div>
-      <h2>{{ 'Bookings' | t }}</h2>
-      <p>{{ 'View and manage guest bookings' | t }}</p>
+  <section class="list-panel" [attr.aria-busy]="loading">
+    <header class="list-heading"><h2><span><i class="bi bi-list-ul" aria-hidden="true"></i></span>{{ 'All Bookings' | t }} <small>({{ totalCount | number }})</small></h2><div class="list-actions"><a *ngIf="canExport" class="button secondary" routerLink="/admin/reports/bookings" [title]="'Open booking report for PDF and Excel exports' | t"><i class="bi bi-download" aria-hidden="true"></i>{{ 'Export' | t }}</a><button type="button" class="button secondary" (click)="refresh()" [disabled]="loading"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i>{{ 'Refresh' | t }}</button></div></header>
+    <div *ngIf="loading" class="empty-state" role="status"><span class="spinner-border spinner-border-sm"></span>{{ 'Loading bookings...' | t }}</div>
+    <div *ngIf="!loading && !items.length" class="empty-state"><i class="bi bi-calendar2-x" aria-hidden="true"></i><h3>{{ 'No Bookings Found' | t }}</h3><p>{{ 'Try changing your search or filters.' | t }}</p><button type="button" class="button secondary" (click)="reset()">{{ 'Reset' | t }}</button></div>
+    <div class="table-scroll" *ngIf="!loading && items.length" tabindex="0" [attr.aria-label]="'Booking list. Scroll horizontally to see all columns.' | t">
+      <table mat-table [dataSource]="items">
+        <ng-container matColumnDef="reference"><th mat-header-cell *matHeaderCellDef>{{ 'Booking ID' | t }}</th><td mat-cell *matCellDef="let booking"><a class="booking-reference" [routerLink]="['/admin/booking', booking.bookingId]">{{ booking.bookingReference }}</a></td></ng-container>
+        <ng-container matColumnDef="guest"><th mat-header-cell *matHeaderCellDef>{{ 'Guest' | t }}</th><td mat-cell *matCellDef="let booking"><div class="guest-name">{{ booking.fullName }}</div><a class="guest-phone" [href]="'tel:' + booking.mobileNumber">{{ booking.mobileNumber }}</a></td></ng-container>
+        <ng-container matColumnDef="dates"><th mat-header-cell *matHeaderCellDef>{{ 'Stay Dates' | t }}</th><td mat-cell *matCellDef="let booking"><span class="stay-dates"><i class="bi bi-calendar3" aria-hidden="true"></i>{{ booking.checkInDate | localDate:'d MMM yyyy' }} – {{ booking.checkOutDate | localDate:'d MMM yyyy' }}</span></td></ng-container>
+        <ng-container matColumnDef="guests"><th mat-header-cell *matHeaderCellDef>{{ 'Guests' | t }}</th><td mat-cell *matCellDef="let booking"><span class="guest-count"><i class="bi bi-people" aria-hidden="true"></i>{{ booking.adultCount }} {{ 'Adults' | t }}<span *ngIf="booking.childrenCount">, {{ booking.childrenCount }} {{ 'Children' | t }}</span></span></td></ng-container>
+        <ng-container matColumnDef="source"><th mat-header-cell *matHeaderCellDef>{{ 'Source' | t }}</th><td mat-cell *matCellDef="let booking"><span class="source-badge" [class.phone]="booking.bookingSource === 'Phone'" [class.walkin]="booking.bookingSource === 'WalkIn'"><i class="bi" [ngClass]="sourceIcon(booking.bookingSource)" aria-hidden="true"></i>{{ sourceLabel(booking.bookingSource) | t }}</span></td></ng-container>
+        <ng-container matColumnDef="amount"><th mat-header-cell *matHeaderCellDef class="amount">{{ 'Amount' | t }}</th><td mat-cell *matCellDef="let booking" class="amount">{{ booking.totalAmount | currency:(booking.currencyCode || 'INR'):'symbol':'1.0-2' }}</td></ng-container>
+        <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>{{ 'Status' | t }}</th><td mat-cell *matCellDef="let booking"><span class="status-badge" [ngClass]="statusClass(booking.status)">{{ statusLabel(booking.status) | t }}</span></td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>{{ 'Actions' | t }}</th><td mat-cell *matCellDef="let booking"><div class="row-actions"><a class="icon-button" [routerLink]="['/admin/booking', booking.bookingId]" [attr.aria-label]="('View details' | t) + ' ' + booking.bookingReference" [title]="'View details' | t"><i class="bi bi-eye" aria-hidden="true"></i></a><button type="button" class="icon-button" [matMenuTriggerFor]="bookingMenu" [attr.aria-label]="('More actions' | t) + ' ' + booking.bookingReference"><i class="bi bi-three-dots" aria-hidden="true"></i></button><mat-menu #bookingMenu="matMenu"><a mat-menu-item [routerLink]="['/admin/booking', booking.bookingId]">{{ 'View details' | t }}</a><a mat-menu-item [href]="'tel:' + booking.mobileNumber">{{ 'Call customer' | t }}</a></mat-menu></div></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="columns"></tr><tr mat-row *matRowDef="let row; columns: columns"></tr>
+      </table>
     </div>
-
-    <button
-      type="button"
-      class="refresh-btn"
-      (click)="refreshBookings()"
-      [disabled]="loading">
-
-      <span>↻</span>
-      {{ 'Refresh' | t }}</button>
-
-  </div>
-
-
-  <!-- SEARCH BOX -->
-  <div class="search-container">
-
-    <i class="bi bi-search search-icon" aria-hidden="true"></i>
-
-    <input
-      type="text"
-      [attr.aria-label]="'Search bookings on this page' | t"
-      [placeholder]="'Search this page by reference, name, email or mobile' | t"
-      [(ngModel)]="searchText"
-      (input)="searchBookings()"
-    />
-
-    <button
-      type="button"
-      *ngIf="searchText"
-      [attr.aria-label]="'Clear search' | t"
-      (click)="clearSearch()">
-
-      <i class="bi bi-x-lg" aria-hidden="true"></i>
-
-    </button>
-
-  </div>
-
-
-  <!-- LOADING -->
-  <div
-    class="loading-container"
-    *ngIf="loading">
-
-    <div class="spinner"></div>
-
-    <p>{{ 'Loading bookings...' | t }}</p>
-
-  </div>
-
-
-  <!-- EMPTY BOOKINGS -->
-  <div
-    class="empty-container"
-    *ngIf="!loading && bookingItems.length === 0">
-
-    <div class="empty-icon">📅</div>
-
-    <h3>{{ 'No Bookings Found' | t }}</h3>
-
-    <p>{{ 'There are no bookings available.' | t }}</p>
-
-  </div>
-
-
-  <!-- NO SEARCH RESULTS -->
-  <div
-    class="empty-container"
-    *ngIf="
-      !loading &&
-      bookingItems.length > 0 &&
-      filteredBookingItems.length === 0
-    ">
-
-    <div class="empty-icon">🔍</div>
-
-    <h3>{{ 'No Matching Bookings' | t }}</h3>
-
-    <p>{{ 'Try searching with another booking ID, name or mobile number.' | t }}</p>
-
-    <button
-      type="button"
-      class="refresh-btn"
-      (click)="clearSearch()">
-
-      {{ 'Clear Search' | t }}</button>
-
-  </div>
-
-
-  <!-- BOOKING TABLE -->
-  <div
-    class="table-wrapper"
-    *ngIf="!loading && filteredBookingItems.length > 0">
-
-    <table mat-table [dataSource]="filteredBookingItems">
-
-
-      <!-- NUMBER -->
-      <ng-container matColumnDef="number">
-
-        <th mat-header-cell *matHeaderCellDef>
-          #
-        </th>
-
-        <td mat-cell *matCellDef="let booking; let i = index">
-          {{ i + 1 }}
-        </td>
-
-      </ng-container>
-
-
-      <!-- BOOKING REFERENCE -->
-      <ng-container matColumnDef="bookingReference">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Booking ID' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-
-          <span class="booking-reference">
-            {{ booking.bookingReference }}
-          </span>
-          <div><span class="badge text-bg-light border mt-1">{{ (booking.bookingSource === 'WalkIn' ? 'Walk-in' : booking.bookingSource === 'Phone' ? 'Phone enquiry' : 'Online') | t }}</span></div>
-
-        </td>
-
-      </ng-container>
-
-
-      <!-- GUEST -->
-      <ng-container matColumnDef="guest">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Guest' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-
-          <div class="guest-name">
-            {{ (booking.fullName || 'Guest') | t }}
-          </div>
-
-          <div class="guest-email">
-            {{ booking.email || '-' }}
-          </div>
-
-        </td>
-
-      </ng-container>
-
-
-      <!-- MOBILE -->
-      <ng-container matColumnDef="mobile">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Mobile' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-          {{ booking.mobileNumber || '-' }}
-        </td>
-
-      </ng-container>
-
-
-      <!-- CHECK IN -->
-      <ng-container matColumnDef="checkIn">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Check In' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-          {{ (booking.checkInDate | localDate:'dd/MM/yyyy') | t }}
-        </td>
-
-      </ng-container>
-
-
-      <!-- CHECK OUT -->
-      <ng-container matColumnDef="checkOut">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Check Out' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-          {{ (booking.checkOutDate | localDate:'dd/MM/yyyy') | t }}
-        </td>
-
-      </ng-container>
-
-
-      <!-- PERSONS -->
-      <ng-container matColumnDef="persons">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Persons' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-          {{ booking.personCount || 0 }}
-        </td>
-
-      </ng-container>
-
-
-      <!-- STATUS -->
-      <ng-container matColumnDef="status">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Status' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-
-          <span
-            class="status-badge"
-            [ngClass]="getStatusClass(booking.status)">
-
-            {{ (booking.status || 'Unknown') | t }}
-
-          </span>
-
-        </td>
-
-      </ng-container>
-
-
-      <!-- BOOKING DATE -->
-      <ng-container matColumnDef="date">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Booking Date' | t }}</th>
-
-        <td mat-cell *matCellDef="let booking">
-          {{ (booking.createdDate | localDate:'dd/MM/yyyy') | t }}
-        </td>
-
-      </ng-container>
-
-
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>{{ 'Action' | t }}</th>
-        <td mat-cell *matCellDef="let booking">
-          <a class="view-booking" [routerLink]="['/admin/booking', booking.bookingId]">
-            {{ 'View details' | t }}<i class="bi bi-arrow-right" aria-hidden="true"></i>
-          </a>
-        </td>
-      </ng-container>
-
-      <!-- HEADER ROW -->
-      <tr
-        mat-header-row
-        *matHeaderRowDef="displayedColumns">
-      </tr>
-
-
-      <!-- DATA ROW -->
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns;">
-      </tr>
-
-    </table>
-
-  </div>
-
-  <nav class="d-flex align-items-center justify-content-center gap-3 mt-3" [attr.aria-label]="'Booking pages' | t">
-    <button type="button" class="btn btn-outline-secondary" [disabled]="loading || page === 1" (click)="changePage(-1)">{{ 'Previous' | t }}</button>
-    <span>{{ 'Page {p0}' | t:{p0: (page)} }}</span>
-    <button type="button" class="btn btn-outline-secondary" [disabled]="loading || bookingItems.length < pageSize" (click)="changePage(1)">{{ 'Next' | t }}</button>
-  </nav>
-
-</div>
+    <footer class="pagination-bar">
+      <span>{{ 'Showing {p0}–{p1} of {p2} bookings' | t:{p0:first, p1:last, p2:totalCount} }}</span>
+      <div class="pagination-controls"><label>{{ 'Rows per page' | t }}<select name="pageSize" [(ngModel)]="pageSize" (ngModelChange)="resize()" [disabled]="loading"><option [ngValue]="5">5</option><option [ngValue]="10">10</option><option [ngValue]="25">25</option><option [ngValue]="50">50</option></select></label>
+        <nav [attr.aria-label]="'Booking pages' | t"><button class="page-button" type="button" (click)="go(page - 1)" [disabled]="loading || page === 1" [attr.aria-label]="'Previous' | t"><i class="bi bi-chevron-left" aria-hidden="true"></i></button><button *ngIf="pageNumbers[0] > 1" type="button" class="page-button" (click)="go(1)" [disabled]="loading">1</button><span *ngIf="pageNumbers[0] > 2">…</span><button *ngFor="let number of pageNumbers" type="button" class="page-button" [class.active]="page === number" [attr.aria-current]="page === number ? 'page' : null" (click)="go(number)" [disabled]="loading">{{ number }}</button><span *ngIf="pageNumbers[pageNumbers.length - 1] < pages - 1">…</span><button *ngIf="pageNumbers[pageNumbers.length - 1] < pages" type="button" class="page-button" (click)="go(pages)" [disabled]="loading">{{ pages }}</button><button class="page-button" type="button" (click)="go(page + 1)" [disabled]="loading || page >= pages" [attr.aria-label]="'Next' | t"><i class="bi bi-chevron-right" aria-hidden="true"></i></button></nav>
+      </div>
+    </footer>
+  </section>
+</main>

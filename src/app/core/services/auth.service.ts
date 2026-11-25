@@ -22,6 +22,15 @@ import { ChangePasswordRequest } from '../../features/profile/models/change-pass
 export class AuthService {
   constructor(private http: HttpClient) {}
 
+  requestProfileCode(channel: 'mobile' | 'email', value: string) {
+    return this.http.post<{success:boolean;message:string}>(environment.apiUrl+'/auth/profile/contact/send-code',{channel,value});
+  }
+  verifyProfileCode(channel: 'mobile' | 'email', value: string, code: string) {
+    return this.http.post<{success:boolean;message:string}>(environment.apiUrl+'/auth/profile/contact/verify-code',{channel,value,code});
+  }
+  updateProfile(request: {fullName:string;mobileNumber:string;email:string|null}) {
+    return this.http.put<{success:boolean;message:string}>(environment.apiUrl+'/auth/profile',request);
+  }
   updateEmail(email: string | null) {
     return this.http.put<{ success: boolean; message: string; data: {hasEmail:boolean;isEmailVerified:boolean;isMobileVerified:boolean} }>(
       environment.apiUrl + '/auth/profile/email', { email });

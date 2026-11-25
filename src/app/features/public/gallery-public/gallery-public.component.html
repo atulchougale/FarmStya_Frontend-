@@ -1,171 +1,70 @@
-<main class="public-gallery-page">
-  <section class="public-gallery-section">
-    <div class="app-container">
-
-      <!-- Gallery Heading -->
-      <div class="public-gallery-header text-center mx-auto">
-        <h1 class="public-gallery-title">{{ 'Gallery' | t }}</h1>
-        <p class="public-gallery-subtitle mb-0">
-          {{ 'A glimpse of life at Chougale Farms.' | t }}</p>
-      </div>
-
-      <!-- Loading State -->
-      <div class="gallery-status" *ngIf="loading">
-        <div class="spinner-border text-warning" role="status">
-          <span class="visually-hidden">{{ 'Loading gallery...' | t }}</span>
+<main class="gallery-page">
+  <div class="gallery-container">
+    <section class="gallery-intro-layout">
+      <div class="gallery-intro">
+        <p class="eyebrow">{{ 'Gallery' | t }} <span aria-hidden="true"></span></p>
+        <h1>{{ 'Take a look around.' | t }}</h1>
+        <p class="intro-description">{{ 'Explore the spaces, the moments, and the little things that make a stay special.' | t }}</p>
+        <div class="media-filters" role="group" [attr.aria-label]="'Filter gallery media' | t">
+          <button type="button" [class.active]="mediaFilter === 'all'" [attr.aria-pressed]="mediaFilter === 'all'" (click)="filterMedia('all')">{{ 'All' | t }}</button>
+          <button type="button" [class.active]="mediaFilter === 'photos'" [attr.aria-pressed]="mediaFilter === 'photos'" (click)="filterMedia('photos')">{{ 'Photos' | t }}</button>
+          <button type="button" [class.active]="mediaFilter === 'videos'" [attr.aria-pressed]="mediaFilter === 'videos'" (click)="filterMedia('videos')">{{ 'Videos' | t }}</button>
         </div>
-
-        <p class="mt-3 mb-0">{{ 'Loading gallery...' | t }}</p>
-      </div>
-
-      <!-- Error State -->
-      <div class="gallery-status" *ngIf="!loading && errorMessage">
-        <i class="bi bi-exclamation-circle gallery-status-icon" aria-hidden="true"></i>
-
-        <p>{{ (errorMessage) | t }}</p>
-
-        <button type="button" class="btn gallery-retry-btn" (click)="loadGallery()">
-          {{ 'Try Again' | t }}</button>
-      </div>
-
-      <!-- Empty State -->
-      <div class="gallery-status" *ngIf="
-          !loading &&
-          !errorMessage &&
-          galleryItems.length === 0
-        ">
-        <i class="bi bi-images gallery-status-icon" aria-hidden="true"></i>
-
-        <h2>{{ 'Gallery coming soon' | t }}</h2>
-
-        <p>
-          {{ 'Photos of our farmhouse will be available here soon.' | t }}</p>
-      </div>
-
-      <!-- Responsive Gallery Grid -->
-      <div class="row g-3 g-md-4 public-gallery-grid" *ngIf="
-          !loading &&
-          !errorMessage &&
-          galleryItems.length > 0
-        ">
-        <div class="col-12 col-sm-6 col-lg-4" *ngFor="
-            let item of galleryItems;
-            trackBy: trackByImageId
-          ">
-          <article class="public-gallery-card" role="button" tabindex="0" [attr.aria-label]="
-              'View ' + (item.imageName || 'gallery media')
-            " (click)="openGalleryModal(item)" (keydown.enter)="openGalleryModal(item)" (keydown.space)="
-              $event.preventDefault();
-              openGalleryModal(item)
-            ">
-            <div class="public-gallery-media">
-
-              <!-- Video Preview -->
-              <video *ngIf="isVideo(item.imageUrl); else galleryImage" class="public-gallery-image"
-                [src]="item.imageUrl" [attr.aria-label]="item.imageName || 'Farmhouse gallery video'" [muted]="true"
-                [autoplay]="true" [loop]="true" playsinline preload="metadata" #videoEl
-                (loadedmetadata)="videoEl.muted = true" tabindex="-1">
-              </video>
-
-              <!-- Image Preview -->
-              <ng-template #galleryImage>
-                <img class="public-gallery-image" [src]="item.imageUrl" [alt]="
-                    item.imageName ||
-                    'Chougale Farms gallery image'
-                   | t" loading="lazy" width="1024" height="768" />
-              </ng-template>
-
-              <!-- Hover Overlay -->
-              <div class="public-gallery-overlay">
-                <div class="gallery-overlay-content">
-
-                  <!-- Video Play Icon -->
-                  <span class="gallery-play-button" *ngIf="isVideo(item.imageUrl)" aria-hidden="true">
-                    <i class="bi bi-play-fill"></i>
-                  </span>
-
-                  <!-- Image View Icon -->
-                  <span class="gallery-view-button" *ngIf="!isVideo(item.imageUrl)" aria-hidden="true">
-                    <i class="bi bi-arrows-fullscreen"></i>
-                  </span>
-
-                  <span class="gallery-overlay-title">
-                    {{ (item.imageName || 'Chougale Farms') | t }}
-                  </span>
-
-                  <span class="gallery-overlay-subtitle" *ngIf="item.category">
-                    {{ (item.category) | t }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Video Badge -->
-              <span class="gallery-media-badge" *ngIf="isVideo(item.imageUrl)">
-                <i class="bi bi-camera-video-fill"></i>
-                {{ 'Video' | t }}</span>
-
-              <!-- Media Open Hint -->
-              <span class="gallery-open-hint" aria-hidden="true">
-                <i class="bi bi-plus-lg"></i>
-              </span>
-
-            </div>
-          </article>
+        <div *ngIf="categories.length" class="category-filters" role="group" [attr.aria-label]="'Filter gallery by category' | t">
+          <button type="button" [class.selected]="!category" [attr.aria-pressed]="!category" (click)="filterCategory('')"><i class="bi bi-grid" aria-hidden="true"></i>{{ 'All spaces' | t }}</button>
+          <button type="button" *ngFor="let name of categories" [class.selected]="category === name" [attr.aria-pressed]="category === name" (click)="filterCategory(name)"><i class="bi" [ngClass]="categoryIcon(name)" aria-hidden="true"></i>{{ name | t }}</button>
         </div>
       </div>
+      <div class="gallery-feature">
+        <div class="feature-toolbar"><a routerLink="/booking" class="gallery-button primary"><i class="bi bi-calendar3" aria-hidden="true"></i>{{ 'Check Availability' | t }}</a></div>
+        <div class="gallery-status" *ngIf="loading" role="status"><span class="spinner-border spinner-border-sm"></span>{{ 'Loading gallery...' | t }}</div>
+        <div class="gallery-status" *ngIf="!loading && errorMessage" role="alert"><i class="bi bi-exclamation-circle" aria-hidden="true"></i><p>{{ errorMessage | t }}</p><button type="button" class="gallery-button outline" (click)="loadGallery()">{{ 'Try Again' | t }}</button></div>
+        <div class="gallery-status" *ngIf="!loading && !errorMessage && !filteredItems.length"><i class="bi bi-images" aria-hidden="true"></i><h2>{{ (galleryItems.length ? 'No matching gallery media' : 'Gallery coming soon') | t }}</h2><p>{{ (galleryItems.length ? 'Try another category or media type.' : 'Photos of our farmhouse will be available here soon.') | t }}</p><button *ngIf="galleryItems.length" type="button" class="gallery-button outline" (click)="resetFilters()">{{ 'Reset filters' | t }}</button></div>
+        <ng-container *ngIf="!loading && !errorMessage && activeItem as item">
+          <div class="feature-stage">
+            <button type="button" class="feature-open" (click)="openGalleryModal(item)" [attr.aria-label]="('Open {p0}' | t:{p0:(item.imageName || 'Gallery')})">
+              <ng-container *ngTemplateOutlet="mediaPreview; context: {$implicit: item}"></ng-container>
+              <span class="fullscreen-icon" aria-hidden="true"><i class="bi bi-fullscreen"></i></span>
+              <span class="feature-caption">{{ (item.imageName || 'Farmhouse gallery') | t }}</span>
+              <span class="play-icon" *ngIf="isVideo(item.imageUrl)" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+            </button>
+            <button *ngIf="filteredItems.length > 1" type="button" class="viewer-arrow previous" (click)="move(-1)" [attr.aria-label]="'Previous photo or video' | t"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+            <button *ngIf="filteredItems.length > 1" type="button" class="viewer-arrow next" (click)="move(1)" [attr.aria-label]="'Next photo or video' | t"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="thumbnail-rail" role="group" [attr.aria-label]="'Gallery thumbnails' | t">
+            <button *ngFor="let media of filteredItems; index as i; trackBy:trackByImageId" type="button" class="thumbnail" [class.active]="i === activeIndex" [attr.aria-pressed]="i === activeIndex" [attr.aria-label]="('Preview {p0}' | t:{p0:(media.imageName || 'Gallery')})" (click)="selectItem(i)"><ng-container *ngTemplateOutlet="mediaPreview; context: {$implicit: media}"></ng-container><span *ngIf="isVideo(media.imageUrl)" class="thumbnail-play" aria-hidden="true"><i class="bi bi-play-circle-fill"></i></span></button>
+          </div>
+        </ng-container>
+      </div>
+    </section>
 
-    </div>
-  </section>
+    <section *ngIf="!loading && !errorMessage && filteredItems.length" class="gallery-grid" [attr.aria-label]="'Gallery photos and videos' | t">
+      <button type="button" class="gallery-card" *ngFor="let item of filteredItems; trackBy:trackByImageId" (click)="openGalleryModal(item)" [attr.aria-label]="'Open {p0}' | t:{p0:(item.imageName || 'Gallery')}">
+        <ng-container *ngTemplateOutlet="mediaPreview; context: {$implicit: item}"></ng-container>
+        <span class="video-badge" *ngIf="isVideo(item.imageUrl)"><i class="bi bi-camera-video-fill" aria-hidden="true"></i>{{ 'Video' | t }}</span>
+        <span class="card-gradient"></span>
+        <span class="card-caption"><strong>{{ (item.imageName || 'Farmhouse gallery') | t }}</strong><span *ngIf="item.description">{{ item.description | t }}</span><small *ngIf="!item.description && item.category">{{ item.category | t }}</small></span>
+        <span class="zoom-icon" aria-hidden="true"><i class="bi" [ngClass]="isVideo(item.imageUrl) ? 'bi-play-fill' : 'bi-zoom-in'"></i></span>
+      </button>
+    </section>
+
+    <section class="booking-invitation"><h2><i class="bi bi-leaf" aria-hidden="true"></i>{{ 'Ready to make your own memories?' | t }}</h2><p>{{ 'Plan a refreshing farm stay with your family and loved ones at Green Valley Farm Stay.' | t }}</p><a routerLink="/booking" class="gallery-button primary"><i class="bi bi-calendar3" aria-hidden="true"></i>{{ 'Check Availability' | t }}</a></section>
+  </div>
 </main>
 
-<!-- Gallery Popup Modal -->
-<div class="gallery-modal-backdrop" *ngIf="selectedGalleryItem as selectedItem" (click)="closeGalleryModal()">
-  <section class="gallery-modal-dialog" role="dialog" aria-modal="true" [attr.aria-label]="
-      selectedItem.imageName || 'Gallery media preview'
-    " (click)="$event.stopPropagation()">
+<ng-template #mediaPreview let-item>
+  <ng-container *ngIf="!failedPreviews.has(item.imageId); else previewUnavailable">
+    <video *ngIf="isVideo(item.imageUrl); else photoPreview" class="media-image" [src]="item.imageUrl" muted playsinline preload="metadata" tabindex="-1" aria-hidden="true" (loadedmetadata)="preparePreview($event)" (error)="previewFailed(item)"></video>
+    <ng-template #photoPreview><img class="media-image" [src]="item.imageUrl" [alt]="(item.imageName || 'Farmhouse gallery') | t" loading="lazy" (error)="previewFailed(item)" /></ng-template>
+  </ng-container>
+  <ng-template #previewUnavailable><span class="preview-unavailable"><i class="bi" [ngClass]="isVideo(item.imageUrl) ? 'bi-camera-video' : 'bi-image'" aria-hidden="true"></i><span>{{ 'Preview unavailable' | t }}</span><small *ngIf="isVideo(item.imageUrl)">{{ 'Open to play video' | t }}</small></span></ng-template>
+</ng-template>
 
-    <!-- Modal Header -->
-    <header class="gallery-modal-header">
-      <div class="gallery-modal-heading">
-        <h2>
-          {{ (selectedItem.imageName || 'Chougale Farms') | t }}
-        </h2>
-
-        <p *ngIf="selectedItem.category">
-          {{ (selectedItem.category) | t }}
-        </p>
-      </div>
-
-      <button type="button" class="gallery-modal-close" [attr.aria-label]="'Close gallery popup' | t" [title]="'Close' | t"
-        (click)="closeGalleryModal()">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </header>
-
-    <!-- Modal Media -->
-    <div class="gallery-modal-media">
-
-      <!-- Large Video -->
-      <ng-container *ngIf="isVideo(selectedItem.imageUrl); else modalImage">
-        <video #modalVideo class="gallery-modal-video" [src]="selectedItem.imageUrl" controls autoplay playsinline
-          preload="metadata" [muted]="modalMuted">
-        </video>
-      </ng-container>
-
-      <!-- Large Image -->
-      <ng-template #modalImage>
-        <img class="gallery-modal-image" [src]="selectedItem.imageUrl" [alt]="
-            selectedItem.imageName ||
-            'Chougale Farms gallery image'
-           | t" />
-      </ng-template>
-
-    </div>
-
-    <!-- Modal Description -->
-    <footer class="gallery-modal-footer" *ngIf="selectedItem.description">
-      <p>{{ (selectedItem.description) | t }}</p>
-    </footer>
-
+<div class="gallery-modal-backdrop" *ngIf="selectedGalleryItem as item" (click)="closeGalleryModal()">
+  <section class="gallery-modal-dialog" role="dialog" aria-modal="true" [attr.aria-label]="(item.imageName || 'Gallery media preview') | t" (click)="$event.stopPropagation()" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+    <header class="modal-heading"><div><h2>{{ (item.imageName || 'Farmhouse gallery') | t }}</h2><p *ngIf="item.category">{{ item.category | t }}</p></div><button type="button" class="modal-control" cdkFocusInitial [attr.aria-label]="'Close gallery popup' | t" (click)="closeGalleryModal()"><i class="bi bi-x-lg" aria-hidden="true"></i></button></header>
+    <div class="modal-media"><video *ngIf="isVideo(item.imageUrl); else enlargedPhoto" [src]="item.imageUrl" controls playsinline preload="metadata" (error)="modalMediaError = true" [attr.aria-label]="item.imageName | t"></video><ng-template #enlargedPhoto><img [src]="item.imageUrl" (error)="modalMediaError = true" [alt]="(item.imageName || 'Farmhouse gallery') | t" /></ng-template></div>
+    <p *ngIf="modalMediaError" class="modal-error" role="alert">{{ 'This media could not be loaded. Please try another item.' | t }}</p>
+    <footer class="modal-footer"><p>{{ (item.description || item.category || '') | t }}</p><div class="modal-navigation"><button type="button" class="modal-control" [disabled]="filteredItems.length < 2" [attr.aria-label]="'Previous photo or video' | t" (click)="move(-1)"><i class="bi bi-chevron-left" aria-hidden="true"></i></button><span>{{ activeIndex + 1 }} / {{ filteredItems.length }}</span><button type="button" class="modal-control" [disabled]="filteredItems.length < 2" [attr.aria-label]="'Next photo or video' | t" (click)="move(1)"><i class="bi bi-chevron-right" aria-hidden="true"></i></button></div></footer>
   </section>
 </div>

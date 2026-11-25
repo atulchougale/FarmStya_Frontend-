@@ -67,6 +67,49 @@ export class HomeComponent implements OnInit, OnDestroy {
   carouselImages: CarouselResponseDto[] = [];
   feedbacks: FeedbackResponseDto[] = [];
 
+  readonly imageRoot = '/assets/images/home/';
+  currentHeroSlide = 0;
+  heroPaused = false;
+  heroInteracting = false;
+  private heroTimer: ReturnType<typeof setInterval> | null = null;
+  readonly experiences = [
+    { image: 'poolside-fun', title: 'Poolside Fun', text: 'Cool off, splash around, and just have fun.', icon: 'bi-water' },
+    { image: 'garden-games', title: 'Garden Games', text: 'Open lawns for games, play and family time.', icon: 'bi-dribbble' },
+    { image: 'cozy-nights', title: 'Cozy Nights', text: 'Unwind, chat, and enjoy peaceful evenings.', icon: 'bi-moon-stars' },
+    { image: 'shared-meals', title: 'Shared Meals', text: 'Good food tastes better when shared together.', icon: 'bi-cup-hot' }
+  ];
+  readonly dayMoments = [
+    { image: 'sunrise-tea', title: 'Sunrise tea', text: 'A calm, fresh start amid greenery.' },
+    { image: 'pool-and-play', title: 'Pool & play', text: 'Swim, play games and enjoy quality time.' },
+    { image: 'sunset-together', title: 'Sunset together', text: 'Slow down and watch the sky turn golden.' },
+    { image: 'restful-nights', title: 'Restful nights', text: 'Recharge with a peaceful, comfortable stay.' }
+  ];
+  readonly galleryPhotos = [
+    { image: 'gallery-pool', title: 'Pool and farmhouse' }, { image: 'gallery-swing', title: 'A quiet garden corner' },
+    { image: 'gallery-lawn', title: 'Open green spaces' }, { image: 'gallery-dining', title: 'The veranda' },
+    { image: 'gallery-bedroom', title: 'A comfortable room' }, { image: 'gallery-food', title: 'Shared meals' }
+  ];
+  get heroSlides() {
+    return this.carouselImages.length ? this.carouselImages : [{ imageUrl: this.imageRoot + 'family-pool-hero.png', title: 'Less screen time. More sunshine.', description: 'Swim, play, rest, and make memories together.' }];
+  }
+  get activeHero() { return this.heroSlides[this.currentHeroSlide % this.heroSlides.length]; }
+  changeHero(offset: number): void { this.currentHeroSlide = (this.currentHeroSlide + offset + this.heroSlides.length) % this.heroSlides.length; }
+  showHero(index: number): void { this.currentHeroSlide = index; }
+  scrollToSection(event: Event, id: string): void {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+  onImageError(event: Event, fallback = 'comfortable-bedroom'): void {
+    const image = event.target as HTMLImageElement;
+    const target = this.imageRoot + fallback + '.png';
+    if (!image.src.endsWith(target)) image.src = target;
+  }
+  private startHeroCarousel(): void {
+    if (this.heroTimer) clearInterval(this.heroTimer);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.heroTimer = setInterval(() => { if (!this.heroPaused && !this.heroInteracting && !document.hidden && this.heroSlides.length > 1) this.changeHero(1); }, 7000);
+  }
+
   isLoading = true;
   errorMessage = '';
 
@@ -155,6 +198,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadHomePageData();
+    this.startHeroCarousel();
   }
 
   // --------------------------------------------------
@@ -178,10 +222,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.carouselImages =
             response.success && response.data ? response.data : [];
+          this.currentHeroSlide = 0;
+          this.isLoading = false;
         },
         error: (error) => {
           console.error('Error loading carousel:', error);
           this.carouselImages = [];
+          this.isLoading = false;
         },
       });
   }
@@ -802,6 +849,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopFeedbackAutoSlide();
+    if (this.heroTimer) clearInterval(this.heroTimer);
     this.destroy$.next();
     this.destroy$.complete();
   }

@@ -1,177 +1,374 @@
+
 @let currentUser = currentUser$ | async;
-<header class="main-header position-sticky top-0 start-0 end-0">
 
-    <nav class="navbar navbar-expand-lg py-0">
+<header class="farmstay-header">
 
-        <div class="container-fluid  d-flex align-items-center justify-content-between">
+    <!-- =========================================
+         TOP UTILITY HEADER
+         Notifications | Theme | Language
+    ========================================== -->
 
-            <!-- ================= Logo ================= -->
+    <div class="top-header">
 
-            <a class="navbar-brand d-flex align-items-center gap-2 m-0 p-0" routerLink="/home">
+        <div class="top-header-inner">
 
-                @if(site?.logoUrl)
-                {
-                <img [src]="logoUrl" [alt]="site?.farmHouseName | t" class="header-logo-image rounded-2">
-                }
-                @else
-                {
-                <div class="logo-box rounded-2 d-flex align-items-center justify-content-center flex-shrink-0">
+            <div class="top-header-actions">
 
-                    {{ (site?.farmHouseName?.charAt(0) || 'F') | t }}
+                <!-- Notifications -->
 
-                </div>
-                }
+                <span
+                    class="notification-indicator"
+                    aria-label="Notifications"
+                    title="Notifications">
 
-                <div class="lh-sm">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-dot"></span>
 
-                    <div class="logo-title">
+                </span>
 
-                        {{ site?.farmHouseName }}
+                <!-- Theme Switcher -->
 
-                    </div>
-
-                    <div class="logo-subtitle text-uppercase">
-
-                        {{ site?.taluka | uppercase }}
-                        ·
-                        {{ site?.district | uppercase }}
-
-                    </div>
-
+                <div class="top-header-theme">
+                    <app-theme-switcher></app-theme-switcher>
                 </div>
 
-            </a>
+                <!-- Language Toggle -->
 
-            <!-- ================= Mobile Button ================= -->
+                <div
+                    class="language-toggle"
+                    role="group"
+                    aria-label="Language / भाषा">
 
-            <button class="navbar-toggler border-0 p-1 shadow-none" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mainNavbar">
-
-                <i class="bi bi-list"></i>
-
-            </button>
-
-            <!-- ================= Menu ================= -->
-
-            <div class="collapse navbar-collapse" id="mainNavbar">
-
-                <ul class="navbar-nav mx-auto gap-1">
-
-                    <li class="nav-item">
-                        <a routerLink="/home" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            {{ 'Home' | t }}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a routerLink="/about" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            {{ 'About' | t }}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a routerLink="/gallery" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            {{ 'Gallery' | t }}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a routerLink="/booking" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            {{ 'Booking' | t }}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a routerLink="/my-bookings" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            {{ 'My Bookings' | t }}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a routerLink="/contact" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                            {{ 'Contact' | t }}</a>
-                    </li>
-
-                    @if (isAdministrationRole(currentUser?.roleName)) {
-                        <li class="nav-item">
-                            <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link rounded-2 px-3 py-2">
-                                {{ 'Dashboard' | t }}</a>
-                        </li>
-                    }
-                </ul>
-
-                <div class="language-toggle" role="group" aria-label="Language / भाषा">
-                    <button type="button" [class.selected]="language.language() === 'en'"
-                        [attr.aria-pressed]="language.language() === 'en'" (click)="language.setLanguage('en')" lang="en">English</button>
-                    <button type="button" [class.selected]="language.language() === 'mr'"
-                        [attr.aria-pressed]="language.language() === 'mr'" (click)="language.setLanguage('mr')" lang="mr">मराठी</button>
-                </div>
-                <!-- Guest -->
-
-                @if(!currentUser)
-                {
-
-                <div class="d-flex align-items-center gap-3 header-actions">
-
-                    <a routerLink="/login" class="login-link text-decoration-none">
-                        {{ 'Login' | t }}</a>
-
-                    <a routerLink="/register" class="btn register-btn rounded-2 d-flex align-items-center">
-                        {{ 'Register' | t }}</a>
-
-                </div>
-
-                }
-
-                <!-- Logged In -->
-
-                @if(currentUser)
-                {
-
-                <div class="dropdown position-relative header-actions" (click)="stopPropagation($event)">
-
-                    <button class="btn profile-btn rounded-2 d-flex align-items-center shadow-sm" type="button"
-                        [attr.aria-expanded]="isDropdownOpen" (click)="toggleDropdown()">
-
-                        <i class="bi bi-person-circle me-1"></i>
-
-                        <span class="profile-name">{{ currentUser.fullName }}</span>
-
-                        <i class="bi bi-chevron-down ms-1"></i>
-
+                    <button
+                        type="button"
+                        [class.selected]="language.language() === 'en'"
+                        [attr.aria-pressed]="language.language() === 'en'"
+                        (click)="language.setLanguage('en')"
+                        lang="en">
+                        English
                     </button>
 
-                    @if(isDropdownOpen)
-                    {
-
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm show rounded-3 p-1">
-
-                        <li>
-                            <a routerLink="/profile" class="dropdown-item rounded-2" (click)="closeDropdown()">
-                                {{ 'Profile' | t }}</a>
-                        </li>
-
-                        <li>
-                            <a routerLink="/my-bookings" class="dropdown-item rounded-2" (click)="closeDropdown()">
-                                {{ 'My Bookings' | t }}</a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li>
-                            <button class="dropdown-item rounded-2" (click)="logout()">
-                                {{ 'Logout' | t }}</button>
-                        </li>
-
-                    </ul>
-
-                    }
+                    <button
+                        type="button"
+                        [class.selected]="language.language() === 'mr'"
+                        [attr.aria-pressed]="language.language() === 'mr'"
+                        (click)="language.setLanguage('mr')"
+                        lang="mr">
+                        मराठी
+                    </button>
 
                 </div>
-
-                }
 
             </div>
 
         </div>
 
-    </nav>
+    </div>
+
+
+    <!-- =========================================
+         MAIN HEADER
+         Logo | Navigation | User Actions
+    ========================================== -->
+
+    <div class="main-header">
+
+        <nav class="navbar navbar-expand-lg">
+
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+
+                <!-- Logo -->
+
+                <a
+                    class="navbar-brand d-flex align-items-center gap-2 m-0 p-0"
+                    routerLink="/home">
+
+                    @if (site?.logoUrl) {
+
+                        <img
+                            [src]="logoUrl"
+                            [alt]="site?.farmHouseName | t"
+                            class="header-logo-image rounded-2">
+
+                    }
+                    @else {
+
+                        <div class="logo-box rounded-2 d-flex align-items-center justify-content-center flex-shrink-0">
+
+                            {{ (site?.farmHouseName?.charAt(0) || 'F') | t }}
+
+                        </div>
+
+                    }
+
+                    <div class="lh-sm">
+
+                        <div class="logo-title">
+                            {{ site?.farmHouseName }}
+                        </div>
+
+                        <div class="logo-subtitle text-uppercase">
+
+                            {{ site?.taluka | uppercase }}
+                            ·
+                            {{ site?.district | uppercase }}
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+                <!-- Mobile Navigation Button -->
+
+                <button
+                    class="navbar-toggler border-0 p-1 shadow-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-label="Toggle navigation">
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+
+                <!-- Main Navigation -->
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+
+                    <ul class="navbar-nav mx-auto gap-1">
+
+                        <li class="nav-item">
+
+                            <a
+                                routerLink="/home"
+                                routerLinkActive="active"
+                                class="nav-link rounded-2 px-3 py-2">
+
+                                {{ 'Home' | t }}
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a
+                                routerLink="/about"
+                                routerLinkActive="active"
+                                class="nav-link rounded-2 px-3 py-2">
+
+                                {{ 'About' | t }}
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a
+                                routerLink="/gallery"
+                                routerLinkActive="active"
+                                class="nav-link rounded-2 px-3 py-2">
+
+                                {{ 'Gallery' | t }}
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a
+                                routerLink="/booking"
+                                routerLinkActive="active"
+                                class="nav-link rounded-2 px-3 py-2">
+
+                                {{ 'Booking' | t }}
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a
+                                routerLink="/my-bookings"
+                                routerLinkActive="active"
+                                class="nav-link rounded-2 px-3 py-2">
+
+                                {{ 'My Bookings' | t }}
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a
+                                routerLink="/contact"
+                                routerLinkActive="active"
+                                class="nav-link rounded-2 px-3 py-2">
+
+                                {{ 'Contact' | t }}
+
+                            </a>
+
+                        </li>
+
+                        @if (isAdministrationRole(currentUser?.roleName)) {
+
+                            <li class="nav-item">
+
+                                <a
+                                    routerLink="/admin/dashboard"
+                                    routerLinkActive="active"
+                                    class="nav-link rounded-2 px-3 py-2">
+
+                                    {{ 'Dashboard' | t }}
+
+                                </a>
+
+                            </li>
+
+                        }
+
+                    </ul>
+
+
+                    <!-- Main Header Right Actions -->
+
+                    <div class="main-header-actions">
+
+                        <!-- Guest -->
+
+                        @if (!currentUser) {
+
+                            <div class="d-flex align-items-center gap-3 header-actions">
+
+                                <a
+                                    routerLink="/login"
+                                    class="login-link text-decoration-none">
+
+                                    {{ 'Login' | t }}
+
+                                </a>
+
+                                <a
+                                    routerLink="/register"
+                                    class="btn register-btn rounded-2 d-flex align-items-center">
+
+                                    {{ 'Register' | t }}
+
+                                </a>
+
+                            </div>
+
+                        }
+
+
+                        <!-- Logged In -->
+
+                        @if (currentUser) {
+
+                            <div
+                                class="dropdown position-relative header-actions"
+                                (click)="stopPropagation($event)">
+
+                                <button
+                                    class="btn profile-btn rounded-2 d-flex align-items-center shadow-sm"
+                                    type="button"
+                                    [attr.aria-expanded]="isDropdownOpen"
+                                    (click)="toggleDropdown()">
+
+                                    <span class="profile-avatar">
+
+                                        <i class="bi bi-person-fill"></i>
+
+                                    </span>
+
+                                    <span class="profile-copy">
+
+                                        <span class="profile-name">
+                                            {{ currentUser.fullName }}
+                                        </span>
+
+                                        <span class="profile-role">
+                                            {{ currentUser.roleName }}
+                                        </span>
+
+                                    </span>
+
+                                    <i class="bi bi-chevron-down profile-chevron"></i>
+
+                                </button>
+
+
+                                @if (isDropdownOpen) {
+
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm show rounded-3 p-1">
+
+                                        <li>
+
+                                            <a
+                                                routerLink="/profile"
+                                                class="dropdown-item rounded-2"
+                                                (click)="closeDropdown()">
+
+                                                {{ 'Profile' | t }}
+
+                                            </a>
+
+                                        </li>
+
+                                        <li>
+
+                                            <a
+                                                routerLink="/my-bookings"
+                                                class="dropdown-item rounded-2"
+                                                (click)="closeDropdown()">
+
+                                                {{ 'My Bookings' | t }}
+
+                                            </a>
+
+                                        </li>
+
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+
+                                        <li>
+
+                                            <button
+                                                class="dropdown-item rounded-2"
+                                                (click)="logout()">
+
+                                                {{ 'Logout' | t }}
+
+                                            </button>
+
+                                        </li>
+
+                                    </ul>
+
+                                }
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </div>
 
 </header>

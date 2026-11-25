@@ -96,6 +96,17 @@ export class TokenService {
     }
   }
 
+  updateProfileDetails(profile: Pick<LoginResponse, 'userId' | 'fullName' | 'email' | 'mobileNumber' | 'isEmailVerified' | 'isMobileVerified'>): void {
+    const current = this.getCurrentUser();
+    if (!current || current.userId !== profile.userId) return;
+    const updated = { ...current, fullName: profile.fullName, email: profile.email,
+      mobileNumber: profile.mobileNumber, hasEmail: !!profile.email,
+      isEmailVerified: profile.isEmailVerified, isMobileVerified: profile.isMobileVerified };
+    const storage = localStorage.getItem(this.USER_KEY) ? localStorage : sessionStorage;
+    storage.setItem(this.USER_KEY, JSON.stringify(updated));
+    this.currentUserSubject.next(updated);
+  }
+
   restoreLogin(): void {
 
     const user = this.getCurrentUser();

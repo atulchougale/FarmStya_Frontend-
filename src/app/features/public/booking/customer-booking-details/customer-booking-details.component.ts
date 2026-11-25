@@ -10,17 +10,32 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { BookingIdentityDocument, BookingService, CheckoutBalance, IDENTITY_DOCUMENT_TYPES } from '../../../../core/services/booking.service';
+import { AlertService } from '../../../../core/services/alert.service';
+import { PublicSiteService } from '../../../../core/services/public-site.service';
+import { VoucherIconComponent } from '../../../../shared/components/voucher-icon/voucher-icon.component';
+import { TokenService } from '../../../../core/services/token.service';
+import { inject } from '@angular/core';
 import { Booking } from '../../../admin/Booking/models/booking.model';
 import { RazorpayCheckoutService } from '../../../../core/services/razorpay-checkout.service';
 
 @Component({
   selector: 'app-customer-booking-details',
   standalone: true,
-  imports: [FormsModule, TranslationPipe, LocalDatePipe, CommonModule, RouterLink, PaymentReceiptsComponent],
+  imports: [FormsModule, TranslationPipe, LocalDatePipe, CommonModule, RouterLink, PaymentReceiptsComponent, VoucherIconComponent],
   templateUrl: './customer-booking-details.component.html',
   styleUrl: './customer-booking-details.component.css'
 })
 export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
+  private readonly alerts = inject(AlertService);
+  private readonly site = inject(PublicSiteService);
+  private readonly tokens = inject(TokenService);
+  get farmHouseName(): string { return this.site.currentFarmHouseName ?? this.tokens.getCurrentUser()?.farmHouseName ?? ''; }
+  get farmHouseLocation(): string { return [this.site.currentSite?.taluka,this.site.currentSite?.district].filter(Boolean).join(' · '); }
+  bookingTypeLabel(type: string): string {
+    return ({ BookingOnly: 'Booking Only', NormalEvent: 'Normal Event', DecorationEvent: 'Decoration Event' } as Record<string,string>)[type] ?? type;
+  }
+  get bookingJourney() { return [...(this.selectedBooking?.statusHistory ?? [])].sort((a,b) => a.createdDate.localeCompare(b.createdDate)); }
+  statusLabel(status: string): string { return status === 'CheckedIn' ? 'Checked In' : status === 'CheckedOut' ? 'Checked Out' : status; }
   @ViewChild('documentDialog', { static: true }) private documentDialog!: ElementRef<HTMLDialogElement>;
   readonly documentTypes = IDENTITY_DOCUMENT_TYPES;
   documentType = '';
@@ -112,6 +127,7 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
       this.checkoutNotice = result.message;
       if (result.success) {
         this.selectedBooking = { ...booking, status: 'CheckedOut' };
+        void this.alerts.success('Checkout completed','Your payment is verified and checkout is complete. You can download your receipts and share your feedback.');
         this.checkoutBalance = undefined;
         this.bookingService.getMyBookingById(booking.bookingId).subscribe({
           next: details => {
@@ -121,12 +137,15 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
             if (session === this.detailSession) this.checkoutNotice = 'Checkout completed. Reopen booking details to refresh the dates.';
           }
         });
+      } else {
+        void this.alerts.warning('Checkout could not be confirmed',this.checkoutNotice || 'Payment verification pending');
       }
     } catch (error) {
       if (session === this.detailSession) {
         this.checkoutNotice = error instanceof HttpErrorResponse
           ? error.error?.message ?? 'Could not complete checkout.'
           : error instanceof Error ? error.message : 'Could not complete checkout.';
+        void this.alerts.warning('Checkout could not be confirmed',this.checkoutNotice);
       }
     } finally {
       if (session === this.detailSession) {
@@ -262,6 +281,7 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
         await this.verifyAdvance();
       } else if (result.status === 'failed') {
         this.paymentError = 'The test payment failed. You can try again.';
+        void this.alerts.error('Payment failed',this.paymentError);
       } else {
         this.paymentMessage = 'Checkout closed. You can open it again to try the test payment.';
       }
@@ -270,6 +290,7 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
       this.paymentError = error instanceof HttpErrorResponse
         ? error.error?.message ?? 'Could not prepare the test order.'
         : error instanceof Error ? error.message : 'Could not open Razorpay Checkout.';
+      void this.alerts.error('Could not start payment',this.paymentError);
     } finally {
       if (this.detailSession === session) {
         this.openingCheckout = false;
@@ -290,11 +311,13 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
       if (!response.success) throw new Error(response.message);
       this.selectedBooking = { ...booking, status: 'Confirmed' };
       this.paymentMessage = 'Test advance verified. Your booking is confirmed.';
+      void this.alerts.success('Booking confirmed','Your advance payment is verified. Bring the original ID documents you uploaded when checking in.');
     } catch (error) {
       if (this.detailSession !== session) return;
       this.paymentError = error instanceof HttpErrorResponse
         ? error.error?.message ?? 'Could not verify the test advance.'
         : error instanceof Error ? error.message : 'Could not verify the test advance.';
+      void this.alerts.warning('Payment verification pending',this.paymentError);
     } finally {
       if (this.detailSession === session) this.verifyingAdvance = false;
     }
@@ -348,13 +371,21 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
     this.bookingService.uploadIdentity(this.selectedBookingId, this.selectedFiles, this.documentType, this.otherDocumentType).subscribe({
       next: response => {
         if (session !== this.detailSession) return;
+        if (!response.success || !response.data) {
+          this.uploadingIdentity=false;
+          this.identityError=response.message || 'Could not upload the ID proof.';
+          void this.alerts.error('Document upload failed',this.identityError);
+          return;
+        }
         this.identity = response.data;
         this.selectedFiles = [];
+        this.alerts.toast('Documents uploaded successfully');
         this.uploadingIdentity = false;
       },
       error: error => {
         if (session !== this.detailSession) return;
         this.identityError = error.error?.message ?? 'Could not upload the ID proof.';
+        void this.alerts.error('Document upload failed',this.identityError);
         this.uploadingIdentity = false;
       }
     });

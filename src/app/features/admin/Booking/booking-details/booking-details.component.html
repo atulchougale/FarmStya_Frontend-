@@ -1,166 +1,437 @@
 <main class="booking-detail">
-  <header>
-    <div>
-      <h1>{{ (booking?.bookingReference || 'Booking details') | t }}</h1>
-      <p *ngIf="booking" class="status">{{ (booking.status) | t }}</p>
-      <span *ngIf="booking" class="badge text-bg-light border">{{ (booking.bookingSource === 'WalkIn' ? 'Walk-in' : booking.bookingSource === 'Phone' ? 'Phone enquiry' : 'Online') | t }}</span>
-    </div>
-    <a class="btn btn-outline-secondary" routerLink="/admin/booking"><i class="bi bi-arrow-left" aria-hidden="true"></i> {{ 'Back' | t }}</a>
-  </header>
+  <!-- Breadcrumb -->
+  <nav class="booking-breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/admin/dashboard" aria-label="Dashboard"><i class="bi bi-house-fill"></i></a>
+    <i class="bi bi-chevron-right"></i>
+    <a routerLink="/admin/dashboard">{{ 'Dashboard' | t }}</a>
+    <i class="bi bi-chevron-right"></i>
+    <a routerLink="/admin/booking">{{ 'Bookings' | t }}</a>
+    <i class="bi bi-chevron-right current"></i>
+    <span>{{ 'Booking Details' | t }}</span>
+  </nav>
 
-  <p *ngIf="loading" role="status">{{ 'Loading booking details…' | t }}</p>
-  <p *ngIf="error" class="alert alert-danger" role="alert">{{ (error) | t }}</p>
-  <p *ngIf="notice" class="alert alert-success" role="status">{{ (notice) | t }}</p>
+  <!-- Page banner -->
+  <section class="booking-banner">
+    <div class="booking-banner-icon"><i class="bi bi-calendar2-check"></i></div>
+    <div class="booking-banner-copy">
+      <h1>{{ 'Booking Details' | t }}</h1>
+      <p>{{ 'View complete booking information, guest details, documents and actions.' | t }}</p>
+    </div>
+    <div class="booking-banner-art" aria-hidden="true"></div>
+  </section>
+
+  <p *ngIf="loading" class="booking-alert booking-alert-info" role="status">
+    <span class="spinner-border spinner-border-sm"></span>{{ 'Loading booking details…' | t }}
+  </p>
+  <p *ngIf="error" class="booking-alert booking-alert-danger" role="alert">{{ (error) | t }}</p>
+  <p *ngIf="notice" class="booking-alert booking-alert-success" role="status">{{ (notice) | t }}</p>
 
   <ng-container *ngIf="booking as item">
-    <div class="detail-grid">
-      <section>
-        <h2>{{ 'Customer and guests' | t }}</h2>
-        <p><strong>{{ item.fullName }}</strong><br>{{ item.email }}<br>{{ item.mobileNumber }}</p>
-        <p>{{ '{p0} adults · {p1} children · {p2} guests' | t:{p0: (item.adultCount), p1: (item.childrenCount), p2: (item.personCount)} }}</p>
-        <p *ngIf="item.customerNotes">{{ item.customerNotes }}</p>
-        <p class="text-muted small">{{ 'Booking created by user' | t }} #{{ item.createdBy }}</p>
+    <!-- Booking overview strip -->
+    <section class="booking-overview">
+      <div class="booking-reference">
+        <div class="booking-reference-code">{{ item.bookingReference }}</div>
+        <span class="booking-status" [ngClass]="'status-' + (item.status || 'unknown').toLowerCase().replace(' ', '-')">
+          <i class="bi bi-check-circle-fill"></i>{{ (item.status) | t }}
+        </span>
+        <span class="booking-source">{{ (item.bookingSource === 'WalkIn' ? 'Walk-in' :
+          item.bookingSource === 'Phone' ? 'Phone enquiry' : 'Online') | t }}</span>
+      </div>
+
+      <div class="overview-meta">
+        <span class="overview-icon"><i class="bi bi-calendar2-event"></i></span>
+        <div><small>{{ 'Booking Type' | t }}</small><strong>{{ (item.bookingType) | t }}</strong></div>
+      </div>
+      <div class="overview-meta">
+        <span class="overview-icon"><i class="bi bi-calendar3"></i></span>
+        <div><small>{{ 'Booking Date' | t }}</small>
+          <strong>{{ (item.checkInDate | localDate:'d MMM yyyy') | t }} – {{ (item.checkOutDate | localDate:'d MMM
+            yyyy') | t }}</strong>
+        </div>
+      </div>
+      <div class="overview-meta">
+        <span class="overview-icon"><i class="bi bi-moon-stars"></i></span>
+        <div><small>{{ 'Stay Length' | t }}</small><strong>{{ '{p0} days' | t:{p0: (item.stayDays)} }}</strong></div>
+      </div>
+      <div class="overview-meta">
+        <span class="overview-icon"><i class="bi bi-coin"></i></span>
+        <div><small>{{ 'Total Amount' | t }}</small><strong class="overview-amount">{{ item.totalAmount |
+            currency:item.currencyCode }}</strong></div>
+      </div>
+      <a class="booking-back" routerLink="/admin/booking"><i class="bi bi-arrow-left"></i>{{ 'Back' | t }}</a>
+    </section>
+
+    <!-- Guest and payment summary tiles -->
+    <section class="booking-stats">
+      <article class="booking-stat stat-orange">
+        <span class="stat-icon"><i class="bi bi-person-fill"></i></span>
+        <div><strong>{{ item.adultCount }}</strong><small>{{ 'Adults' | t }}</small></div>
+      </article>
+      <article class="booking-stat stat-orange">
+        <span class="stat-icon"><i class="bi bi-emoji-smile"></i></span>
+        <div><strong>{{ item.childrenCount }}</strong><small>{{ 'Children' | t }}</small></div>
+      </article>
+      <article class="booking-stat stat-orange">
+        <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+        <div><strong>{{ item.personCount }}</strong><small>{{ 'Guests' | t }}</small></div>
+      </article>
+      <article class="booking-stat stat-green">
+        <span class="stat-icon"><i class="bi bi-currency-rupee"></i></span>
+        <div><strong>{{ item.advancePaid | currency:item.currencyCode }}</strong><small>{{ 'Advance Paid' | t }}</small>
+        </div>
+      </article>
+      <article class="booking-stat stat-red">
+        <span class="stat-icon"><i class="bi bi-currency-rupee"></i></span>
+        <div><strong>{{ item.remainingAmount | currency:item.currencyCode }}</strong><small>{{ 'Remaining' | t
+            }}</small></div>
+      </article>
+      <article class="booking-stat stat-green">
+        <span class="stat-icon"><i class="bi bi-calendar-check"></i></span>
+        <div><strong>{{ (item.status) | t }}</strong><small>{{ 'Booking Status' | t }}</small></div>
+      </article>
+    </section>
+
+    <!-- Main detail cards -->
+    <div class="booking-card-grid">
+      <!-- Customer -->
+      <section class="booking-card customer-card">
+        <div class="booking-card-heading">
+          <span class="card-heading-icon"><i class="bi bi-person-circle"></i></span>
+          <h2>{{ 'Guest / Customer Information' | t }}</h2>
+        </div>
+        <div class="booking-card-body">
+          <div class="detail-row"><i class="bi bi-person-fill"></i><span>{{ 'Customer' | t }}</span><strong>{{
+              item.fullName }}</strong></div>
+          <div class="detail-row"><i class="bi bi-envelope-fill"></i><span>{{ 'Email' | t }}</span><strong>{{ item.email
+              || '—' }}</strong></div>
+          <div class="detail-row"><i class="bi bi-telephone-fill"></i><span>{{ 'Mobile' | t }}</span><strong>{{
+              item.mobileNumber || '—' }}</strong></div>
+          <div class="detail-row"><i class="bi bi-people-fill"></i><span>{{ 'Guests' | t }}</span>
+            <strong>{{ '{p0} adults · {p1} children (Total: {p2})' | t:{p0: (item.adultCount), p1: (item.childrenCount),
+              p2: (item.personCount)} }}</strong>
+          </div>
+          <div class="detail-row detail-note" *ngIf="item.customerNotes">
+            <i class="bi bi-chat-left-text-fill"></i><span>{{ 'Customer Notes' | t }}</span><strong>{{
+              item.customerNotes }}</strong>
+          </div>
+          <!-- <p class="created-by">{{ 'Booking created by user' | t }} #{{ item.createdBy }}</p> -->
+        </div>
       </section>
-      <section>
-        <h2>{{ 'Stay and event' | t }}</h2>
-        <dl>
-          <dt>{{ 'Scheduled check-in' | t }}</dt><dd>{{ (item.checkInDate | localDate:'d MMM yyyy') | t }}</dd>
-          <dt *ngIf="item.actualCheckInAt">{{ 'Actual check-in' | t }}</dt><dd *ngIf="item.actualCheckInAt">{{ (item.actualCheckInAt | localDate:'d MMM yyyy, h:mm a') | t }}</dd>
-          <dt>{{ 'Scheduled check-out' | t }}</dt><dd>{{ (item.checkOutDate | localDate:'d MMM yyyy') | t }}</dd>
-          <dt *ngIf="item.actualCheckOutAt">{{ 'Actual check-out' | t }}</dt><dd *ngIf="item.actualCheckOutAt">{{ (item.actualCheckOutAt | localDate:'d MMM yyyy, h:mm a') | t }}</dd>
-          <dt *ngIf="item.checkoutPaidAt">{{ 'Checkout payment' | t }}</dt><dd *ngIf="item.checkoutPaidAt">{{ (item.checkoutPaidAt | localDate:'d MMM yyyy, h:mm a') | t }}</dd>
-          <dt>{{ 'Stay length' | t }}</dt><dd>{{ '{p0} days' | t:{p0: (item.stayDays)} }}</dd>
-          <dt>{{ 'Booking type' | t }}</dt><dd>{{ (item.bookingType) | t }}</dd>
-          <ng-container *ngIf="item.eventDates?.length">
-            <dt>{{ 'Event dates' | t }}</dt>
-            <dd><div *ngFor="let event of item.eventDates">{{ (event.eventDate | localDate:'d MMM yyyy') | t }}</div></dd>
+
+      <!-- Stay and event -->
+      <section class="booking-card stay-card">
+        <div class="booking-card-heading">
+          <span class="card-heading-icon"><i class="bi bi-house-door-fill"></i></span>
+          <h2>{{ 'Stay & Event Details' | t }}</h2>
+        </div>
+        <div class="booking-card-body">
+          <div class="detail-row"><i class="bi bi-calendar-check"></i><span>{{ 'Check In' | t }}</span>
+            <strong>{{ (item.checkInDate | localDate:'d MMM yyyy, h:mm a') | t }}</strong>
+          </div>
+          <div class="detail-row"><i class="bi bi-calendar-x"></i><span>{{ 'Check Out' | t }}</span>
+            <strong>{{ (item.checkOutDate | localDate:'d MMM yyyy, h:mm a') | t }}</strong>
+          </div>
+          <div class="detail-row"><i class="bi bi-clock"></i><span>{{ 'Stay Length' | t }}</span>
+            <strong>{{ '{p0} days' | t:{p0: (item.stayDays)} }}</strong>
+          </div>
+          <div class="detail-row"><i class="bi bi-stars"></i><span>{{ 'Event Type' | t }}</span>
+            <strong>{{ (item.bookingType) | t }}</strong>
+          </div>
+          <div class="detail-row" *ngFor="let event of item.eventDates">
+            <i class="bi bi-calendar-heart"></i><span>{{ 'Event Date' | t }}</span>
+            <strong>{{ (event.eventDate | localDate:'d MMM yyyy') | t }}</strong>
+          </div>
+          <div class="detail-row" *ngIf="item.actualCheckInAt">
+            <i class="bi bi-box-arrow-in-right"></i><span>{{ 'Actual check-in' | t }}</span>
+            <strong>{{ (item.actualCheckInAt | localDate:'d MMM yyyy, h:mm a') | t }}</strong>
+          </div>
+          <div class="detail-row" *ngIf="item.actualCheckOutAt">
+            <i class="bi bi-box-arrow-right"></i><span>{{ 'Actual check-out' | t }}</span>
+            <strong>{{ (item.actualCheckOutAt | localDate:'d MMM yyyy, h:mm a') | t }}</strong>
+          </div>
+          <div class="detail-row" *ngIf="item.checkoutPaidAt">
+            <i class="bi bi-credit-card"></i><span>{{ 'Checkout payment' | t }}</span>
+            <strong>{{ (item.checkoutPaidAt | localDate:'d MMM yyyy, h:mm a') | t }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section class="booking-card pricing-card">
+        <div class="booking-card-heading">
+          <span class="card-heading-icon"><i class="bi bi-stack"></i></span>
+          <h2>{{ 'Pricing Details' | t }}</h2>
+        </div>
+        <div class="booking-card-body">
+          <div class="price-row"><span><i class="bi bi-house"></i>{{ 'Stay Amount' | t }}</span><strong>{{
+              item.baseAmount | currency:item.currencyCode }}</strong></div>
+          <div class="price-row"><span><i class="bi bi-stars"></i>{{ 'Event' | t }}</span><strong>{{ item.eventAmount |
+              currency:item.currencyCode }}</strong></div>
+          <div class="price-row price-total"><span>{{ 'Total Amount' | t }}</span><strong>{{ item.totalAmount |
+              currency:item.currencyCode }}</strong></div>
+          <div class="price-row price-paid"><span><i class="bi bi-check-circle-fill"></i>{{ 'Total Paid' | t
+              }}</span><strong>{{ item.totalPaid | currency:item.currencyCode }}</strong></div>
+          <div class="price-row price-due" *ngIf="item.remainingAmount > 0"><span><i
+                class="bi bi-hourglass-split"></i>{{ 'Remaining Amount' | t }}</span><strong>{{ item.remainingAmount |
+              currency:item.currencyCode }}</strong></div>
+          <div class="price-row" *ngIf="item.discountAmount > 0"><span><i class="bi bi-tag"></i>{{ 'Discount' | t
+              }}</span><strong>{{ item.discountAmount | currency:item.currencyCode }}</strong></div>
+          <div class="price-row"><span><i class="bi bi-wallet2"></i>{{ 'Advance paid' | t }}</span><strong>{{
+              item.advancePaid | currency:item.currencyCode }}</strong></div>
+        </div>
+      </section>
+
+      <!-- Booking confirmation workflow (moved into the former timeline position) -->
+      <section *ngIf="item.canManageConfirmation" class="booking-card confirmation-card">
+        <div class="booking-card-heading">
+          <span class="card-heading-icon"><i class="bi bi-patch-check-fill"></i></span>
+          <h2>{{ 'Confirmation Actions' | t }}</h2>
+          <button type="button" class="booking-action action-outline refresh-action"
+            [disabled]="loading || confirmationLoading || savingConfirmation" (click)="load()">
+            <i class="bi bi-arrow-clockwise"></i>{{ 'Refresh' | t }}
+          </button>
+        </div>
+        <div class="booking-card-body">
+          <p class="confirmation-intro">{{ 'Upload the customer ID, then collect the advance or send an online payment
+            reminder.' | t }}</p>
+          <p *ngIf="confirmationLoading" role="status">{{ 'Loading document…' | t }}</p>
+          <ng-container *ngIf="!confirmationLoading">
+            <div *ngIf="confirmationIdentity as doc" class="confirmation-document">
+              <i class="bi bi-file-earmark-check"></i>
+              <span><strong>{{ doc.documentType | t }} · {{ doc.status | t }}</strong>
+                <small>{{ (doc.uploadedByAdministration ? 'Uploaded by administration' : 'Uploaded by customer') | t }}
+                  · #{{ doc.uploadedBy }} · {{ doc.uploadedAt | localDate:'d MMM yyyy, h:mm a' }}</small>
+              </span>
+            </div>
+            <form *ngIf="canUploadIdentity" #uploadForm="ngForm" class="confirmation-form"
+              (ngSubmit)="uploadCustomerIdentity()">
+              <div class="form-field">
+                <label for="admin-id-type" class="form-label">{{ 'Document type' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+                <select id="admin-id-type" name="documentType" class="form-select" required [(ngModel)]="documentType"
+                  [disabled]="savingConfirmation">
+                  <option value="">{{ 'Select document type' | t }}</option>
+                  <option *ngFor="let type of documentTypes" [value]="type">{{ type | t }}</option>
+                </select>
+              </div>
+              <div class="form-field" *ngIf="documentType === 'Other'">
+                <label for="admin-other-type" class="form-label">{{ 'Other document type' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+                <input id="admin-other-type" name="otherType" class="form-control" required maxlength="100"
+                  [(ngModel)]="otherDocumentType" [disabled]="savingConfirmation">
+              </div>
+              <div class="form-field form-field-wide">
+                <label for="admin-id-files" class="form-label">{{ 'Customer ID proof' | t }}</label>
+                <input id="admin-id-files" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple class="form-control"
+                  (change)="chooseFiles($event)" [disabled]="savingConfirmation">
+                <small>{{ 'Upload one or two files for the same document type. Each file can be up to 5 MB.' | t
+                  }}</small>
+              </div>
+              <button type="submit" class="booking-action action-outline"
+                [disabled]="uploadForm.invalid || selectedFiles.length < 1 || selectedFiles.length > 2 || savingConfirmation">
+                <i class="bi bi-cloud-arrow-up"></i>{{ 'Upload ID Proof' | t }}
+              </button>
+            </form>
+            <div
+              *ngIf="item.status === 'Approved' && confirmationIdentity && confirmationIdentity.status !== 'ReuploadRequested'"
+              class="advance-collection">
+              <h3>{{ 'Collect Advance' | t }} · {{ item.advanceAmount | currency:item.currencyCode }}</h3>
+              <div class="form-field">
+                <label for="advance-method" class="form-label">{{ 'Payment method' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+                <select id="advance-method" class="form-select" [(ngModel)]="advanceMethod"
+                  [disabled]="savingConfirmation">
+                  <option value="Cash" [disabled]="item.hasPendingAdvanceOrder">{{ 'Cash' | t }}</option>
+                  <option value="Online">{{ 'Online' | t }}</option>
+                </select>
+              </div>
+              <p *ngIf="item.hasPendingAdvanceOrder" class="booking-alert booking-alert-warning">{{ 'An online advance
+                order is pending. Verify that payment before collecting cash.' | t }}</p>
+              <label *ngIf="advanceMethod === 'Cash'" class="cash-confirmation">
+                <input type="checkbox" [(ngModel)]="cashReceived"
+                  [disabled]="savingConfirmation || item.hasPendingAdvanceOrder === true">
+                {{ 'I have physically received the full advance amount.' | t }}
+              </label>
+              <p *ngIf="advanceMethod === 'Online'" class="muted-note">{{ 'The customer pays through My Bookings.
+                Confirmation follows successful backend payment verification.' | t }}</p>
+              <button type="button" class="booking-action action-primary" (click)="collectAdvance()"
+                [disabled]="savingConfirmation || (advanceMethod === 'Cash' && (!cashReceived || item.hasPendingAdvanceOrder))">
+                <i class="bi bi-check2-circle"></i>
+                {{ (savingConfirmation ? 'Processing…' : advanceMethod === 'Cash' ? 'Cash received — confirm booking' :
+                'Send payment reminder') | t }}
+              </button>
+            </div>
           </ng-container>
-        </dl>
+          <p class="confirmation-footnote">{{ 'Bring the original ID documents you uploaded when checking in.' | t }}
+          </p>
+        </div>
       </section>
-      <section>
-        <h2>{{ 'Pricing' | t }}</h2>
-        <app-payment-receipts [bookingId]="item.bookingId" [bookingStatus]="item.status" />
-        <dl>
-          <dt>{{ 'Stay' | t }}</dt><dd>{{ item.baseAmount | currency:item.currencyCode }}</dd>
-          <dt>{{ 'Event' | t }}</dt><dd>{{ item.eventAmount | currency:item.currencyCode }}</dd>
-          <dt>{{ 'Total' | t }}</dt><dd><strong>{{ item.totalAmount | currency:item.currencyCode }}</strong></dd>
-          <dt>{{ 'Advance paid' | t }}</dt><dd>{{ item.advancePaid | currency:item.currencyCode }}</dd>
-          <dt *ngIf="item.discountAmount > 0">{{ 'Discount' | t }}</dt><dd *ngIf="item.discountAmount > 0">{{ item.discountAmount | currency:item.currencyCode }}</dd>
-          <dt>{{ 'Total paid' | t }}</dt><dd><strong>{{ item.totalPaid | currency:item.currencyCode }}</strong></dd>
-          <dt *ngIf="item.remainingAmount > 0">{{ 'Remaining' | t }}</dt><dd *ngIf="item.remainingAmount > 0">{{ item.remainingAmount | currency:item.currencyCode }}</dd>
-        </dl>
+
+
+      <!-- Identity proof -->
+      <section class="booking-card identity-card" *ngIf="item.hasIdentityDocument || canCheckIn || item.canCheckout">
+        <div class="booking-card-heading">
+          <span class="card-heading-icon"><i class="bi bi-shield-lock-fill"></i></span>
+          <h2>{{ 'ID Proof Verification' | t }}</h2>
+          <span *ngIf="item.hasIdentityDocument" class="verified-chip"><i class="bi bi-check-circle-fill"></i>{{
+            'Uploaded' | t }}</span>
+        </div>
+        <div class="booking-card-body">
+          <div class="identity-document-info" *ngIf="item.identityDocumentType">
+            <span class="identity-file-icon"><i class="bi bi-file-earmark-person"></i></span>
+            <div><strong>{{ item.identityDocumentType | t }}<span *ngIf="item.otherIdentityDocumentType"> · {{
+                  item.otherIdentityDocumentType }}</span></strong>
+              <small>{{ item.identityFileCount }} {{ 'file(s)' | t }}</small>
+            </div>
+          </div>
+          <p *ngIf="!item.hasIdentityDocument" class="empty-document">{{ 'No identity document uploaded yet.' | t }}</p>
+          <div class="identity-actions">
+            <button *ngIf="item.hasIdentityDocument" type="button" class="booking-action action-outline"
+              (click)="openIdentity()">
+              <i class="bi bi-eye"></i>{{ 'View Document' | t }}
+            </button>
+            <button *ngIf="canCheckIn" type="button" class="booking-action action-primary" [disabled]="deciding"
+              (click)="checkIn()">
+              <i class="bi bi-box-arrow-in-right"></i>{{ 'Check In' | t }}
+            </button>
+            <a *ngIf="item.canCheckout" class="booking-action action-primary" routerLink="checkout">
+              <i class="bi bi-box-arrow-right"></i>{{ 'Check Out' | t }}
+            </a>
+          </div>
+        </div>
       </section>
-      <section>
-        <h2>{{ 'Decision timeline' | t }}</h2>
-        <dl>
-          <dt>{{ 'Submitted' | t }}</dt><dd>{{ (item.createdDate | localDate:'d MMM, h:mm a') | t }}</dd>
-          <dt>{{ 'Owner decision due' | t }}</dt><dd>{{ (item.ownerDeadline | localDate:'d MMM, h:mm a') | t }}</dd>
-          <ng-container *ngIf="item.customerDeadline">
-            <dt>{{ 'Customer confirmation due' | t }}</dt><dd>{{ (item.customerDeadline | localDate:'d MMM, h:mm a') | t }}</dd>
-          </ng-container>
-        </dl>
-        <ul>
-          <li *ngFor="let change of item.statusHistory">
-            {{ (change.newStatus) | t }} · {{ (change.createdDate | localDate:'d MMM, h:mm a') | t }}
-            <div *ngIf="change.reason">{{ change.reason }}</div>
-          </li>
-        </ul>
-      </section>
-      <section *ngIf="item.hasIdentityDocument || canCheckIn || item.canCheckout">
-        <h2>{{ 'Identity proof' | t }}</h2>
-        <p *ngIf="item.identityDocumentType">{{ item.identityDocumentType | t }}<span *ngIf="item.otherIdentityDocumentType"> · {{ item.otherIdentityDocumentType }}</span> · {{ item.identityFileCount }} {{ 'file(s)' | t }}</p>
-        <div class="d-flex flex-wrap gap-2">
-          <button *ngIf="item.hasIdentityDocument" type="button" class="btn btn-outline-success" (click)="openIdentity()">{{ 'View Document' | t }}</button>
-          <button *ngIf="canCheckIn" class="btn btn-success" type="button" [disabled]="deciding" (click)="checkIn()">{{ 'Check In' | t }}</button>
-          <a *ngIf="item.canCheckout" class="btn btn-success" routerLink="checkout">{{ 'Check Out' | t }}</a>
+
+      <!-- Documents are limited to identity files currently exposed by this component's model. -->
+      <section class="booking-card documents-card" *ngIf="item.hasIdentityDocument">
+        <div class="booking-card-heading">
+          <span class="card-heading-icon"><i class="bi bi-file-earmark-text-fill"></i></span>
+          <h2>{{ 'Documents' | t }} ({{ item.identityFileCount }})</h2>
+        </div>
+        <div class="booking-card-body">
+          <div class="document-row">
+            <span class="document-icon"><i class="bi bi-file-earmark-pdf"></i></span>
+            <div class="document-description">
+              <strong>{{ item.identityDocumentType | t }}</strong>
+              <small>{{ item.identityFileCount }} {{ 'file(s)' | t }}</small>
+            </div>
+            <div class="document-actions">
+              <button type="button" class="document-view" (click)="openIdentity()"
+                [attr.aria-label]="'View Document' | t" [title]="'View Document' | t"><i class="bi bi-eye"></i></button>
+              <button type="button" class="document-download" (click)="downloadIdentity()"
+                [disabled]="downloadingIdentity" [attr.aria-label]="'Download Document' | t"
+                [title]="'Download Document' | t">
+                <i class="bi" [ngClass]="downloadingIdentity ? 'bi-hourglass-split' : 'bi-download'"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </div>
-    <section *ngIf="item.canManageConfirmation" class="card p-4 mt-4">
-      <h2 class="h5">{{ 'Booking confirmation' | t }}</h2>
-      <button type="button" class="btn btn-sm btn-outline-secondary align-self-start mb-3" [disabled]="loading || confirmationLoading || savingConfirmation" (click)="load()">{{ 'Refresh' | t }}</button>
-      <p class="text-muted">{{ 'Upload the customer ID, then collect the advance or send an online payment reminder.' | t }}</p>
-      <p *ngIf="confirmationLoading" role="status">{{ 'Loading document…' | t }}</p>
-      <ng-container *ngIf="!confirmationLoading">
-        <p *ngIf="confirmationIdentity as doc">
-          {{ doc.documentType | t }} · {{ doc.status | t }}<br>
-          <small>{{ (doc.uploadedByAdministration ? 'Uploaded by administration' : 'Uploaded by customer') | t }} ·
-            #{{ doc.uploadedBy }} · {{ doc.uploadedAt | localDate:'d MMM yyyy, h:mm a' }}</small>
-        </p>
-        <form *ngIf="canUploadIdentity" #uploadForm="ngForm" (ngSubmit)="uploadCustomerIdentity()">
-          <label for="admin-id-type" class="form-label">{{ 'Document type' | t }}</label>
-          <select id="admin-id-type" name="documentType" class="form-select mb-3" required [(ngModel)]="documentType" [disabled]="savingConfirmation">
-            <option value="">{{ 'Select document type' | t }}</option>
-            <option *ngFor="let type of documentTypes" [value]="type">{{ type | t }}</option>
-          </select>
-          <ng-container *ngIf="documentType === 'Other'">
-            <label for="admin-other-type">{{ 'Other document type' | t }}</label>
-            <input id="admin-other-type" name="otherType" class="form-control mb-3" required maxlength="100" [(ngModel)]="otherDocumentType" [disabled]="savingConfirmation">
-          </ng-container>
-          <label for="admin-id-files" class="form-label">{{ 'Customer ID proof' | t }}</label>
-          <input id="admin-id-files" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple class="form-control" (change)="chooseFiles($event)" [disabled]="savingConfirmation">
-          <p class="text-muted small mt-1">{{ 'Upload one or two files for the same document type. Each file can be up to 5 MB.' | t }}</p>
-          <button type="submit" class="btn btn-outline-success" [disabled]="uploadForm.invalid || selectedFiles.length < 1 || selectedFiles.length > 2 || savingConfirmation">{{ 'Upload ID Proof' | t }}</button>
-        </form>
-        <div *ngIf="item.status === 'Approved' && confirmationIdentity && confirmationIdentity.status !== 'ReuploadRequested'" class="border-top pt-3 mt-3">
-          <h3 class="h6">{{ 'Collect Advance' | t }} · {{ item.advanceAmount | currency:item.currencyCode }}</h3>
-          <label for="advance-method" class="form-label">{{ 'Payment method' | t }}</label>
-          <select id="advance-method" class="form-select mb-3" [(ngModel)]="advanceMethod" [disabled]="savingConfirmation">
-            <option value="Cash" [disabled]="item.hasPendingAdvanceOrder">{{ 'Cash' | t }}</option><option value="Online">{{ 'Online' | t }}</option>
-          </select>
-          <p *ngIf="item.hasPendingAdvanceOrder" class="alert alert-warning">{{ 'An online advance order is pending. Verify that payment before collecting cash.' | t }}</p>
-          <label *ngIf="advanceMethod === 'Cash'" class="d-flex align-items-center gap-2 mb-3">
-            <input type="checkbox" [(ngModel)]="cashReceived" [disabled]="savingConfirmation || item.hasPendingAdvanceOrder === true">
-            {{ 'I have physically received the full advance amount.' | t }}
-          </label>
-          <p *ngIf="advanceMethod === 'Online'" class="text-muted">{{ 'The customer pays through My Bookings. Confirmation follows successful backend payment verification.' | t }}</p>
-          <button type="button" class="btn btn-success" (click)="collectAdvance()" [disabled]="savingConfirmation || (advanceMethod === 'Cash' && (!cashReceived || item.hasPendingAdvanceOrder))">
-            {{ (savingConfirmation ? 'Processing…' : advanceMethod === 'Cash' ? 'Cash received — confirm booking' : 'Send payment reminder') | t }}
-          </button>
+
+    <!-- Horizontal decision timeline moved to the former confirmation-workflow position -->
+    <section class="booking-card timeline-card">
+      <div class="booking-card-heading">
+        <span class="card-heading-icon"><i class="bi bi-clock-history"></i></span>
+        <h2>{{ 'Decision Timeline' | t }}</h2>
+      </div>
+      <div class="booking-card-body timeline-body">
+        <div class="timeline-row">
+          <span class="timeline-dot"><i class="bi bi-check-lg"></i></span>
+          <strong>{{ 'Submitted' | t }}</strong>
+          <time>{{ (item.createdDate | localDate:'d MMM yyyy, h:mm a') | t }}</time>
         </div>
-      </ng-container>
-      <p class="text-muted small mt-3 mb-0">{{ 'Bring the original ID documents you uploaded when checking in.' | t }}</p>
+        <div class="timeline-row">
+          <span class="timeline-dot"><i class="bi bi-clock"></i></span>
+          <strong>{{ 'Owner Decision Due' | t }}</strong>
+          <time>{{ (item.ownerDeadline | localDate:'d MMM yyyy, h:mm a') | t }}</time>
+        </div>
+        <div class="timeline-row" *ngIf="item.customerDeadline">
+          <span class="timeline-dot"><i class="bi bi-clock"></i></span>
+          <strong>{{ 'Customer Confirmation Due' | t }}</strong>
+          <time>{{ (item.customerDeadline | localDate:'d MMM yyyy, h:mm a') | t }}</time>
+        </div>
+        <div class="timeline-row history-row" *ngFor="let change of item.statusHistory">
+          <span class="timeline-dot"><i class="bi bi-check-lg"></i></span>
+          <strong>{{ (change.newStatus) | t }}<small *ngIf="change.reason">{{ change.reason }}</small></strong>
+          <time>{{ (change.createdDate | localDate:'d MMM yyyy, h:mm a') | t }}</time>
+        </div>
+      </div>
     </section>
-    <div class="decision-actions" *ngIf="canDecide">
-      <button type="button" class="btn btn-outline-danger" [disabled]="deciding || loading" (click)="decide(false)">{{ 'Reject' | t }}</button>
-      <button type="button" class="btn btn-success" [disabled]="deciding || loading" (click)="decide(true)">{{ 'Approve' | t }}</button>
+
+    <!-- Existing confirmation workflow -->
+
+
+    <!-- Main workflow actions -->
+    <div class="booking-bottom-actions">
+      <div class="booking-receipts-actions">
+        <app-payment-receipts [bookingId]="item.bookingId" [bookingStatus]="item.status" />
+      </div>
+      <button *ngIf="canDecide" type="button" class="booking-action action-approve" [disabled]="deciding || loading"
+        (click)="decide(true)">
+        <i class="bi bi-check-circle"></i>{{ 'Approve' | t }}
+      </button>
+      <button *ngIf="canDecide" type="button" class="booking-action action-reject" [disabled]="deciding || loading"
+        (click)="decide(false)">
+        <i class="bi bi-x-circle"></i>{{ 'Reject' | t }}
+      </button>
+      <button *ngIf="item.hasIdentityDocument" type="button" class="booking-action action-outline"
+        (click)="openIdentity()">
+        <i class="bi bi-file-earmark-text"></i>{{ 'View Documents' | t }}
+      </button>
+      <button *ngIf="canCheckIn" type="button" class="booking-action action-primary" [disabled]="deciding"
+        (click)="checkIn()">
+        <i class="bi bi-box-arrow-in-right"></i>{{ 'Check In' | t }}
+      </button>
+      <a *ngIf="item.canCheckout" class="booking-action action-primary" routerLink="checkout">
+        <i class="bi bi-box-arrow-right"></i>{{ 'Check Out' | t }}
+      </a>
     </div>
   </ng-container>
 </main>
 
 <dialog #identityDialog class="identity-dialog" aria-labelledby="identity-dialog-heading" (close)="clearIdentity()">
-  <header>
-    <div><h2 id="identity-dialog-heading">{{ 'Customer ID proof' | t }}</h2><span *ngIf="identity">{{ (identity.status) | t }}</span></div>
-    <button type="button" class="btn-close" [attr.aria-label]="'Close document' | t" (click)="closeIdentity()"></button>
+  <header class="identity-dialog-header">
+    <div>
+      <h2 id="identity-dialog-heading">{{ 'Customer ID proof' | t }}</h2>
+      <span *ngIf="identity">{{ (identity.status) | t }}</span>
+    </div>
+    <button type="button" class="identity-close" [attr.aria-label]="'Close document' | t" (click)="closeIdentity()">
+      <i class="bi bi-x-lg"></i>
+    </button>
   </header>
   <p *ngIf="identityLoading" role="status">{{ 'Loading document…' | t }}</p>
-  <p *ngIf="identityError" class="alert alert-danger" role="alert">{{ (identityError) | t }}</p>
-  <p *ngIf="identity" class="fw-semibold">{{ identity.documentType | t }}<span *ngIf="identity.otherDocumentType"> · {{ identity.otherDocumentType }}</span></p>
-  <p *ngIf="identity">{{ identity.files[identityIndex]?.fileName }}</p>
-  <p *ngIf="identity" class="small text-muted">{{ (identity.uploadedByAdministration ? 'Uploaded by administration' : 'Uploaded by customer') | t }} · #{{ identity.uploadedBy }} · {{ identity.uploadedAt | localDate:'d MMM yyyy, h:mm a' }}</p>
-  <nav *ngIf="identity && identity.files.length > 1" class="d-flex align-items-center gap-3 mb-3" [attr.aria-label]="'Document pages' | t">
-    <button type="button" class="btn btn-outline-secondary" [disabled]="identityLoading || reviewingIdentity || identityIndex === 0"
+  <p *ngIf="identityError" class="booking-alert booking-alert-danger" role="alert">{{ (identityError) | t }}</p>
+  <p *ngIf="identity" class="identity-document-title">{{ identity.documentType | t }}<span
+      *ngIf="identity.otherDocumentType"> · {{ identity.otherDocumentType }}</span></p>
+  <p *ngIf="identity" class="identity-file-name">{{ identity.files[identityIndex]?.fileName }}</p>
+  <p *ngIf="identity" class="identity-upload-meta">{{ (identity.uploadedByAdministration ? 'Uploaded by administration'
+    : 'Uploaded by customer') | t }} · #{{ identity.uploadedBy }} · {{ identity.uploadedAt | localDate:'d MMM yyyy, h:mm
+    a' }}</p>
+  <nav *ngIf="identity && identity.files.length > 1" class="identity-pager" [attr.aria-label]="'Document pages' | t">
+    <button type="button" class="booking-action action-outline"
+      [disabled]="identityLoading || reviewingIdentity || identityIndex === 0"
       (click)="openIdentity(identityIndex - 1)">{{ 'Previous' | t }}</button>
     <span>{{ identityIndex + 1 }} / {{ identity.files.length }}</span>
-    <button type="button" class="btn btn-outline-secondary" [disabled]="identityLoading || reviewingIdentity || identityIndex >= identity.files.length - 1"
+    <button type="button" class="booking-action action-outline"
+      [disabled]="identityLoading || reviewingIdentity || identityIndex >= identity.files.length - 1"
       (click)="openIdentity(identityIndex + 1)">{{ 'Next' | t }}</button>
   </nav>
-  <img *ngIf="identityImage"  [src]="identityImage" [alt]="'Uploaded customer ID proof' | t">
+  <img *ngIf="identityImage" [src]="identityImage" [alt]="'Uploaded customer ID proof' | t">
   <iframe *ngIf="identityPreview" [src]="identityPreview" [title]="'Uploaded customer ID proof' | t"></iframe>
-  <p *ngIf="identity?.reason" class="mt-2">{{ identity?.reason }}</p>
-  <div *ngIf="showReuploadReason">
-    <label for="identity-reupload-reason" class="form-label mt-3">{{ 'Reason shared with the customer' | t }}</label>
-    <textarea id="identity-reupload-reason" maxlength="1000" class="form-control"
-      #reason (input)="reuploadReason = reason.value"></textarea>
+  <p *ngIf="identity?.reason" class="identity-reason">{{ identity?.reason }}</p>
+  <div *ngIf="showReuploadReason" class="reupload-reason">
+    <label for="identity-reupload-reason" class="form-label">{{ 'Reason shared with the customer' | t }}</label>
+    <textarea id="identity-reupload-reason" maxlength="1000" class="form-control" #reason
+      (input)="reuploadReason = reason.value"></textarea>
   </div>
-  <div class="decision-actions">
-    <button type="button" class="btn btn-outline-secondary" (click)="closeIdentity()">{{ 'Back' | t }}</button>
-    <ng-container *ngIf="booking?.status === 'Confirmed' && identity?.status === 'Uploaded' && (identityImage || identityPreview)">
-      <button *ngIf="!showReuploadReason" type="button" class="btn btn-outline-danger"
+  <div class="identity-dialog-actions">
+    <button type="button" class="booking-action action-outline" (click)="closeIdentity()">{{ 'Back' | t }}</button>
+    <ng-container
+      *ngIf="booking?.status === 'Confirmed' && identity?.status === 'Uploaded' && (identityImage || identityPreview)">
+      <button *ngIf="!showReuploadReason" type="button" class="booking-action action-danger-outline"
         [disabled]="reviewingIdentity" (click)="showReuploadReason = true">{{ 'Request Re-upload' | t }}</button>
-      <button *ngIf="showReuploadReason" type="button" class="btn btn-outline-danger"
-        [disabled]="reviewingIdentity || !reuploadReason.trim()" (click)="reviewIdentity(false)">{{ 'Send Request' | t }}</button>
-      <button type="button" class="btn btn-success" [disabled]="reviewingIdentity" (click)="reviewIdentity(true)">{{ 'OK' | t }}</button>
+      <button *ngIf="showReuploadReason" type="button" class="booking-action action-danger-outline"
+        [disabled]="reviewingIdentity || !reuploadReason.trim()" (click)="reviewIdentity(false)">{{ 'Send Request' | t
+        }}</button>
+      <button type="button" class="booking-action action-approve" [disabled]="reviewingIdentity"
+        (click)="reviewIdentity(true)">{{ 'OK' | t }}</button>
     </ng-container>
   </div>
 </dialog>

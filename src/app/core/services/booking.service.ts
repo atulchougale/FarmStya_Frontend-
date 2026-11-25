@@ -79,6 +79,14 @@ export class BookingService {
     private readonly http: HttpClient
   ) {}
 
+  getAdministrationBookings(filter: { page: number; pageSize: number; search: string; status: string; source: string; from: string; to: string }) {
+    let params = new HttpParams().set('page', filter.page).set('pageSize', filter.pageSize);
+    for (const key of ['search', 'status', 'source', 'from', 'to'] as const) {
+      if (filter[key]) params = params.set(key, filter[key]);
+    }
+    return this.http.get<ApiResponse<{ items: Booking[]; totalCount: number; summary: { total: number; confirmed: number; checkedIn: number; checkedOut: number; pending: number } }>>(`${this.apiUrl}/administration-list`, { params });
+  }
+
   // Admin - Get All Bookings
 
   getAllBookings(params: {
@@ -177,12 +185,14 @@ export class BookingService {
 
  getMyBookings(
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 5,
+    status?: 'Confirmed' | 'CheckedOut'
   ): Observable<ApiResponse<Booking[]>> {
 
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('page', page)
       .set('pageSize', pageSize);
+    if (status) params = params.set('status', status);
 
     return this.http.get<ApiResponse<Booking[]>>(
       `${this.apiUrl}/my-bookings`,

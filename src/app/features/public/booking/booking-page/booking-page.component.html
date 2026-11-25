@@ -1,23 +1,10 @@
 <section class="booking-page">
   <div class="booking-container">
 
-    <!-- Page Header -->
-    <header class="booking-header">
-      <a class="brand-label" href="/" [attr.aria-label]="'FarmStay home' | t">
-        <span class="brand-icon">
-          <i class="bi bi-house-heart"></i>
-        </span>
-        <span>{{ 'FARMSTAY' | t }}</span>
-      </a>
-
-      <p class="eyebrow">{{ 'YOUR NEXT GETAWAY' | t }}</p>
-      <h1>{{ 'Book Your Farmhouse' | t }}</h1>
-      <p class="header-description">
-        {{ 'A few simple steps to plan your perfect stay.' | t }}</p>
-    </header>
+    <header class="booking-header"><app-voucher-icon name="calendar"></app-voucher-icon><div><h1>{{ 'Book Your Farmhouse' | t }}</h1><p>{{ 'A few simple steps to plan your perfect stay.' | t }}</p></div></header>
 
     <!-- Booking Layout -->
-    <main class="booking-layout">
+    <main class="booking-layout" [class.review-layout]="currentStep >= 5">
 
       <!-- Step Progress -->
       <nav class="step-navigation" [attr.aria-label]="'Booking progress' | t">
@@ -37,7 +24,7 @@
 
           <div class="step-label">
             <strong>{{ (step.title) | t }}</strong>
-            <span>{{ (step.subtitle) | t }}</span>
+            <span>{{ (currentStep > i + 1 ? 'Completed' : currentStep === i + 1 ? 'In Progress' : 'Upcoming') | t }}</span>
           </div>
 
           <div *ngIf="i < bookingSteps.length - 1" class="step-connector">
@@ -46,7 +33,7 @@
       </nav>
 
       <!-- Main Content -->
-      <section class="booking-card">
+      <section class="booking-card" [class.review-card]="currentStep >= 5">
 
         <div class="card-topline">
           <span class="section-tag">
@@ -62,7 +49,7 @@
             <p class="eyebrow">{{ 'LET\'S GET STARTED' | t }}</p>
 
             <h2>
-              {{ (currentStepInfo.title) | t }}
+              {{ stepHeading | t }}
             </h2>
 
             <p>
@@ -79,7 +66,7 @@
             </div>
 
             <div class="countdown-content" *ngIf="!reservationExpired">
-              <strong>{{ 'Temporary Reservation Active' | t }}</strong>
+              <strong>{{ 'Dates held for' | t }}</strong>
 
               <p *ngIf="!reservationReminderVisible">
                 {{ 'Complete your booking before your reservation expires.' | t }}</p>
@@ -136,7 +123,7 @@
 
             <!-- Full Name -->
             <div class="form-field">
-              <label for="customerFullName">{{ 'Full Name' | t }}</label>
+              <label for="customerFullName">{{ 'Full Name' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
               <div class="input-wrapper">
                 <i class="bi bi-person"></i>
@@ -151,7 +138,7 @@
 
             <!-- Mobile Number -->
             <div class="form-field">
-              <label for="customerMobile">{{ 'Mobile Number' | t }}</label>
+              <label for="customerMobile">{{ 'Mobile Number' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
 
               <div class="input-wrapper">
                 <i class="bi bi-telephone"></i>
@@ -207,7 +194,7 @@
 
             <!-- Adult Count -->
             <div class="form-field">
-              <label for="adultCount">{{ 'Adults' | t }}<span>*</span></label>
+              <label for="adultCount">{{ 'Adults' | t }}<span data-required-marker="true">*</span></label>
 
               <div class="input-wrapper">
                 <i class="bi bi-person"></i>
@@ -280,40 +267,10 @@
             </div>
           </div>
 
-          <!-- Calendar Section -->
           <div class="booking-calendar-section">
-
-            <!-- Calendar Header -->
-            <div class="calendar-header">
-
-              <button type="button" class="calendar-nav-button" (click)="previousMonth()"
-                [disabled]="!canGoToPreviousMonth || loadingCalendar || reservingDates" [attr.aria-label]="'Previous month' | t">
-                <i class="bi bi-chevron-left"></i>
-              </button>
-
-              <div class="calendar-month-title">
-                <h3>{{ (monthLabel) | t }}</h3>
-                <span>{{ 'Select your preferred dates' | t }}</span>
-              </div>
-
-              <button type="button" class="calendar-nav-button" (click)="nextMonth()"
-                [disabled]="loadingCalendar || reservingDates" [attr.aria-label]="'Next month' | t">
-                <i class="bi bi-chevron-right"></i>
-              </button>
-
-            </div>
-
-
-
-            <!-- Loading -->
-            <div class="calendar-loading" *ngIf="loadingCalendar">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">{{ 'Loading...' | t }}</span>
-              </div>
-              <p>{{ 'Loading calendar availability...' | t }}</p>
-            </div>
-
-            <!-- Calendar -->
+            <div class="calendar-toolbar"><button type="button" class="calendar-nav-button" (click)="previousMonth()" [disabled]="!canGoToPreviousMonth || loadingCalendar || reservingDates" [attr.aria-label]="'Previous month' | t"><i class="bi bi-chevron-left" aria-hidden="true"></i></button><span>{{ 'Select your check-in and check-out dates' | t }}</span><button type="button" class="calendar-nav-button" (click)="nextMonth()" [disabled]="loadingCalendar || reservingDates" [attr.aria-label]="'Next month' | t"><i class="bi bi-chevron-right" aria-hidden="true"></i></button></div>
+            <p *ngIf="loadingCalendar" class="calendar-loading" role="status">{{ 'Loading calendar availability...' | t }}</p>
+            <div class="dual-calendars"><section class="calendar-panel" *ngFor="let panel of calendarPanels"><h3>{{ panel.title }}</h3>
             <div class="calendar-grid" *ngIf="!loadingCalendar">
 
               <!-- Week Days -->
@@ -322,7 +279,7 @@
               </div>
 
               <!-- Calendar Dates -->
-              <button type="button" class="calendar-day" *ngFor="let day of calendarDays" [disabled]="!day.isCurrentMonth ||
+              <button type="button" class="calendar-day" *ngFor="let day of panel.days" [disabled]="!calendarData || !day.isCurrentMonth ||
                 day.isPast ||
                 (
                   (day.isBooked || (day.isReserved && !isOwnReservedDate(day.dateKey))) &&
@@ -347,6 +304,7 @@
 
             </div>
 
+            </section></div>
             <!-- Calendar Legend -->
             <div class="calendar-legend" *ngIf="!loadingCalendar">
 
@@ -460,64 +418,29 @@
         </div>
 
 
-        <!-- Step 4: Event Details -->
-        <div *ngIf="currentStep === 4" class="step-content">
-          <div *ngIf="stayRate as rate">
-            <p>
-              {{ 'Stay charge' | t }}<strong>{{ stayCharge | currency:rate.currencyCode }}</strong>
-              <br />
-              {{ '{p0} per day × {p1} {p2}' | t:{p0: (rate.price | currency:rate.currencyCode), p1: (availableEventDates.length), p2: (availableEventDates.length === 1 ? 'day' : 'days')} }}</p>
-          </div>
-
-          <fieldset class="event-options">
-            <legend>{{ 'Add an event (optional)' | t }}</legend>
-            <label *ngFor="let type of bookingTypes">
-              <input type="radio" name="bookingType" [checked]="bookingType === type.value"
-                (change)="selectBookingType(type.value)" />
-              {{ (type.label) | t }}
-            </label>
-            <div *ngIf="bookingType !== 'BookingOnly'">
-              <button type="button" class="back-button" (click)="selectBookingType('BookingOnly')">
-                {{ 'Remove event' | t }}</button>
-            </div>
-          </fieldset>
-
-          <fieldset *ngIf="bookingType !== 'BookingOnly'" class="event-options">
-            <legend>{{ 'Event dates' | t }}</legend>
-            <label *ngFor="let date of availableEventDates">
-              <input type="checkbox" [checked]="eventDates.includes(date)"
-                (change)="toggleEventDate(date, $any($event.target).checked)" />
-              {{ (date | localDate:'EEE, d MMM yyyy') | t }}
-            </label>
-          </fieldset>
-
-          <p *ngIf="selectedEventRate as rate" aria-live="polite">
-            {{ 'Estimated event charge' | t }}<strong>{{ eventCharge | currency:rate.currencyCode }}</strong>
-            <br />
-            {{ '{p0} per day × {p1} {p2}' | t:{p0: (rate.price | currency:rate.currencyCode), p1: (eventDates.length), p2: (eventDates.length === 1 ? 'day' : 'days')} }}</p>
-          <ng-container *ngIf="stayRate as rate">
-            <p *ngIf="bookingType === 'BookingOnly' || !eventStepError" aria-live="polite">
-              {{ 'Estimated total' | t }}<strong>{{ stayCharge + eventCharge | currency:rate.currencyCode }}</strong>
-            </p>
-          </ng-container>
-          <p *ngIf="eventStepError" aria-live="polite">{{ (eventStepError) | t }}</p>
-          <div *ngIf="!loadingRates && (!stayRate || (bookingType !== 'BookingOnly' && !selectedEventRate))">
-            <p *ngIf="pricingError" role="status">{{ (pricingError) | t }}</p>
-            <button type="button" class="back-button" (click)="loadBookingRates()">{{ 'Retry pricing' | t }}</button>
-          </div>
+        <div *ngIf="currentStep === 4" class="step-content event-step">
+          <div *ngIf="stayRate as rate" class="stay-charge-banner"><app-voucher-icon name="bed"></app-voucher-icon><div><strong>{{ 'Base booking charges always apply' | t }}</strong><span>{{ rate.price | currency:rate.currencyCode }} × {{ selectedStayDays }} {{ 'days' | t }} = <strong>{{ stayCharge | currency:rate.currencyCode }}</strong></span></div></div>
+          <fieldset class="event-options"><legend>{{ 'Add an event (optional)' | t }}</legend><div class="event-card-grid">
+            <label class="event-choice" [class.selected]="bookingType === 'BookingOnly'"><input type="radio" name="bookingType" [checked]="bookingType === 'BookingOnly'" (change)="selectBookingType('BookingOnly')"><app-voucher-icon name="bed"></app-voucher-icon><strong>{{ 'Booking Only' | t }}</strong><span class="rate-pill">{{ 'No event charges' | t }}</span><p>{{ 'Stay only, no event.' | t }}</p></label>
+            <label class="event-choice" *ngFor="let type of bookingTypes" [class.selected]="bookingType === type.value"><input type="radio" name="bookingType" [checked]="bookingType === type.value" (change)="selectBookingType(type.value)"><app-voucher-icon name="party"></app-voucher-icon><strong>{{ type.label | t }}</strong><span class="rate-pill" *ngIf="rateFor(type.rateKey) as rate">{{ rate.price | currency:rate.currencyCode }} {{ 'per day' | t }}</span><span *ngIf="!rateFor(type.rateKey)">{{ (loadingRates ? 'Loading booking rates…' : 'Pricing unavailable') | t }}</span><p>{{ (type.value === 'NormalEvent' ? 'Celebrate with your family and friends.' : 'Add decoration to your celebration.') | t }}</p></label>
+          </div></fieldset>
+          <fieldset *ngIf="bookingType !== 'BookingOnly'" class="event-date-options"><legend><app-voucher-icon name="calendar"></app-voucher-icon>{{ 'Choose Event Dates' | t }}</legend><p>{{ 'Select one or more dates within your stay.' | t }}</p><div class="event-date-pills"><label *ngFor="let date of availableEventDates" [class.selected]="eventDates.includes(date)"><input type="checkbox" [checked]="eventDates.includes(date)" (change)="toggleEventDate(date, $any($event.target).checked)">{{ date | localDate:'EEE, dd MMM yyyy' }}</label></div><button type="button" class="remove-event" (click)="selectBookingType('BookingOnly')"><i class="bi bi-trash" aria-hidden="true"></i>{{ 'Remove event' | t }}</button></fieldset>
+          <p *ngIf="selectedEventRate as rate" class="event-estimate">{{ 'Estimated event charge' | t }}: <strong>{{ rate.price | currency:rate.currencyCode }} × {{ eventDates.length }} = {{ eventCharge | currency:rate.currencyCode }}</strong></p>
+          <p *ngIf="eventStepError" class="calendar-error" role="alert">{{ eventStepError | t }}</p>
+          <div *ngIf="!loadingRates && (!stayRate || (bookingType !== 'BookingOnly' && !selectedEventRate))"><p *ngIf="pricingError" role="alert">{{ pricingError | t }}</p><button type="button" class="back-button" (click)="loadBookingRates()">{{ 'Retry pricing' | t }}</button></div>
         </div>
 
         <!-- Steps 5 and 6 share the booking summary. -->
         <div *ngIf="currentStep === 5 || currentStep === 6" class="step-content">
           <div class="booking-review">
             <section>
-              <h3>{{ 'Customer and guests' | t }}</h3>
+              <h3><app-voucher-icon name="guests"></app-voucher-icon>{{ 'Customer and guests' | t }}<button type="button" class="edit-step" (click)="goToStep(1)">{{ 'Edit' | t }}</button></h3>
               <p>{{ customerDetails.fullName }}<br />{{ customerDetails.email }}<br />{{ customerDetails.mobileNumber }}</p>
               <p>{{ '{p0} adults · {p1} children · {p2} guests' | t:{p0: (guestDetails.AdultCount), p1: (guestDetails.ChildrenCount ?? 0), p2: (guestDetails.PersonCount)} }}</p>
               <p *ngIf="guestDetails.CustomerNotes">{{ guestDetails.CustomerNotes }}</p>
             </section>
             <section>
-              <h3>{{ 'Stay and event' | t }}</h3>
+              <h3><app-voucher-icon name="calendar"></app-voucher-icon>{{ 'Stay and event' | t }}<button type="button" class="edit-step" (click)="goToStep(3)">{{ 'Edit' | t }}</button></h3>
               <dl>
                 <dt>{{ 'Check-in' | t }}</dt><dd>{{ (checkInDate | localDate:'d MMM yyyy') | t }}</dd>
                 <dt>{{ 'Check-out' | t }}</dt><dd>{{ (checkOutDate | localDate:'d MMM yyyy') | t }}</dd>
@@ -530,7 +453,7 @@
               </dl>
             </section>
             <section class="review-pricing">
-              <h3>{{ 'Estimated price' | t }}</h3>
+              <h3><app-voucher-icon name="coins"></app-voucher-icon>{{ 'Price Summary' | t }}</h3>
               <div *ngIf="currentStep === 6 && previousQuote && quote" role="alert">
                 <p>{{ 'Pricing changed. Review these amounts before submitting again.' | t }}</p>
                 <p>{{ 'Total {p0} →' | t:{p0: (previousQuote.totalAmount | currency:previousQuote.currencyCode)} }}<strong>{{ quote.totalAmount | currency:quote.currencyCode }}</strong></p>
@@ -560,7 +483,8 @@
           <span>{{ (errorMessage) | t }}</span>
           <a *ngIf="submissionUncertain" routerLink="/my-bookings">{{ 'View My Bookings' | t }}</a>
         </div>
-        <p *ngIf="currentStep === 1"><a routerLink="/my-bookings">{{ 'View My Bookings' | t }}</a></p>
+        <p *ngIf="currentStep === 1" class="my-bookings-link"><a routerLink="/my-bookings">{{ 'View My Bookings' | t }}</a></p>
+        <div *ngIf="currentStep === 6" class="submission-note"><i class="bi bi-info-circle" aria-hidden="true"></i>{{ 'Submitting sends your booking request for approval. No payment is collected now.' | t }}</div>
         <footer class="booking-footer">
           <button type="button" class="back-button" [disabled]="currentStep === 1" (click)="previousStep()">
 
@@ -573,22 +497,30 @@
 
           <button *ngIf="currentStep < bookingSteps.length" type="button" class="next-button"
             [disabled]="(currentStep >= 3 && reservationExpired) ||
-              (currentStep === 4 && !!eventStepError) || (currentStep === 5 && !quote)"
+              (currentStep === 3 && (!selectionId || reservingDates || loadingCalendar)) || (currentStep === 4 && !!eventStepError) || (currentStep === 5 && !quote)"
             (click)="nextStep()">
 
-            {{ 'Next' | t }}<i class="bi bi-arrow-right"></i>
+            {{ 'Continue' | t }}<i class="bi bi-arrow-right"></i>
           </button>
 
           <button *ngIf="currentStep === bookingSteps.length" type="button" class="next-button"
             [disabled]="!canSubmitBooking" (click)="submitBooking()">
 
-            {{ (submittingBooking ? 'Submitting…' : 'Submit Booking') | t }}
+            {{ (submittingBooking ? 'Submitting…' : 'Submit Booking Request') | t }}
             <i class="bi bi-check2"></i>
           </button>
         </footer>
 
       </section>
 
+      <aside class="stay-summary" *ngIf="currentStep < 5">
+        <h2><app-voucher-icon [name]="currentStep === 4 ? 'document' : 'bed'"></app-voucher-icon>{{ (currentStep === 4 ? 'Booking Summary' : 'Stay Summary') | t }}</h2>
+        <img *ngIf="currentStep !== 4" [src]="summaryImage" alt="" width="480" height="192" class="summary-photo"><div class="summary-property"><h3>{{ siteName }}</h3><p><i class="bi bi-geo-alt" aria-hidden="true"></i>{{ siteLocation }}</p></div>
+        <p *ngIf="loadingRates" role="status" class="summary-note">{{ 'Loading booking rates…' | t }}</p><div *ngIf="selectedStayDays && !stayRate && !loadingRates" class="calendar-error"><p>{{ (pricingError || 'The daily stay rate is unavailable.') | t }}</p><button type="button" class="back-button" (click)="loadBookingRates()">{{ 'Retry pricing' | t }}</button></div><dl><div><dt><app-voucher-icon name="guests"></app-voucher-icon>{{ 'Guests' | t }}</dt><dd>{{ guestDetails.PersonCount || '—' }}<small>{{ guestDetails.AdultCount || 0 }} {{ 'Adults' | t }} · {{ guestDetails.ChildrenCount || 0 }} {{ 'Children' | t }}</small></dd></div><div><dt><app-voucher-icon name="calendar"></app-voucher-icon>{{ 'Selected Dates' | t }}</dt><dd><ng-container *ngIf="checkInDate && checkOutDate; else noDates">{{ checkInDate | localDate:'dd MMM yyyy' }} – {{ checkOutDate | localDate:'dd MMM yyyy' }}<small>{{ selectedStayDays }} {{ 'days' | t }}</small></ng-container><ng-template #noDates>{{ 'Not selected' | t }}</ng-template></dd></div>
+        <ng-container *ngIf="selectedStayDays && stayRate as rate"><div><dt>{{ 'Stay Charges' | t }}<small>{{ rate.price | currency:rate.currencyCode }} × {{ selectedStayDays }} {{ 'days' | t }}</small></dt><dd>{{ rate.price * selectedStayDays | currency:rate.currencyCode }}</dd></div><div *ngIf="currentStep === 4"><dt>{{ 'Event Charges' | t }}<small *ngIf="selectedEventRate as eventRate">{{ eventRate.price | currency:eventRate.currencyCode }} × {{ eventDates.length }}</small></dt><dd>{{ eventCharge | currency:rate.currencyCode }}</dd></div><div class="summary-total"><dt>{{ (currentStep === 4 ? 'Total Booking Amount' : 'Base Booking Estimate') | t }}</dt><dd>{{ rate.price * selectedStayDays + (currentStep === 4 ? eventCharge : 0) | currency:rate.currencyCode }}</dd></div><ng-container *ngIf="currentStep === 4 && rateFor('ADVANCE_DAILY') as advance"><div><dt>{{ 'Advance (after approval)' | t }}<small>{{ advance.price | currency:advance.currencyCode }} × {{ selectedStayDays }}</small></dt><dd>{{ advance.price * selectedStayDays | currency:advance.currencyCode }}</dd></div><div><dt>{{ 'Remaining after advance' | t }}</dt><dd>{{ rate.price * selectedStayDays + eventCharge - advance.price * selectedStayDays | currency:rate.currencyCode }}</dd></div></ng-container></ng-container></dl>
+        <p class="summary-note" *ngIf="currentStep < 4"><i class="bi bi-info-circle" aria-hidden="true"></i>{{ (selectedStayDays ? 'Event charges will be added in the next step.' : 'Select your stay dates to see the price estimate.') | t }}</p><p class="summary-note" *ngIf="currentStep === 4">{{ 'Base booking charges remain even without an event.' | t }}</p>
+      </aside>
+      <div class="after-submit-flow" *ngIf="currentStep === 6"><span><app-voucher-icon name="document"></app-voucher-icon>{{ 'Request submitted' | t }}</span><i class="bi bi-arrow-right" aria-hidden="true"></i><span><i class="bi bi-shield-check" aria-hidden="true"></i>{{ 'Administration approval' | t }}</span><i class="bi bi-arrow-right" aria-hidden="true"></i><span><app-voucher-icon name="identity"></app-voucher-icon>{{ 'Upload ID & pay advance to confirm' | t }}</span></div>
       <p class="page-note">
         <i class="bi bi-info-circle"></i>
         {{ 'Your booking request will be subject to farmhouse availability and owner approval.' | t }}</p>

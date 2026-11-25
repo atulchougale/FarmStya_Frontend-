@@ -1,173 +1,106 @@
-\:host {
-    display: block;
-    min-height: 100vh;
-}
+/* ==========================================================
+   FARMSTAY ADMIN LAYOUT
+   Theme-aware Orange / Blue layout geometry.
+   Header: 114px | Sidebar: 280px | Main gutter: 18px
+   Layout structure and responsive navigation behavior preserved.
+========================================================== */
 
-/* =========================================
-   Main Admin Layout
-   ========================================= */
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
 .admin-layout {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-
-    /* Same light background as client design */
-    background-color: #f8f4ec;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--page-bg, #fffaf6);
 }
 
-
-/* =========================================
-   Header
-   ========================================= */
-
+/* Fixed two-level application header.
+   Keep this value synchronized with the public/header component height. */
 .admin-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: 70px;
-
-    z-index: 1000;
-
-    background-color: #faf8f2;
-
-    border-bottom: 1px solid #ddd6ca;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  height: var(--farmstay-header-height, 114px);
+  background: var(--header-bg, var(--surface, #ffffff));
+  border-bottom: 1px solid var(--border, #eee3dc);
 }
 
-
-/* =========================================
-   Body
-   ========================================= */
-
+/* Two-column shell */
 .admin-body {
-    display: flex;
-
-    min-height: calc(100vh - 95px);
-
-    margin-top: 95px;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  align-items: stretch;
+  width: 100%;
+  min-height: calc(100vh - var(--farmstay-header-height, 114px));
+  min-height: calc(100dvh - var(--farmstay-header-height, 114px));
+  margin-top: var(--farmstay-header-height, 114px);
 }
 
-
-/* =========================================
-   Sidebar
-   ========================================= */
-
-.admin-sidebar {
-    position: fixed;
-
-    top: 95px;
-    left: 0;
-    bottom: 0;
-
-    width: 280px;
-
-    z-index: 900;
-
-    overflow-y: auto;
-
-    background-color: #f8f4ec;
+/* Angular sidebar component host */
+.admin-sidebar-host {
+  display: block;
+  width: 280px;
+  min-width: 0;
+  min-height: calc(100vh - var(--farmstay-header-height, 114px));
+  min-height: calc(100dvh - var(--farmstay-header-height, 114px));
+  background: var(--surface, #ffffff);
 }
 
-
-/* =========================================
-   Right Side Content
-   ========================================= */
-
+/* Routed page area */
 .admin-content-wrapper {
-    margin-left: 280px;
-
-    width: calc(100% - 280px);
-
-    min-height: calc(100vh - 70px);
-
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100vh - var(--farmstay-header-height, 114px));
+  min-height: calc(100dvh - var(--farmstay-header-height, 114px));
+  background: var(--page-bg, #fffaf6);
 }
-
-
-/* =========================================
-   Dashboard / Route Content
-   ========================================= */
 
 .admin-main-content {
-    flex: 1;
-
-    width: 100%;
-
-    /* padding: 32px; */
-    padding-top: 1rem;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-1) var(--space-3) var(--space-3);
+  background: var(--page-bg, #fffaf6);
 }
 
-
-/* =========================================
-   Footer
-   ========================================= */
-
-.admin-footer {
-    width: 100%;
-}
-
-
-/* =========================================
-   Scrollbar
-   ========================================= */
-
-.admin-sidebar::-webkit-scrollbar {
-    width: 5px;
-}
-
-.admin-sidebar::-webkit-scrollbar-thumb {
-    background: #d8d0c4;
-    border-radius: 10px;
-}
-
-
-/* =========================================
-   Responsive
-   ========================================= */
-
+/* Match sidebar component width at tablet and smaller desktop sizes. */
 @media (max-width: 991.98px) {
+  .admin-body {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
 
-    .admin-sidebar {
-        width: 240px;
-    }
+  .admin-sidebar-host {
+    width: 240px;
+  }
 
-    .admin-content-wrapper {
-        margin-left: 240px;
-        width: calc(100% - 240px);
-    }
-
-    .admin-main-content {
-        padding: 24px;
-    }
+  .admin-main-content {
+    padding-right: var(--space-2);
+    padding-left: var(--space-2);
+  }
 }
 
+/* Small/mobile: preserve the existing stacked sidebar layout.
+   No menu-toggle behavior is introduced or changed here. */
+@media (max-width: 650px) {
+  .admin-body {
+    display: block;
+  }
 
-@media (max-width: 767.98px) {
+  .admin-sidebar-host {
+    width: 100%;
+    min-height: auto;
+  }
 
-    .admin-body {
-        display: block;
-    }
-
-    .admin-sidebar {
-        position: static;
-
-        width: 100%;
-
-        height: auto;
-
-        max-height: none;
-    }
-
-    .admin-content-wrapper {
-        margin-left: 0;
-
-        width: 100%;
-    }
-
-    .admin-main-content {
-        padding: 20px 15px;
-    }
+  .admin-main-content {
+    padding: var(--space-1) var(--space-2) var(--space-3);
+  }
 }
