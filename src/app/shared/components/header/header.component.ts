@@ -31,6 +31,7 @@ export class HeaderComponent implements OnInit {
   site: PublicSite | null = null;
 
   isDropdownOpen = false;
+  isNavigationOpen = false;
 
 
   constructor(
@@ -63,6 +64,14 @@ export class HeaderComponent implements OnInit {
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+
+  closeNavigationOnLink(event: Event): void {
+    if ((event.target as HTMLElement).closest('a')) this.isNavigationOpen = false;
+  }
+  @HostListener('document:keydown.escape')
+  closeNavigation(): void { this.isNavigationOpen = false; this.closeDropdown(); }
+  @HostListener('window:resize')
+  onViewportResize(): void { if (window.innerWidth >= 1200) this.isNavigationOpen = false; }
 
   closeDropdown(): void {
     this.isDropdownOpen = false;

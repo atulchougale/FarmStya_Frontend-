@@ -1,6 +1,6 @@
 <main class="reporting-page admin-records">
   <header class="report-heading"><div><h1><i class="bi bi-file-earmark-bar-graph admin-page-icon" aria-hidden="true"></i>{{ (definition?.title || 'Reports') | t }}</h1><p class="subtitle">{{ definition?.description | t }}</p></div>
-    <a class="btn btn-outline-secondary" routerLink="/admin/reports">← {{ 'Reports' | t }}</a></header>
+    <a class="btn btn-outline-secondary" routerLink="/admin/reporting">← {{ 'Reporting' | t }}</a></header>
   <form class="filter-card" #filterForm="ngForm" (ngSubmit)="submit()">
     <h2 class="filter-heading"><i class="bi bi-funnel" aria-hidden="true"></i>{{ 'Report Filters' | t }}</h2><div class="filters">
       <label>{{ 'Period' | t }}<select name="period" [(ngModel)]="filter.period" class="form-select">

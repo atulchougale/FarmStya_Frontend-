@@ -11,7 +11,7 @@ describe('AdminSidebarComponent menu routes', () => {
     expect(component.getAdminRoute('/bookings/create')).toBe('/admin/bookings/create');
     expect(component.getAdminRoute('/admin/booking/42')).toBe('/admin/booking/42');
     expect(component.getAdminRoute('/website-settings/pricing')).toBe('/admin/website-settings/pricing');
-    expect(component.getAdminRoute('/reports/bookings')).toBe('/admin/reports/bookings');
+    expect(component.getAdminRoute('/reports/bookings')).toBe('/admin/reporting/bookings');
     expect(component.getAdminRoute('')).toBe('/admin');
   });
 });

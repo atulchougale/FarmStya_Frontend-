@@ -177,3 +177,5 @@
     display: none;
   }
 }
+
+.otp-secondary-actions{flex-wrap:wrap;gap:8px}.otp-secondary-actions .auth-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px;font-size:14px;line-height:1.5}

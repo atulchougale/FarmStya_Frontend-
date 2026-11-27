@@ -1,3 +1,4 @@
+import { AccountsBreadcrumbComponent } from './accounts-breadcrumb.component';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,7 @@ import { TranslationPipe } from '../../../core/i18n/language';
 import { AccountsService, AccountPage, AccountRow, VoucherDraft, VoucherLine } from './accounts.service';
 import { localDay } from './accounts-page.component';
 import Swal from 'sweetalert2';
-@Component({standalone:true,imports:[CommonModule,FormsModule,RouterLink,TranslationPipe],templateUrl:'./voucher.component.html',styleUrl:'./accounts.css'})
+@Component({standalone:true,imports:[CommonModule,FormsModule,RouterLink,TranslationPipe,AccountsBreadcrumbComponent],templateUrl:'./voucher.component.html',styleUrl:'./accounts.css'})
 export class AccountVoucherComponent implements OnInit {
  private api=inject(AccountsService);private route=inject(ActivatedRoute);private router=inject(Router);private destroy=inject(DestroyRef);
  id:number|null=null;record:AccountRow|null=null;rights:string[]=[];ledgers:AccountRow[]=[];vendors:AccountRow[]=[];customers:AccountRow[]=[];bills:AccountRow[]=[];masters:AccountRow[]=[];attachments:AccountRow[]=[];settlements:AccountRow[]=[];outstanding:number|null=null;saving=false;loading=false;error='';
@@ -18,6 +19,8 @@ export class AccountVoucherComponent implements OnInit {
  async load(){this.loading=true;this.error='';try{const access=await firstValueFrom(this.api.get<{permissions:string[]}>('access'));this.rights=access.data.permissions;const lookup=async(area:string)=>{const all:AccountRow[]=[];for(let page=1;page<=100;page++){const r=await firstValueFrom(this.api.get<AccountPage>(area,{page,pageSize:100}));all.push(...r.data.items);if(all.length>=r.data.total)break;}return all;};[this.ledgers,this.vendors,this.masters,this.bills,this.customers]=await Promise.all(['ledgers','vendors','masters','payables','customers'].map(lookup));if(this.id){const r=await firstValueFrom(this.api.get<{voucher:AccountRow;attachments:AccountRow[];settlements:AccountRow[];outstanding:number|null}>('vouchers/'+this.id));this.record=r.data.voucher;this.attachments=r.data.attachments;this.settlements=r.data.settlements;this.outstanding=r.data.outstanding;this.draft={date:String(this.record['voucherDate']).slice(0,10),type:String(this.record['voucherType']),narration:String(this.record['narration']),reference:String(this.record['sourceReference']||''),dueDate:this.record['dueDate']?String(this.record['dueDate']).slice(0,10):null,settlesVoucherId:this.record['settlesVoucherId']?Number(this.record['settlesVoucherId']):null,paymentModeId:this.record['paymentModeId']?Number(this.record['paymentModeId']):null,version:this.record['version'] as string,lines:(this.record['lines'] as VoucherLine[]).map(l=>({...l}))};}else if(!this.draft.lines.length){this.add();this.add();}}catch(e:unknown){this.error=this.message(e);}finally{this.loading=false;}}
  message(e:unknown){return (e as {error?:{message?:string}})?.error?.message||'Could not complete the accounting operation.';}
  can(p:string){return this.rights.includes('Accounts.'+p);}
+ get breadcrumbTitle(){return String(this.record?.['voucherNumber']||'Create Voucher');}
+ get listPath(){return '/admin/accounts/'+(this.draft.type==='VendorBill'?'payables':this.draft.type==='VendorPayment'?'vendor-payments':this.draft.type==='Income'?'income':this.draft.type==='Expense'?'expenses':'vouchers');}
  get posted(){return this.record?.['status']==='Posted';}
  get debit(){return this.draft.lines.reduce((sum,l)=>sum+Number(l.debit||0),0);}
  get credit(){return this.draft.lines.reduce((sum,l)=>sum+Number(l.credit||0),0);}

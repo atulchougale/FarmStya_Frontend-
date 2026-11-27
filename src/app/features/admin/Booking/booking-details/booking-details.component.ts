@@ -1,3 +1,4 @@
+import { BookingPaymentSummaryComponent } from '../../../../shared/components/booking-payment-summary/booking-payment-summary.component';
 import {
   TranslationPipe,
   LocalDatePipe,
@@ -28,7 +29,7 @@ import { Booking } from '../models/booking.model';
 
 @Component({
   standalone: true,
-  imports: [
+  imports: [BookingPaymentSummaryComponent,
     TranslationPipe,
     LocalDatePipe,
     CommonModule,
@@ -61,6 +62,8 @@ export class BookingDetailsComponent implements OnInit, OnDestroy {
   get canUploadIdentity(): boolean {
     return (
       !!this.booking?.canManageConfirmation &&
+      !this.confirmationLoading &&
+      (!this.confirmationIdentity || this.confirmationIdentity.status === 'ReuploadRequested') &&
       (this.booking.status === 'Approved' ||
         (this.booking.status === 'Confirmed' &&
           this.confirmationIdentity?.status === 'ReuploadRequested'))
@@ -68,10 +71,18 @@ export class BookingDetailsComponent implements OnInit, OnDestroy {
   }
 
   chooseFiles(event: Event): void {
-    this.selectedFiles = Array.from(
-      (event.target as HTMLInputElement).files ?? [],
-    );
+    const input = event.target as HTMLInputElement;
+    const incoming = Array.from(input.files ?? []);
+    const combined = [...this.selectedFiles];
+    for (const file of incoming) {
+      if (!combined.some(existing => existing.name === file.name && existing.size === file.size && existing.lastModified === file.lastModified)) combined.push(file);
+    }
+    if (combined.length > 2) this.error = 'Upload a maximum of two files for the same document type.';
+    else { this.selectedFiles = combined; this.error = ''; }
+    input.value = '';
   }
+
+  removeSelectedFile(index: number): void { this.selectedFiles.splice(index, 1); }
 
   uploadCustomerIdentity(): void {
     if (!this.canUploadIdentity || this.savingConfirmation) return;

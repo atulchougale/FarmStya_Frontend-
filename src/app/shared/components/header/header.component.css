@@ -447,7 +447,7 @@
    TABLET / MOBILE
 ========================================================= */
 
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
   .top-header-inner {
     padding-left: 15px;
     padding-right: 15px;
@@ -600,3 +600,7 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+@media(min-width:1200px) and (max-width:1399.98px){.main-header .container-fluid{padding-inline:16px}.main-header .navbar-nav .nav-link{padding-inline:8px!important;font-size:13px}.main-header .logo-title{font-size:17px}.main-header .navbar-nav{gap:2px!important}}
+
+@media(max-width:359.98px){.top-header-inner{padding-inline:4px}.top-header-actions{gap:4px}}

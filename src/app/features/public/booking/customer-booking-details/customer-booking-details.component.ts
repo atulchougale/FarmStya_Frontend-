@@ -1,3 +1,4 @@
+import { BookingPaymentSummaryComponent } from '../../../../shared/components/booking-payment-summary/booking-payment-summary.component';
 import { TranslationPipe, LocalDatePipe } from '../../../../core/i18n/language';
 import { PaymentReceiptsComponent } from '../../../../shared/components/payment-receipts/payment-receipts.component';
 
@@ -21,7 +22,7 @@ import { RazorpayCheckoutService } from '../../../../core/services/razorpay-chec
 @Component({
   selector: 'app-customer-booking-details',
   standalone: true,
-  imports: [FormsModule, TranslationPipe, LocalDatePipe, CommonModule, RouterLink, PaymentReceiptsComponent, VoucherIconComponent],
+  imports: [BookingPaymentSummaryComponent,FormsModule, TranslationPipe, LocalDatePipe, CommonModule, RouterLink, PaymentReceiptsComponent, VoucherIconComponent],
   templateUrl: './customer-booking-details.component.html',
   styleUrl: './customer-booking-details.component.css'
 })
@@ -247,10 +248,19 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  get canConfirmBooking(): boolean {
+    return this.selectedBooking?.status === 'Approved' && Date.parse(this.selectedBooking.customerDeadline ?? '') > Date.now();
+  }
+
   get canUploadIdentity(): boolean {
-    const booking = this.selectedBooking;
-    return (booking?.status === 'Approved' && Date.parse(booking.customerDeadline ?? '') > Date.now())
-      || (booking?.status === 'Confirmed' && this.identity?.status === 'ReuploadRequested');
+    if (this.identityLoading || this.identityError || (this.identity && this.identity.status !== 'ReuploadRequested')) return false;
+    return this.canConfirmBooking || (this.selectedBooking?.status === 'Confirmed' && this.identity?.status === 'ReuploadRequested');
+  }
+
+  get canPayAdvance(): boolean {
+    return this.canConfirmBooking && !this.identityLoading && !this.identityError
+      && (this.identity?.status === 'Uploaded' || this.identity?.status === 'Verified')
+      && !this.uploadingIdentity && !this.openingCheckout && !this.verifyingAdvance && !this.paymentReceived;
   }
 
   get paymentReceived(): boolean {
@@ -259,8 +269,7 @@ export class CustomerBookingDetailsComponent implements OnInit, OnDestroy {
 
   async payAdvance(): Promise<void> {
     const booking = this.selectedBooking;
-    if (!booking || booking.status !== 'Approved' || !this.canUploadIdentity ||
-        this.identity?.status !== 'Uploaded' || this.selectedFiles.length > 0 || this.uploadingIdentity || this.openingCheckout || this.paymentReceived) return;
+    if (!booking || !this.canPayAdvance) return;
 
     const session = this.detailSession;
     this.openingCheckout = true;

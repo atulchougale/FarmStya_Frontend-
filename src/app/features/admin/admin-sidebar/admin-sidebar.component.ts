@@ -45,6 +45,7 @@ export class AdminSidebarComponent implements OnInit {
     const path = '/' + (route ?? '').trim().split('/').filter(Boolean).join('/');
     const relative = path === '/admin' ? '/' : path.startsWith('/admin/') ? path.slice(6) : path;
     if (relative === '/bookings' || relative === '/bookings/bookings') return '/admin/booking';
+    if (relative === '/reports' || relative.startsWith('/reports/')) return '/admin/reporting' + relative.slice(8);
     return relative === '/' ? '/admin' : `/admin${relative}`;
   }
 }

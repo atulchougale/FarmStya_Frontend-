@@ -1,3 +1,5 @@
+import { VideoPreviewComponent } from '../../../../shared/components/video-preview/video-preview.component';
+import { videoSource } from '../../../../shared/components/video-preview/video-source';
 import { TranslationPipe, LanguageService } from '../../../../core/i18n/language';
 import { inject as injectLanguage } from '@angular/core';
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
@@ -12,11 +14,13 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-gallery-view',
   standalone: true,
-  imports: [TranslationPipe, FormsModule],
+  imports: [TranslationPipe, FormsModule, VideoPreviewComponent],
   templateUrl: './gallery-view.component.html',
   styleUrl: './gallery-view.component.css',
 })
 export class GalleryViewComponent implements OnInit, OnDestroy {
+  readonly videoSource = videoSource;
+  previewRevision = 0;
   readonly language = injectLanguage(LanguageService);
   galleryItems: GalleryResponse[] = [];
   filteredGalleryItems: GalleryResponse[] = [];

@@ -1,0 +1,7 @@
+/* Low-specificity form defaults; feature designs and joined input adornments remain authoritative. */
+:where(form) :where(label:not(.btn):not(.form-check-label):not(.checkbox-label):not(.radio-label):not(.toggle-label):not(.form-check)):not(:has(input,select,textarea)){display:block;margin-block-end:8px}
+.fst-field-action-row{display:flex;align-items:stretch;flex-wrap:wrap;gap:8px;min-width:0}
+.fst-field-action-row>:is(input,select,.form-control){flex:1 1 200px;min-width:0;width:auto;margin:0}
+.fst-field-action-row>:is(button,.btn){flex:0 0 auto;min-height:48px;margin:0;white-space:normal}
+@container admin-content (max-width:560px){.fst-field-action-row>:is(input,select,.form-control,button,.btn){flex-basis:100%;width:100%}}
+@media(max-width:575.98px){.fst-field-action-row>:is(input,select,.form-control,button,.btn){flex-basis:100%;width:100%}}

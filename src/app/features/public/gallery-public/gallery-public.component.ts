@@ -1,3 +1,5 @@
+import { VideoPreviewComponent } from '../../../shared/components/video-preview/video-preview.component';
+import { videoSource } from '../../../shared/components/video-preview/video-source';
 import { TranslationPipe } from '../../../core/i18n/language';
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -9,9 +11,10 @@ import { GalleryResponseDto } from './gallery.model';
 
 type MediaFilter = 'all' | 'photos' | 'videos';
 @Component({ selector: 'app-gallery', standalone: true,
-  imports: [TranslationPipe, CommonModule, RouterLink, A11yModule],
+  imports: [TranslationPipe, CommonModule, RouterLink, A11yModule, VideoPreviewComponent],
   templateUrl: './gallery-public.component.html', styleUrl: './gallery-public.component.css' })
 export class GalleryPublicComponent implements OnInit, OnDestroy {
+  readonly videoSource = videoSource;
   galleryItems: GalleryResponseDto[] = [];
   filteredItems: GalleryResponseDto[] = [];
   categories: string[] = [];
@@ -22,6 +25,7 @@ export class GalleryPublicComponent implements OnInit, OnDestroy {
   errorMessage = '';
   selectedGalleryItem: GalleryResponseDto | null = null;
   modalMediaError = false;
+  previewRevision = 0;
   readonly failedPreviews = new Set<number>();
   private previousOverflow = '';
   private readonly destroy$ = new Subject<void>();
@@ -66,12 +70,6 @@ export class GalleryPublicComponent implements OnInit, OnDestroy {
     if (/garden|nature|outdoor/.test(name)) return 'bi-tree';
     if (/family|event/.test(name)) return 'bi-people';
     return 'bi-house';
-  }
-  preparePreview(event: Event): void {
-    const video = event.target as HTMLVideoElement;
-    video.muted = true;
-    // Decode a real frame without autoplaying all gallery videos.
-    if (Number.isFinite(video.duration) && video.duration > 0) video.currentTime = Math.min(.1, video.duration / 2);
   }
   previewFailed(item: GalleryResponseDto): void { this.failedPreviews.add(item.imageId); }
   openGalleryModal(item: GalleryResponseDto): void {

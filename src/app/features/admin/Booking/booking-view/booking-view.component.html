@@ -20,7 +20,7 @@
     <label>{{ 'Booking Status' | t }}<select name="status" [(ngModel)]="status"><option value="">{{ 'All Status' | t }}</option><option *ngFor="let state of statuses" [value]="state">{{ statusLabel(state) | t }}</option></select></label>
     <fieldset class="date-filter"><legend>{{ 'Stay Date' | t }}</legend><div class="date-inputs"><input type="date" name="from" [(ngModel)]="from" [max]="to" [attr.aria-label]="'From date' | t" /><span aria-hidden="true">–</span><input type="date" name="to" [(ngModel)]="to" [min]="from" [attr.aria-label]="'To date' | t" /></div></fieldset>
     <label>{{ 'Source' | t }}<select name="source" [(ngModel)]="source"><option value="">{{ 'All Sources' | t }}</option><option value="Online">{{ 'Online' | t }}</option><option value="Phone">{{ 'Phone enquiry' | t }}</option><option value="WalkIn">{{ 'Walk-in' | t }}</option></select></label>
-    <div class="filter-actions"><button type="submit" class="button primary" [disabled]="loading"><i class="bi bi-funnel-fill" aria-hidden="true"></i>{{ 'Apply Filters' | t }}</button><button type="button" class="button secondary" (click)="reset()" [disabled]="loading"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>{{ 'Reset' | t }}</button></div>
+    <div class="filter-actions"><button type="submit" class="button primary" [disabled]="loading"><i class="bi bi-funnel" aria-hidden="true"></i>{{ 'Apply Filters' | t }}</button><button type="button" class="button secondary" (click)="reset()" [disabled]="loading"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>{{ 'Reset' | t }}</button></div>
   </form>
   <p *ngIf="error" class="error-message" role="alert">{{ error | t }}</p>
 

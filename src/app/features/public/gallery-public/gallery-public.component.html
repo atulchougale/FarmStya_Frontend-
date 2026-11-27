@@ -54,7 +54,7 @@
 
 <ng-template #mediaPreview let-item>
   <ng-container *ngIf="!failedPreviews.has(item.imageId); else previewUnavailable">
-    <video *ngIf="isVideo(item.imageUrl); else photoPreview" class="media-image" [src]="item.imageUrl" muted playsinline preload="metadata" tabindex="-1" aria-hidden="true" (loadedmetadata)="preparePreview($event)" (error)="previewFailed(item)"></video>
+    <app-video-preview *ngIf="isVideo(item.imageUrl); else photoPreview" class="media-image" [revision]="previewRevision" [src]="item.imageUrl" [label]="item.imageName || 'Video'" />
     <ng-template #photoPreview><img class="media-image" [src]="item.imageUrl" [alt]="(item.imageName || 'Farmhouse gallery') | t" loading="lazy" (error)="previewFailed(item)" /></ng-template>
   </ng-container>
   <ng-template #previewUnavailable><span class="preview-unavailable"><i class="bi" [ngClass]="isVideo(item.imageUrl) ? 'bi-camera-video' : 'bi-image'" aria-hidden="true"></i><span>{{ 'Preview unavailable' | t }}</span><small *ngIf="isVideo(item.imageUrl)">{{ 'Open to play video' | t }}</small></span></ng-template>
@@ -63,7 +63,7 @@
 <div class="gallery-modal-backdrop" *ngIf="selectedGalleryItem as item" (click)="closeGalleryModal()">
   <section class="gallery-modal-dialog" role="dialog" aria-modal="true" [attr.aria-label]="(item.imageName || 'Gallery media preview') | t" (click)="$event.stopPropagation()" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
     <header class="modal-heading"><div><h2>{{ (item.imageName || 'Farmhouse gallery') | t }}</h2><p *ngIf="item.category">{{ item.category | t }}</p></div><button type="button" class="modal-control" cdkFocusInitial [attr.aria-label]="'Close gallery popup' | t" (click)="closeGalleryModal()"><i class="bi bi-x-lg" aria-hidden="true"></i></button></header>
-    <div class="modal-media"><video *ngIf="isVideo(item.imageUrl); else enlargedPhoto" [src]="item.imageUrl" controls playsinline preload="metadata" (error)="modalMediaError = true" [attr.aria-label]="item.imageName | t"></video><ng-template #enlargedPhoto><img [src]="item.imageUrl" (error)="modalMediaError = true" [alt]="(item.imageName || 'Farmhouse gallery') | t" /></ng-template></div>
+    <div class="modal-media"><video *ngIf="isVideo(item.imageUrl); else enlargedPhoto" crossorigin="anonymous" [src]="videoSource(item.imageUrl)" controls playsinline preload="metadata" (loadeddata)="previewRevision = previewRevision + 1" (error)="modalMediaError = true" [attr.aria-label]="item.imageName | t"></video><ng-template #enlargedPhoto><img [src]="item.imageUrl" (error)="modalMediaError = true" [alt]="(item.imageName || 'Farmhouse gallery') | t" /></ng-template></div>
     <p *ngIf="modalMediaError" class="modal-error" role="alert">{{ 'This media could not be loaded. Please try another item.' | t }}</p>
     <footer class="modal-footer"><p>{{ (item.description || item.category || '') | t }}</p><div class="modal-navigation"><button type="button" class="modal-control" [disabled]="filteredItems.length < 2" [attr.aria-label]="'Previous photo or video' | t" (click)="move(-1)"><i class="bi bi-chevron-left" aria-hidden="true"></i></button><span>{{ activeIndex + 1 }} / {{ filteredItems.length }}</span><button type="button" class="modal-control" [disabled]="filteredItems.length < 2" [attr.aria-label]="'Next photo or video' | t" (click)="move(1)"><i class="bi bi-chevron-right" aria-hidden="true"></i></button></div></footer>
   </section>

@@ -816,7 +816,7 @@
 .form-field {
   display: flex;
   flex-direction: column;
-  gap:4px;
+  gap:8px;
   min-width: 0;
 }
 .form-field-wide {

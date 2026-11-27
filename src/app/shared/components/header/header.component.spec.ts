@@ -45,4 +45,13 @@ describe('HeaderComponent', () => {
     expect(header.querySelector('.register-btn')).toBeNull();
     expect(header.querySelector('.profile-btn')?.textContent).toContain('Test Customer');
   });
+  it('toggles the responsive navigation without Bootstrap JavaScript', () => {
+    const button=fixture.nativeElement.querySelector('.navbar-toggler') as HTMLButtonElement;
+    button.click();fixture.detectChanges();
+    expect(component.isNavigationOpen).toBeTrue();
+    expect(fixture.nativeElement.querySelector('#mainNavbar').classList.contains('show')).toBeTrue();
+    component.closeNavigation();fixture.detectChanges();
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+  });
+
 });

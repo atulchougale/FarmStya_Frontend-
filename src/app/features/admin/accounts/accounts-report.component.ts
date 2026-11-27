@@ -1,3 +1,4 @@
+import { AccountsBreadcrumbComponent } from './accounts-breadcrumb.component';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +11,7 @@ import { TranslationPipe } from '../../../core/i18n/language';
 import { AccountsService,AccountRow,AccountPage } from './accounts.service';
 import { ACCOUNT_REPORTS } from './accounts.schema';
 import { localDay } from './accounts-page.component';
-@Component({standalone:true,imports:[CommonModule,FormsModule,RouterLink,MatTableModule,MatPaginatorModule,TranslationPipe],templateUrl:'./accounts-report.component.html',styleUrl:'./accounts.css'})
+@Component({standalone:true,imports:[CommonModule,FormsModule,RouterLink,MatTableModule,MatPaginatorModule,TranslationPipe,AccountsBreadcrumbComponent],templateUrl:'./accounts-report.component.html',styleUrl:'./accounts.css'})
 export class AccountsReportComponent implements OnInit {
  private api=inject(AccountsService);private route=inject(ActivatedRoute);private destroy=inject(DestroyRef);
  ledgers:AccountRow[]=[];report='ledger';title='';rows:AccountRow[]=[];loading=false;downloading='';error='';canExport=false;period='year';year=new Date().getFullYear();month=new Date().getMonth()+1;

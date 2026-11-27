@@ -4,42 +4,8 @@
    Menu data, routes and component logic remain unchanged.
 ========================================================== */
 
-:host {
-  display: block;
-  flex: 0 0 280px;
-  width: 280px;
-  min-width: 280px;
-  align-self: stretch;
-}
-
-/* Sidebar sits directly below the two-level sticky site header.
-   Header height = utility bar + main navigation bar (38px + 76px). */
-.admin-sidebar {
-  position: sticky;
-  top: var(--farmstay-header-height, 114px);
-  display: flex;
-  flex-direction: column;
-  width: 280px;
-  min-width: 280px;
-  height: calc(100vh - var(--farmstay-header-height, 114px));
-  height: calc(100dvh - var(--farmstay-header-height, 114px));
-  min-height: 420px;
-  margin: 0;
-  padding: 16px 11px 0;
-  overflow: hidden;
-  border: 0;
-  border-right: 1px solid var(--border, #f1e5dd);
-  border-radius: 0;
-  background:
-    linear-gradient(
-      180deg,
-      var(--surface, #ffffff) 0%,
-      var(--surface, #ffffff) 72%,
-      var(--surface-muted, #fff5e9) 100%
-    );
-  color: var(--text-body, #30343b);
-}
-
+:host {display:block;width:100%;min-width:0;height:100%;min-height:0}
+.admin-sidebar{position:relative;display:flex;flex-direction:column;width:100%;min-width:0;height:100%;min-height:0;margin:0;padding:8px 8px 0;overflow:hidden;border:0;border-radius:0;background:linear-gradient(180deg,var(--surface,#fff) 0%,var(--surface,#fff) 72%,var(--surface-muted,#fff5e9) 100%);color:var(--text-body,#30343b)}
 /* Loading state */
 .sidebar-loading {
   position: relative;
@@ -73,6 +39,7 @@
 }
 
 .sidebar-section-label {
+  display:none;
   padding: 0 14px 12px;
   color: var(--text-heading, #30343b);
   font-size: 15px;
@@ -282,43 +249,6 @@
 .sidebar-loading {
   position: relative;
   z-index: 1;
-}
-
-/* Medium screens */
-@media (max-width: 991.98px) {
-  :host {
-    flex-basis: 240px;
-    width: 240px;
-    min-width: 240px;
-  }
-
-  .admin-sidebar {
-    width: 240px;
-    min-width: 240px;
-    padding-right: 9px;
-    padding-left: 9px;
-  }
-
-  .sidebar-footer {
-    margin-right: -9px;
-    margin-left: -9px;
-  }
-}
-
-/* Small/mobile screens: keep the existing parent toggle behavior. */
-@media (max-width: 767.98px) {
-  :host {
-    flex: 0 0 min(280px, 86vw);
-    width: min(280px, 86vw);
-    min-width: min(280px, 86vw);
-  }
-
-  .admin-sidebar {
-    width: min(280px, 86vw);
-    min-width: min(280px, 86vw);
-    min-height: 0;
-    box-shadow: 8px 0 24px rgba(34, 24, 17, 0.08);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -269,9 +269,9 @@
 
                             <!-- Change Number / Resend -->
 
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3 otp-secondary-actions">
 
-                                <button type="button" class="btn btn-link p-0 auth-link" (click)="changeNumber()">
+                                <button type="button" class="btn btn-link auth-link" (click)="changeNumber()">
                                     {{ 'Change number' | t }}</button>
 
                                 @if (resendSeconds > 0)
@@ -281,7 +281,7 @@
                                 }
                                 @else
                                 {
-                                <button type="button" class="btn btn-link p-0 auth-link" [disabled]="isSendingOtp"
+                                <button type="button" class="btn btn-link auth-link" [disabled]="isSendingOtp"
                                     (click)="resendOtp()">
                                     {{ 'Resend OTP' | t }}</button>
                                 }

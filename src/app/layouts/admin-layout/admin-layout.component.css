@@ -1,106 +1,31 @@
-/* ==========================================================
-   FARMSTAY ADMIN LAYOUT
-   Theme-aware Orange / Blue layout geometry.
-   Header: 114px | Sidebar: 280px | Main gutter: 18px
-   Layout structure and responsive navigation behavior preserved.
-========================================================== */
-
-:host {
-  display: block;
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-.admin-layout {
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: var(--page-bg, #fffaf6);
-}
-
-/* Fixed two-level application header.
-   Keep this value synchronized with the public/header component height. */
-.admin-header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 1000;
-  height: var(--farmstay-header-height, 114px);
-  background: var(--header-bg, var(--surface, #ffffff));
-  border-bottom: 1px solid var(--border, #eee3dc);
-}
-
-/* Two-column shell */
-.admin-body {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  align-items: stretch;
-  width: 100%;
-  min-height: calc(100vh - var(--farmstay-header-height, 114px));
-  min-height: calc(100dvh - var(--farmstay-header-height, 114px));
-  margin-top: var(--farmstay-header-height, 114px);
-}
-
-/* Angular sidebar component host */
-.admin-sidebar-host {
-  display: block;
-  width: 280px;
-  min-width: 0;
-  min-height: calc(100vh - var(--farmstay-header-height, 114px));
-  min-height: calc(100dvh - var(--farmstay-header-height, 114px));
-  background: var(--surface, #ffffff);
-}
-
-/* Routed page area */
-.admin-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-width: 0;
-  min-height: calc(100vh - var(--farmstay-header-height, 114px));
-  min-height: calc(100dvh - var(--farmstay-header-height, 114px));
-  background: var(--page-bg, #fffaf6);
-}
-
-.admin-main-content {
-  flex: 1 1 auto;
-  width: 100%;
-  min-width: 0;
-  padding: var(--space-1) var(--space-3) var(--space-3);
-  background: var(--page-bg, #fffaf6);
-}
-
-/* Match sidebar component width at tablet and smaller desktop sizes. */
-@media (max-width: 991.98px) {
-  .admin-body {
-    grid-template-columns: 240px minmax(0, 1fr);
-  }
-
-  .admin-sidebar-host {
-    width: 240px;
-  }
-
-  .admin-main-content {
-    padding-right: var(--space-2);
-    padding-left: var(--space-2);
-  }
-}
-
-/* Small/mobile: preserve the existing stacked sidebar layout.
-   No menu-toggle behavior is introduced or changed here. */
-@media (max-width: 650px) {
-  .admin-body {
-    display: block;
-  }
-
-  .admin-sidebar-host {
-    width: 100%;
-    min-height: auto;
-  }
-
-  .admin-main-content {
-    padding: var(--space-1) var(--space-2) var(--space-3);
-  }
-}
+:host{display:block;width:100%;min-width:0;min-height:100dvh}
+.admin-layout{--sidebar-space:0px;width:100%;min-width:0;min-height:100dvh;background:var(--page-bg,#fffaf6);color:var(--text-body,#30343b)}
+.admin-layout.sidebar-open{--sidebar-space:var(--sidebar-width,280px)}
+.admin-header{position:sticky;top:0;z-index:1000;width:100%;background:var(--surface,#fff);border-bottom:1px solid var(--border,#eee3dc)}
+.admin-body{display:grid;grid-template-columns:var(--sidebar-space) minmax(0,1fr);align-items:start;min-width:0;min-height:calc(100dvh - var(--shell-header-height,114px));transition:grid-template-columns 180ms cubic-bezier(.2,0,0,1)}
+.sidebar-slot{position:sticky;top:var(--shell-header-height,114px);height:calc(100dvh - var(--shell-header-height,114px));min-width:0;overflow:clip;visibility:hidden;transition:visibility 0s 180ms}
+.sidebar-open .sidebar-slot{visibility:visible;transition:visibility 0s}
+.sidebar-panel{display:flex;flex-direction:column;width:var(--sidebar-width,280px);height:100%;background:var(--surface,#fff);border-right:1px solid var(--border,#eee3dc)}
+.sidebar-controls{display:flex;flex-shrink:0;align-items:center;justify-content:space-between;gap:8px;height:56px;padding:4px 8px 4px 24px}
+.sidebar-controls>span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-sidebar-host{display:block;flex:1;min-height:0;min-width:0;width:100%}
+.admin-content-wrapper{min-width:0;width:100%;min-height:calc(100dvh - var(--shell-header-height,114px))}
+.admin-toolbar{position:sticky;top:var(--shell-header-height,114px);z-index:30;display:flex;align-items:center;gap:8px;height:56px;padding:4px 16px;background:var(--page-bg,#fffaf6);border-bottom:1px solid var(--border,#eee3dc)}
+.admin-toolbar>span{font-size:13px;font-weight:650;color:var(--text-muted,#667085)}
+.admin-toolbar[hidden]{display:none}
+.shell-button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:48px;height:48px;padding:0;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--text-heading,var(--text,#17212d));font-size:22px;cursor:pointer;transition:background-color 120ms ease,color 120ms ease}
+.shell-button:hover{background:var(--primary-100,#ffe0cc);color:var(--primary-700,#c94a08)}
+.shell-button:focus-visible,.sidebar-resizer:focus-visible{outline:2px solid var(--primary-500,#f47716);outline-offset:-3px}
+.admin-main-content{width:100%;min-width:0;padding:16px 24px 24px}
+.sidebar-resizer{position:absolute;right:0;top:0;bottom:0;width:8px;cursor:col-resize;touch-action:none;z-index:2}
+.sidebar-resizer::after{content:'';position:absolute;inset:0 2px;background:transparent;border-radius:4px;transition:background-color 120ms}
+.sidebar-resizer:hover::after,.sidebar-resizer:focus-visible::after,.resizing .sidebar-resizer::after{background:var(--primary-400,var(--primary-500,#f47716))}
+.resizing .admin-body{transition:none}.resizing{user-select:none;cursor:col-resize}
+.sidebar-backdrop{position:fixed;inset:var(--shell-header-height,114px) 0 0;z-index:1040;background:#101a2e66;animation:backdrop-in 160ms ease}
+.mobile-layout .admin-body{grid-template-columns:minmax(0,1fr)}
+.mobile-layout .sidebar-slot{position:fixed;top:var(--shell-header-height,114px);left:0;bottom:0;z-index:1050;width:min(var(--sidebar-width,280px),calc(100vw - 48px));height:calc(100dvh - var(--shell-header-height,114px));transform:translateX(-100%);transition:transform 180ms cubic-bezier(.2,0,0,1),visibility 0s 180ms}
+.mobile-layout.sidebar-open .sidebar-slot{transform:translateX(0);transition:transform 180ms cubic-bezier(.2,0,0,1),visibility 0s}
+.mobile-layout .sidebar-panel{width:100%;box-shadow:8px 0 32px #101a2e26}
+.mobile-layout .admin-main-content{padding:16px}.mobile-layout .admin-toolbar{padding-inline:8px}
+@keyframes backdrop-in{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.admin-body,.sidebar-slot,.shell-button,.sidebar-resizer::after{transition:none!important}.sidebar-backdrop{animation:none}}

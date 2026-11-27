@@ -14,6 +14,7 @@ export class AccountsService {
  get<T>(area:string,query:Record<string,unknown>={}) {return this.http.get<AccountsResponse<T>>(this.base+'/'+area,{params:this.params(query)});}
  save(area:string,id:number|null,input:unknown) {return id?this.http.put<AccountsResponse<AccountRow>>(this.base+'/'+area+'/'+id,input):area==='settings'?this.http.put<AccountsResponse<AccountRow>>(this.base+'/settings',input):this.http.post<AccountsResponse<AccountRow>>(this.base+'/'+area,input);}
  action(area:string,id:number,action:string,input:unknown){return this.http.post<AccountsResponse<AccountRow>>(`${this.base}/${area}/${id}/${action}`,input);}
+ refund(input:unknown){return this.http.post<AccountsResponse<{paymentTransactionId:number;amount:number;replay:boolean}>>(this.base+'/refunds',input);}
  upload(id:number,file:File){const f=new FormData();f.append('file',file);return this.http.post<AccountsResponse<AccountRow>>(`${this.base}/vouchers/${id}/attachments`,f);}
  download(path:string,query:Record<string,unknown>={}){return this.http.get(this.base+'/'+path,{params:this.params(query),responseType:'blob'});}
 }

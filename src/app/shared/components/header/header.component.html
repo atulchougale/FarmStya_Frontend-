@@ -73,7 +73,7 @@
 
     <div class="main-header">
 
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-xl">
 
             <div class="container-fluid d-flex align-items-center justify-content-between">
 
@@ -125,8 +125,8 @@
                 <button
                     class="navbar-toggler border-0 p-1 shadow-none"
                     type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#mainNavbar"
+                    (click)="isNavigationOpen = !isNavigationOpen"
+                    [attr.aria-expanded]="isNavigationOpen"
                     aria-controls="mainNavbar"
                     aria-label="Toggle navigation">
 
@@ -137,7 +137,7 @@
 
                 <!-- Main Navigation -->
 
-                <div class="collapse navbar-collapse" id="mainNavbar">
+                <div class="collapse navbar-collapse" id="mainNavbar" [class.show]="isNavigationOpen" (click)="closeNavigationOnLink($event)">
 
                     <ul class="navbar-nav mx-auto gap-1">
 

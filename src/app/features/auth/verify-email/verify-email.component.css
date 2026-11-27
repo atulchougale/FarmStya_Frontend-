@@ -207,3 +207,5 @@
     letter-spacing: 3px;
   }
 }
+
+.resend-otp-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px}.resend-otp-row .btn{min-height:40px;padding:8px 16px;font-size:14px}

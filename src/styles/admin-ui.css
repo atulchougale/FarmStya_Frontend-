@@ -54,7 +54,9 @@
 .admin-ui .mat-mdc-paginator-container{gap:var(--space-1);padding:var(--space-1) var(--space-2);flex-wrap:wrap}
 .admin-ui .mat-mdc-paginator{font-family:inherit!important;font-size:13px!important}
 .admin-ui :is(.search-box,.report-search){border:1px solid var(--input-border);border-radius:8px;background:var(--surface);min-height:48px}
-.admin-ui .search-box input{padding-left:var(--space-5);border:0;box-shadow:none}
+.admin-ui :is(.search-box,.report-search) input{border:0!important;box-shadow:none!important;background:transparent;border-radius:0;min-width:0}
+/* The wrapper owns the border and keyboard focus ring for composite searches. */
+.admin-ui :is(.search-box,.report-search) input:focus-visible{outline:none!important}
 .admin-ui :is(.search-box,.report-search):focus-within{border-color:var(--primary-500);box-shadow:0 0 0 3px var(--focus-ring)}
 .admin-ui :is(.gallery-toolbar,.amenity-toolbar,.table-heading){display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);flex-wrap:wrap;margin-bottom:var(--space-3)}
 .admin-ui :is(.empty-state,.empty-container,.loading-container,.gallery-form-loading,.amenity-loading){padding:var(--space-4) var(--space-3);border-radius:12px;background:var(--surface);color:var(--text-muted);text-align:center}
@@ -89,3 +91,12 @@
 .admin-ui :is(.gallery-popup-header,.amenity-popup-header){background:var(--primary-50);border-color:var(--border)}
 @container admin-content (max-width:1100px){.admin-ui .filter-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-ui .filter-panel>.filter-actions{grid-column:1/-1;justify-content:flex-end}.admin-ui .filter-panel>.search-field{grid-column:1/-1}}
 @container admin-content (max-width:560px){.admin-ui .filter-panel{grid-template-columns:1fr}.admin-ui .filter-panel>.filter-actions{justify-content:stretch}.admin-ui .filter-panel>.filter-actions>*{flex:1}.admin-ui .report-card{flex-wrap:wrap}.admin-ui .report-card>div{flex-basis:100%}.admin-ui :is(.booking-action,.button,.dashboard-button){min-height:48px}}
+
+/* Reserve an icon lane after the shared control reset: never paint text beneath icons. */
+.admin-ui .input-wrapper > :is(input,textarea),
+.admin-ui .input-wrap > input { padding-inline-start:48px!important; }
+.admin-ui :is(.input-wrapper,.input-wrap) > i { pointer-events:none; }
+
+/* Shared shell owns page width. Wide data tables scroll inside their panels. */
+.admin-main-content>router-outlet+*{display:block;min-width:0;max-width:100%}
+.admin-ui :is(.table-responsive,.table-container,.table-wrapper){max-width:100%;overflow-x:auto}

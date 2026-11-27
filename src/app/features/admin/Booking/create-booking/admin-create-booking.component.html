@@ -1,13 +1,13 @@
 <main class="admin-task-page assisted-booking-page">
  <h1 class="h3"><i class="bi bi-calendar-plus admin-page-icon" aria-hidden="true"></i>{{ 'Create customer booking' | t }}</h1>
- <section *ngIf="!bookingOpen" class="card p-4 mt-3" style="max-width:780px">
+ <section *ngIf="!bookingOpen" class="card assisted-customer-card">
   <label for="booking-source" class="form-label">{{ 'Booking source' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
   <select id="booking-source" class="form-select mb-3" [(ngModel)]="context.source" [disabled]="busy">
    <option value="WalkIn">{{ 'Walk-in' | t }}</option><option value="Phone">{{ 'Phone enquiry' | t }}</option>
   </select>
   <form (ngSubmit)="lookup()" #lookupForm="ngForm">
    <label for="customer-mobile" class="form-label">{{ 'Customer mobile number' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
-   <div class="input-group">
+   <div class="fst-field-action-row">
     <input id="customer-mobile" name="mobile" class="form-control" maxlength="10" required pattern="[0-9]{10}"
       [(ngModel)]="mobile" [disabled]="busy" (ngModelChange)="searched=false;context.customer=null">
     <button class="btn btn-outline-success" type="submit" [disabled]="lookupForm.invalid || busy">{{ 'Find customer' | t }}</button>
@@ -18,9 +18,9 @@
   <p *ngIf="message" class="text-success mt-3" role="status">{{ message | t }}</p>
   <form *ngIf="searched && !context.customer" #registerForm="ngForm" (ngSubmit)="register()" class="mt-4">
    <h2 class="h5">{{ 'Register customer' | t }}</h2>
-   <label for="customer-name">{{ 'Full Name' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+   <label for="customer-name" class="form-label">{{ 'Full Name' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
    <input id="customer-name" name="name" class="form-control mb-3" maxlength="100" required [(ngModel)]="fullName" [disabled]="busy">
-   <label for="customer-email">{{ 'Email (optional)' | t }}</label>
+   <label for="customer-email" class="form-label">{{ 'Email (optional)' | t }}</label>
    <input id="customer-email" name="email" class="form-control mb-3" type="email" email maxlength="150" [(ngModel)]="email" [disabled]="busy">
    <p class="text-muted">{{ 'The customer can sign in with mobile OTP and set a password using Forgot Password.' | t }}</p>
    <button class="btn btn-success" type="submit" [disabled]="registerForm.invalid || busy">{{ 'Register and send verification' | t }}</button>
@@ -30,9 +30,10 @@
    <p>{{ 'Mobile verification' | t }} · {{ (customer.isMobileVerified ? 'Verified' : 'Pending') | t }}</p>
    <p *ngIf="customer.email">{{ 'Email Verification' | t }} · {{ (customer.isEmailVerified ? 'Verified' : 'Pending') | t }}</p>
    <form *ngIf="!customer.isMobileVerified" #otpForm="ngForm" (ngSubmit)="verify()">
-    <label for="customer-otp">{{ 'Customer mobile OTP' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
-    <input id="customer-otp" name="otp" class="form-control mb-2" required pattern="[0-9]{6}" maxlength="6" [(ngModel)]="otp" [disabled]="busy">
-    <button class="btn btn-success" type="submit" [disabled]="otpForm.invalid || busy">{{ 'Verify OTP' | t }}</button>
+    <p *ngIf="customer.mobileOtpExpiresAt" role="timer">{{ 'OTP expires at' | t }}: <strong>{{ customer.mobileOtpExpiresAt | localDate:'dd MMM yyyy, h:mm a' }}</strong> · {{ otpSeconds > 0 ? otpCountdown : ('OTP expired. Resend verification.' | t) }}</p>
+    <label for="customer-otp" class="form-label">{{ 'Customer mobile OTP' | t }} <span class="required-marker" aria-hidden="true">*</span></label>
+    <input id="customer-otp" name="otp" class="form-control mb-3" required pattern="[0-9]{6}" maxlength="6" [(ngModel)]="otp" [disabled]="busy">
+    <button class="btn btn-success" type="submit" [disabled]="otpForm.invalid || busy || (customer.mobileOtpExpiresAt && otpSeconds === 0)">{{ 'Verify OTP' | t }}</button>
    </form>
    <div class="d-flex flex-wrap gap-2 mt-3">
     <button *ngIf="!customer.canBook" type="button" class="btn btn-outline-success" [disabled]="busy" (click)="resend()">{{ 'Resend verification' | t }}</button>

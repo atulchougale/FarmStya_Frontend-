@@ -13,7 +13,7 @@
             <!-- Filter / Create -->
             <div class="gallery-toolbar">
                 <div class="category-filter">
-                    <label for="category" class="form-label mb-1">{{ 'Category' | t }}</label>
+                    <label for="category" class="form-label mb-2">{{ 'Category' | t }}</label>
                     <select id="category" class="form-select" [(ngModel)]="selectedCategory"
                         (change)="onCategoryChange()">
                         <option value="">{{ 'All Categories' | t }}</option>
@@ -64,12 +64,10 @@
                         <div class="gallery-media">
 
                             @if (isVideo(item.imageUrl)) {
-                            <video class="gallery-image" [src]="item.imageUrl" [muted]="true" [autoplay]="true"
-                                [loop]="true" playsinline preload="metadata" #videoEl
-                                (loadedmetadata)="videoEl.muted = true"></video>
+                            <app-video-preview [revision]="previewRevision" class="gallery-image" [src]="item.imageUrl" [label]="item.imageName" />
 
                             <div class="video-play-badge">
-                                <i class="bi bi-play-fill"></i>
+                                <i class="bi bi-play"></i>
                             </div>
                             } @else {
                             <img [src]="item.imageUrl" [alt]="item.imageName | t" class="gallery-image" />
@@ -77,7 +75,7 @@
 
                             @if (item.isFavorite) {
                             <span class="favorite-badge">
-                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
                             </span>
                             }
 
@@ -113,7 +111,7 @@
             <!-- Image / Video -->
             <div class="gallery-popup-media">
                 @if (isVideo(selectedItem.imageUrl)) {
-                <video [src]="selectedItem.imageUrl" controls autoplay muted playsinline></video>
+                <video crossorigin="anonymous" [src]="videoSource(selectedItem.imageUrl)" controls autoplay muted playsinline (loadeddata)="previewRevision = previewRevision + 1"></video>
                 } @else {
                 <img [src]="selectedItem.imageUrl" [alt]="selectedItem.imageName | t" />
                 }

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 /** Small consistent stroke icons for booking vouchers. SVG stays sharp at every display density. */
-@Component({selector:'app-voucher-icon',standalone:true,template:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path [attr.d]="paths[name] || paths['document']"/></svg>`,styles:[`:host{display:inline-flex;width:1em;height:1em;flex-shrink:0;vertical-align:middle}svg{display:block;width:100%;height:100%}`]})
+@Component({selector:'app-voucher-icon',standalone:true,template:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path [attr.d]="paths[name] || paths['document']"/></svg>`,styles:[`:host{display:inline-flex;width:1em;height:1em;flex-shrink:0;vertical-align:middle}svg{display:block;width:100%;height:100%;fill:none!important;stroke:currentColor;overflow:visible}path{fill:none!important;stroke:currentColor}`]})
 export class VoucherIconComponent {
  @Input() name='document';
  readonly paths:Record<string,string>={

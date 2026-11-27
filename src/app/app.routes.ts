@@ -1,3 +1,4 @@
+import { bookingEntryGuard } from './core/guards/booking-entry.guard';
 import { adminBookingCreateGuard } from './core/guards/admin-booking-create.guard';
 import { reportingGuard } from './features/admin/reporting/guards/reporting.guard';
 import { pricingManagementGuard } from './core/guards/pricing-management.guard';
@@ -132,6 +133,7 @@ export const routes: Routes = [
       // Public Feedback - Protected
       {
         path: 'booking',
+        canActivate: [bookingEntryGuard],
         loadComponent: () =>
           import('./features/public/booking/booking-page/booking-page.component').then(
             (c) => c.BookingPageComponent,
@@ -203,9 +205,13 @@ export const routes: Routes = [
       },
 
       // Gallery List
+      { path: 'reports', children: [
+        { path: '', pathMatch: 'full', redirectTo: '/admin/reporting' },
+        { path: ':report', redirectTo: '/admin/reporting/:report' }
+      ] },
       {
-        path: 'reports',
-        canActivate: [authGuard, bookingAdministrationGuard],
+        path: 'reporting',
+        canActivate: [authGuard],
         children: [
           {
             path: '',

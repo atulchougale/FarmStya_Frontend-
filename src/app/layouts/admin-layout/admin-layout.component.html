@@ -1,17 +1,35 @@
-<div class="admin-layout">
-    <!-- Fixed public/admin header -->
-    <header class="admin-header">
-        <app-header></app-header>
-    </header>
-
-    <!-- Sidebar and routed page -->
-    <div class="admin-body">
-        <app-admin-sidebar class="admin-sidebar-host"></app-admin-sidebar>
-
-        <div class="admin-content-wrapper">
-            <main class="admin-main-content admin-ui">
-                <router-outlet></router-outlet>
-            </main>
+<div class="admin-layout" [class.sidebar-open]="open" [class.mobile-layout]="isMobile" [class.resizing]="resizing"
+  [style.--sidebar-width.px]="width" [style.--shell-header-height.px]="headerHeight">
+  <header #header class="admin-header" [attr.inert]="isMobile && mobileOpen ? '' : null"><app-header></app-header></header>
+  <div class="admin-body">
+    @if (isMobile && mobileOpen) {
+      <div class="sidebar-backdrop" aria-hidden="true" (click)="close()"></div>
+    }
+    <div id="administration-menu" class="sidebar-slot" [attr.inert]="!open ? '' : null"
+      [attr.role]="isMobile && mobileOpen ? 'dialog' : null" [attr.aria-modal]="isMobile && mobileOpen ? 'true' : null"
+      [attr.aria-label]="'Administration menu' | t" [cdkTrapFocus]="isMobile && mobileOpen" [cdkTrapFocusAutoCapture]="isMobile && mobileOpen">
+      <div class="sidebar-panel">
+        <div class="sidebar-controls"><span>{{ 'Administration' | t }}</span>
+          <button #closeMenu cdkFocusInitial type="button" class="shell-button" (click)="close()" [attr.aria-label]="'Hide sidebar' | t" [title]="'Hide sidebar' | t"><i class="bi bi-layout-sidebar-inset" aria-hidden="true"></i></button>
         </div>
+        <app-admin-sidebar class="admin-sidebar-host"></app-admin-sidebar>
+      </div>
+      @if (!isMobile && open) {
+        <div class="sidebar-resizer" role="separator" tabindex="0" aria-orientation="vertical"
+          [attr.aria-label]="'Resize sidebar' | t" [attr.aria-valuemin]="minWidth" [attr.aria-valuemax]="maxWidth" [attr.aria-valuenow]="width"
+          [title]="'Drag to resize. Use arrow keys or double-click to reset.' | t"
+          (pointerdown)="startResize($event)" (pointermove)="resize($event)" (pointerup)="endResize()" (pointercancel)="endResize()" (lostpointercapture)="endResize()"
+          (keydown)="resizeKey($event)" (dblclick)="resetWidth()"></div>
+      }
     </div>
+    <div class="admin-content-wrapper" [attr.inert]="isMobile && mobileOpen ? '' : null">
+      <div class="admin-toolbar" [hidden]="open">
+        <button #menuToggle type="button" class="shell-button" (click)="toggle()" aria-controls="administration-menu" [attr.aria-expanded]="open"
+          [attr.aria-label]="(open ? 'Hide sidebar' : 'Show sidebar') | t" [title]="(open ? 'Hide sidebar' : 'Show sidebar') | t">
+          <i class="bi" [class.bi-layout-sidebar-inset]="open" [class.bi-list]="!open" aria-hidden="true"></i>
+        </button><span>{{ 'Administration' | t }}</span>
+      </div>
+      <main class="admin-main-content admin-ui"><router-outlet></router-outlet></main>
+    </div>
+  </div>
 </div>

@@ -1,7 +1,7 @@
 <main class="booking-detail">
   <!-- Breadcrumb -->
   <nav class="booking-breadcrumb" aria-label="Breadcrumb">
-    <a routerLink="/admin/dashboard" aria-label="Dashboard"><i class="bi bi-house-fill"></i></a>
+    <a routerLink="/admin/dashboard" aria-label="Dashboard"><i class="bi bi-house"></i></a>
     <i class="bi bi-chevron-right"></i>
     <a routerLink="/admin/dashboard">{{ 'Dashboard' | t }}</a>
     <i class="bi bi-chevron-right"></i>
@@ -32,7 +32,7 @@
       <div class="booking-reference">
         <div class="booking-reference-code">{{ item.bookingReference }}</div>
         <span class="booking-status" [ngClass]="'status-' + (item.status || 'unknown').toLowerCase().replace(' ', '-')">
-          <i class="bi bi-check-circle-fill"></i>{{ (item.status) | t }}
+          <i class="bi bi-check-circle"></i>{{ (item.status) | t }}
         </span>
         <span class="booking-source">{{ (item.bookingSource === 'WalkIn' ? 'Walk-in' :
           item.bookingSource === 'Phone' ? 'Phone enquiry' : 'Online') | t }}</span>
@@ -64,7 +64,7 @@
     <!-- Guest and payment summary tiles -->
     <section class="booking-stats">
       <article class="booking-stat stat-orange">
-        <span class="stat-icon"><i class="bi bi-person-fill"></i></span>
+        <span class="stat-icon"><i class="bi bi-person"></i></span>
         <div><strong>{{ item.adultCount }}</strong><small>{{ 'Adults' | t }}</small></div>
       </article>
       <article class="booking-stat stat-orange">
@@ -72,7 +72,7 @@
         <div><strong>{{ item.childrenCount }}</strong><small>{{ 'Children' | t }}</small></div>
       </article>
       <article class="booking-stat stat-orange">
-        <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+        <span class="stat-icon"><i class="bi bi-people"></i></span>
         <div><strong>{{ item.personCount }}</strong><small>{{ 'Guests' | t }}</small></div>
       </article>
       <article class="booking-stat stat-green">
@@ -100,18 +100,18 @@
           <h2>{{ 'Guest / Customer Information' | t }}</h2>
         </div>
         <div class="booking-card-body">
-          <div class="detail-row"><i class="bi bi-person-fill"></i><span>{{ 'Customer' | t }}</span><strong>{{
+          <div class="detail-row"><i class="bi bi-person"></i><span>{{ 'Customer' | t }}</span><strong>{{
               item.fullName }}</strong></div>
-          <div class="detail-row"><i class="bi bi-envelope-fill"></i><span>{{ 'Email' | t }}</span><strong>{{ item.email
+          <div class="detail-row"><i class="bi bi-envelope"></i><span>{{ 'Email' | t }}</span><strong>{{ item.email
               || '—' }}</strong></div>
-          <div class="detail-row"><i class="bi bi-telephone-fill"></i><span>{{ 'Mobile' | t }}</span><strong>{{
+          <div class="detail-row"><i class="bi bi-telephone"></i><span>{{ 'Mobile' | t }}</span><strong>{{
               item.mobileNumber || '—' }}</strong></div>
-          <div class="detail-row"><i class="bi bi-people-fill"></i><span>{{ 'Guests' | t }}</span>
+          <div class="detail-row"><i class="bi bi-people"></i><span>{{ 'Guests' | t }}</span>
             <strong>{{ '{p0} adults · {p1} children (Total: {p2})' | t:{p0: (item.adultCount), p1: (item.childrenCount),
               p2: (item.personCount)} }}</strong>
           </div>
           <div class="detail-row detail-note" *ngIf="item.customerNotes">
-            <i class="bi bi-chat-left-text-fill"></i><span>{{ 'Customer Notes' | t }}</span><strong>{{
+            <i class="bi bi-chat-left-text"></i><span>{{ 'Customer Notes' | t }}</span><strong>{{
               item.customerNotes }}</strong>
           </div>
           <!-- <p class="created-by">{{ 'Booking created by user' | t }} #{{ item.createdBy }}</p> -->
@@ -121,7 +121,7 @@
       <!-- Stay and event -->
       <section class="booking-card stay-card">
         <div class="booking-card-heading">
-          <span class="card-heading-icon"><i class="bi bi-house-door-fill"></i></span>
+          <span class="card-heading-icon"><i class="bi bi-house-door"></i></span>
           <h2>{{ 'Stay & Event Details' | t }}</h2>
         </div>
         <div class="booking-card-body">
@@ -169,7 +169,7 @@
               currency:item.currencyCode }}</strong></div>
           <div class="price-row price-total"><span>{{ 'Total Amount' | t }}</span><strong>{{ item.totalAmount |
               currency:item.currencyCode }}</strong></div>
-          <div class="price-row price-paid"><span><i class="bi bi-check-circle-fill"></i>{{ 'Total Paid' | t
+          <div class="price-row" *ngIf="(item.refundedAmount || 0) > 0"><span>{{ 'Refunded' | t }}</span><strong>{{ item.refundedAmount | currency:item.currencyCode }}</strong></div><div class="price-row price-paid"><span><i class="bi bi-check-circle"></i>{{ ((item.refundedAmount || 0) > 0 ? 'Net paid' : 'Total Paid') | t
               }}</span><strong>{{ item.totalPaid | currency:item.currencyCode }}</strong></div>
           <div class="price-row price-due" *ngIf="item.remainingAmount > 0"><span><i
                 class="bi bi-hourglass-split"></i>{{ 'Remaining Amount' | t }}</span><strong>{{ item.remainingAmount |
@@ -178,13 +178,14 @@
               }}</span><strong>{{ item.discountAmount | currency:item.currencyCode }}</strong></div>
           <div class="price-row"><span><i class="bi bi-wallet2"></i>{{ 'Advance paid' | t }}</span><strong>{{
               item.advancePaid | currency:item.currencyCode }}</strong></div>
+          <app-booking-payment-summary [booking]="item"></app-booking-payment-summary>
         </div>
       </section>
 
       <!-- Booking confirmation workflow (moved into the former timeline position) -->
       <section *ngIf="item.canManageConfirmation" class="booking-card confirmation-card">
         <div class="booking-card-heading">
-          <span class="card-heading-icon"><i class="bi bi-patch-check-fill"></i></span>
+          <span class="card-heading-icon"><i class="bi bi-patch-check"></i></span>
           <h2>{{ 'Confirmation Actions' | t }}</h2>
           <button type="button" class="booking-action action-outline refresh-action"
             [disabled]="loading || confirmationLoading || savingConfirmation" (click)="load()">
@@ -222,6 +223,7 @@
                 <label for="admin-id-files" class="form-label">{{ 'Customer ID proof' | t }}</label>
                 <input id="admin-id-files" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple class="form-control"
                   (change)="chooseFiles($event)" [disabled]="savingConfirmation">
+                <ul class="list-unstyled mt-2"><li *ngFor="let file of selectedFiles; let index = index" class="d-flex align-items-center gap-2 mb-2"><span>{{ file.name }}</span><button type="button" class="btn btn-outline-danger btn-sm" [disabled]="savingConfirmation" (click)="removeSelectedFile(index)">{{ 'Remove' | t }}</button></li></ul>
                 <small>{{ 'Upload one or two files for the same document type. Each file can be up to 5 MB.' | t
                   }}</small>
               </div>
@@ -268,9 +270,9 @@
       <!-- Identity proof -->
       <section class="booking-card identity-card" *ngIf="item.hasIdentityDocument || canCheckIn || item.canCheckout">
         <div class="booking-card-heading">
-          <span class="card-heading-icon"><i class="bi bi-shield-lock-fill"></i></span>
+          <span class="card-heading-icon"><i class="bi bi-shield-lock"></i></span>
           <h2>{{ 'ID Proof Verification' | t }}</h2>
-          <span *ngIf="item.hasIdentityDocument" class="verified-chip"><i class="bi bi-check-circle-fill"></i>{{
+          <span *ngIf="item.hasIdentityDocument" class="verified-chip"><i class="bi bi-check-circle"></i>{{
             'Uploaded' | t }}</span>
         </div>
         <div class="booking-card-body">
@@ -301,7 +303,7 @@
       <!-- Documents are limited to identity files currently exposed by this component's model. -->
       <section class="booking-card documents-card" *ngIf="item.hasIdentityDocument">
         <div class="booking-card-heading">
-          <span class="card-heading-icon"><i class="bi bi-file-earmark-text-fill"></i></span>
+          <span class="card-heading-icon"><i class="bi bi-file-earmark-text"></i></span>
           <h2>{{ 'Documents' | t }} ({{ item.identityFileCount }})</h2>
         </div>
         <div class="booking-card-body">

@@ -32,8 +32,10 @@ export interface Booking {
   canCheckIn?: boolean;
   canCheckout?: boolean;
   totalPaid: number;
+  refundedAmount?: number;
   advancePaid: number;
   discountAmount: number;
+  discounts?: { amount: number; reason: string; enteredBy: number; enteredByName?: string | null; createdDate: string }[];
   remainingAmount: number;
   hasIdentityDocument?: boolean;
   identityDocumentType?: string;
